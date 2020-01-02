@@ -34,6 +34,7 @@ include(Catch)
 # libnpln target
 add_library(libnpln
     libnpln/dummy.cpp
+    libnpln/machine/BitCodec.hpp
 )
 target_compile_features(libnpln
     PUBLIC
@@ -48,6 +49,7 @@ target_include_directories(libnpln
 # libnpln tests
 add_executable(test-libnpln
     libnpln/libnpln.test.cpp
+    libnpln/machine/BitCodec.test.cpp
 )
 target_link_libraries(test-libnpln
     libnpln
