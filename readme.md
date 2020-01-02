@@ -8,6 +8,27 @@ a CHIP-8 disassembler, a CHIP-8 debugger, and a CHIP-8 virtual machine.
 The PL/0 programming language is extended with procedures and data types
 that appear in the CHIP-8 architecture.
 
+## Building
+
+### Dependencies
+
+- C++17 compiler
+- CMake 3.13
+- Catch 2.2
+
+### Instructions
+
+npln uses CMake as its build system.  The standard procedure for
+building software with CMake applies:
+
+```sh
+mkdir build
+cd build
+cmake -G"Ninja" .. # or other generator
+cmake --build .
+ctest # to run the test suite
+```
+
 ## License
 
 npln is licensed under the terms of the permissive ISC open source
