@@ -28,6 +28,8 @@ project(npln
 include(CTest)
 
 # Dependencies
+find_package(fmt 6.1.0 REQUIRED)
+
 find_package(Catch2 2.2.0 REQUIRED)
 include(Catch)
 
@@ -40,6 +42,10 @@ add_library(libnpln
 target_compile_features(libnpln
     PUBLIC
     cxx_std_17
+)
+target_link_libraries(libnpln
+    PUBLIC
+    fmt::fmt
 )
 target_include_directories(libnpln
     PUBLIC
