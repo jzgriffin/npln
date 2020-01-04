@@ -35,6 +35,7 @@ include(Catch)
 add_library(libnpln
     libnpln/dummy.cpp
     libnpln/machine/BitCodec.hpp
+    libnpln/machine/DataUnits.hpp
 )
 target_compile_features(libnpln
     PUBLIC
@@ -50,6 +51,7 @@ target_include_directories(libnpln
 add_executable(test-libnpln
     libnpln/libnpln.test.cpp
     libnpln/machine/BitCodec.test.cpp
+    libnpln/machine/DataUnits.test.cpp
 )
 target_link_libraries(test-libnpln
     libnpln
