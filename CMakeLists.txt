@@ -39,6 +39,7 @@ add_library(libnpln
     libnpln/dummy.cpp
     libnpln/machine/BitCodec.hpp
     libnpln/machine/DataUnits.hpp
+    libnpln/machine/Operator.hpp
 )
 target_compile_features(libnpln
     PUBLIC
@@ -59,6 +60,7 @@ add_executable(test-libnpln
     libnpln/libnpln.test.cpp
     libnpln/machine/BitCodec.test.cpp
     libnpln/machine/DataUnits.test.cpp
+    libnpln/machine/Operator.test.cpp
 )
 target_link_libraries(test-libnpln
     libnpln
