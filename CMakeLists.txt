@@ -40,6 +40,7 @@ add_library(libnpln
     libnpln/machine/BitCodec.hpp
     libnpln/machine/BitCodecs.hpp
     libnpln/machine/DataUnits.hpp
+    libnpln/machine/Operand.hpp
     libnpln/machine/Operator.hpp
     libnpln/machine/Register.hpp
 )
@@ -62,6 +63,7 @@ add_executable(test-libnpln
     libnpln/libnpln.test.cpp
     libnpln/machine/BitCodec.test.cpp
     libnpln/machine/DataUnits.test.cpp
+    libnpln/machine/Operand.test.cpp
     libnpln/machine/Operator.test.cpp
     libnpln/machine/Register.test.cpp
 )
