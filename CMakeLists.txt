@@ -36,7 +36,6 @@ include(Catch)
 # libnpln target
 add_library(libnpln
     libnpln/detail/cpp2b.hpp
-    libnpln/dummy.cpp
     libnpln/machine/BitCodec.hpp
     libnpln/machine/BitCodecs.hpp
     libnpln/machine/DataUnits.hpp
