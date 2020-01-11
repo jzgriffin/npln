@@ -28,7 +28,7 @@ project(npln
 include(CTest)
 
 # Dependencies
-find_package(fmt 6.1.0 REQUIRED)
+find_package(fmt 6.0.0 REQUIRED)
 
 find_package(Catch2 2.2.0 REQUIRED)
 include(Catch)
