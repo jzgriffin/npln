@@ -45,6 +45,7 @@ add_library(libnpln
     libnpln/machine/Key.hpp
     libnpln/machine/Keys.cpp
     libnpln/machine/Keys.hpp
+    libnpln/machine/Memory.cpp
     libnpln/machine/Memory.hpp
     libnpln/machine/Operand.hpp
     libnpln/machine/Operands.hpp

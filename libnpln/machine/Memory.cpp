@@ -12,30 +12,39 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef LIBNPLN_MACHINE_MEMORY_HPP
-#define LIBNPLN_MACHINE_MEMORY_HPP
+#include <libnpln/machine/Memory.hpp>
 
-#include <libnpln/machine/DataUnits.hpp>
-
-#include <array>
-#include <filesystem>
-#include <iosfwd>
-#include <optional>
+#include <fstream>
 
 namespace libnpln::machine {
 
-using Memory = std::array<Byte, 0x1000>;
-
-constexpr Address program_address = 0x200;
-
 auto load_into_memory(std::istream& s, Memory& m, Address const a)
-    -> bool;
-auto load_into_memory(std::filesystem::path const& p, Memory& m,
-    Address const a) -> bool;
-auto load_program(std::istream& s) -> std::optional<Memory>;
-auto load_program(std::filesystem::path const& p)
-    -> std::optional<Memory>;
-
+    -> bool
+{
+    s.read(reinterpret_cast<char*>(m.data()) + a, m.size() - a);
+    return s.fail() && s.eof() && !s.bad();
 }
 
-#endif
+auto load_into_memory(std::filesystem::path const& p, Memory& m,
+    Address const a) -> bool
+{
+    auto s = std::ifstream{p, std::ios::in | std::ios::binary};
+    return s ? load_into_memory(s, m, a) : false;
+}
+
+auto load_program(std::istream& s) -> std::optional<Memory>
+{
+    auto m = Memory{};
+    return load_into_memory(s, m, program_address)
+        ? std::optional{m} : std::nullopt;
+}
+
+auto load_program(std::filesystem::path const& p) ->
+    std::optional<Memory>
+{
+    auto m = Memory{};
+    return load_into_memory(p, m, program_address)
+        ? std::optional{m} : std::nullopt;
+}
+
+}
