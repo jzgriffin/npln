@@ -43,6 +43,7 @@ add_library(libnpln
     libnpln/machine/DataUnits.hpp
     libnpln/machine/Instruction.cpp
     libnpln/machine/Instruction.hpp
+    libnpln/machine/Key.hpp
     libnpln/machine/Operand.hpp
     libnpln/machine/Operands.hpp
     libnpln/machine/Operator.hpp
@@ -72,6 +73,7 @@ add_executable(test-libnpln
     libnpln/machine/BitCodec.test.cpp
     libnpln/machine/DataUnits.test.cpp
     libnpln/machine/Instruction.test.cpp
+    libnpln/machine/Key.test.cpp
     libnpln/machine/Operand.test.cpp
     libnpln/machine/Operands.test.cpp
     libnpln/machine/Operator.test.cpp
