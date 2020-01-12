@@ -49,6 +49,7 @@ add_library(libnpln
     libnpln/machine/Register.hpp
     libnpln/machine/Registers.hpp
     libnpln/machine/Stack.hpp
+    libnpln/utility/BitSetDifference.hpp
     libnpln/utility/FixedSizeStack.hpp
 )
 target_compile_features(libnpln
@@ -77,6 +78,7 @@ add_executable(test-libnpln
     libnpln/machine/Register.test.cpp
     libnpln/machine/Registers.test.cpp
     libnpln/machine/Stack.test.cpp
+    libnpln/utility/BitSetDifference.test.cpp
     libnpln/utility/FixedSizeStack.test.cpp
 )
 target_link_libraries(test-libnpln
