@@ -15,11 +15,11 @@
 #ifndef LIBNPLN_MACHINE_REGISTER_HPP
 #define LIBNPLN_MACHINE_REGISTER_HPP
 
+#include <libnpln/detail/unreachable.hpp>
 #include <libnpln/machine/DataUnits.hpp>
 
 #include <fmt/format.h>
 
-#include <stdexcept>
 #include <string_view>
 
 namespace libnpln::machine {
@@ -63,9 +63,9 @@ constexpr auto get_name(Register const r) -> std::string_view
         case Register::vd: return "VD";
         case Register::ve: return "VE";
         case Register::vf: return "VF";
-        default:
-            throw std::logic_error{"Missing Register in get_name"};
     }
+
+    LIBNPLN_DETAIL_UNREACHABLE
 }
 
 }

@@ -15,11 +15,11 @@
 #ifndef LIBNPLN_MACHINE_OPERATOR_HPP
 #define LIBNPLN_MACHINE_OPERATOR_HPP
 
+#include <libnpln/detail/unreachable.hpp>
 #include <libnpln/machine/DataUnits.hpp>
 
 #include <fmt/format.h>
 
-#include <stdexcept>
 #include <string_view>
 
 namespace libnpln::machine {
@@ -99,9 +99,9 @@ constexpr auto get_format_string(Operator const op) -> std::string_view
         case Operator::bcd_v: return "BCD %{Vx}";
         case Operator::mov_ii_v: return "MOV %V0..%{Vx}, (%I)";
         case Operator::mov_v_ii: return "MOV (%I), %V0..%{Vx}";
-        default:
-            throw std::logic_error{"Missing Operator in get_format_string"};
     }
+
+    LIBNPLN_DETAIL_UNREACHABLE
 }
 
 }

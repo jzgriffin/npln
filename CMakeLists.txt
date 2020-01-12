@@ -41,7 +41,6 @@ add_library(libnpln
     libnpln/machine/BitCodec.hpp
     libnpln/machine/BitCodecs.hpp
     libnpln/machine/DataUnits.hpp
-    libnpln/machine/Instruction.cpp
     libnpln/machine/Instruction.hpp
     libnpln/machine/Key.hpp
     libnpln/machine/Keys.cpp
