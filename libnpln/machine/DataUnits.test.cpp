@@ -42,3 +42,8 @@ TEST_CASE("Data unit types are of acceptable widths", "[machine][dataunits]")
         REQUIRE(std::numeric_limits<Nibble>::digits >= 4);
     }
 }
+
+TEST_CASE("Words can be constructed from bytes", "[machine][dataunits]")
+{
+    REQUIRE(make_word(0x12, 0x34) == 0x1234);
+}

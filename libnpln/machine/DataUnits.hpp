@@ -16,6 +16,7 @@
 #define LIBNPLN_MACHINE_DATAUNITS_HPP
 
 #include <cstdint>
+#include <limits>
 
 namespace libnpln::machine {
 
@@ -23,6 +24,12 @@ using Word = std::uint16_t;
 using Address = Word;
 using Byte = std::uint8_t;
 using Nibble = Byte;
+
+constexpr auto make_word(Byte const high, Byte const low) noexcept
+{
+    return static_cast<Word>(low |
+        (high << std::numeric_limits<Byte>::digits));
+}
 
 }
 
