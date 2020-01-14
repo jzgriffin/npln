@@ -48,7 +48,7 @@ TEST_CASE("Memory cannot be loaded from a stream larger than the memory",
     auto s = std::istringstream{str};
     auto m = Memory{};
     auto const a = static_cast<Address>(m.size() - str.size() + 1);
-    REQUIRE(!load_into_memory(s, m, a));
+    REQUIRE_FALSE(load_into_memory(s, m, a));
 }
 
 TEST_CASE("Memory can be loaded from a file", "[machine][memory]")
@@ -80,7 +80,7 @@ TEST_CASE("Memory cannot be loaded from a file larger than the memory",
 
     auto m = Memory{};
     auto const a = static_cast<Address>(m.size() - str.size() + 1);
-    REQUIRE(!load_into_memory(p, m, a));
+    REQUIRE_FALSE(load_into_memory(p, m, a));
 }
 
 TEST_CASE("Programs can be loaded from a stream", "[machine][memory]")

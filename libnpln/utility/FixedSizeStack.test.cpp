@@ -89,7 +89,7 @@ SCENARIO("FixedSizeStack respects its size constraint",
     {
         auto s = FixedSizeStack<bool, 10>{};
         REQUIRE(s.empty());
-        REQUIRE(!s.full());
+        REQUIRE_FALSE(s.full());
 
         WHEN("it is pushed onto")
         {
@@ -97,8 +97,8 @@ SCENARIO("FixedSizeStack respects its size constraint",
 
             THEN("it is no longer empty")
             {
-                REQUIRE(!s.empty());
-                REQUIRE(!s.full());
+                REQUIRE_FALSE(s.empty());
+                REQUIRE_FALSE(s.full());
 
                 AND_WHEN("it is popped off of")
                 {
@@ -107,7 +107,7 @@ SCENARIO("FixedSizeStack respects its size constraint",
                     THEN("it is empty again")
                     {
                         REQUIRE(s.empty());
-                        REQUIRE(!s.full());
+                        REQUIRE_FALSE(s.full());
                     }
                 }
             }
@@ -121,7 +121,7 @@ SCENARIO("FixedSizeStack respects its size constraint",
 
             THEN("it is full")
             {
-                REQUIRE(!s.empty());
+                REQUIRE_FALSE(s.empty());
                 REQUIRE(s.full());
 
                 AND_WHEN("it is popped off of")
@@ -130,8 +130,8 @@ SCENARIO("FixedSizeStack respects its size constraint",
 
                     THEN("it is no longer full")
                     {
-                        REQUIRE(!s.empty());
-                        REQUIRE(!s.full());
+                        REQUIRE_FALSE(s.empty());
+                        REQUIRE_FALSE(s.full());
                     }
                 }
             }
@@ -211,7 +211,7 @@ SCENARIO("FixedSizeStack implements push and pop",
 
             THEN("it cannot be pushed onto")
             {
-                REQUIRE(!s.push(0));
+                REQUIRE_FALSE(s.push(0));
 
                 AND_WHEN("all of its elements are popped off")
                 {
@@ -230,7 +230,7 @@ SCENARIO("FixedSizeStack implements push and pop",
 
             THEN("it cannot be emplaced onto")
             {
-                REQUIRE(!s.emplace(0));
+                REQUIRE_FALSE(s.emplace(0));
             }
         }
     }
