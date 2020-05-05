@@ -29,6 +29,7 @@ TEST_CASE("Memory stores 4096 bytes", "[machine][memory]")
 {
     static_assert(std::is_same_v<Memory::value_type, Byte>);
     REQUIRE(Memory{}.max_size() == 4096);
+    REQUIRE(Memory{}.max_size() == memory_size);
 }
 
 TEST_CASE("Memory can be loaded from a stream", "[machine][memory]")
@@ -96,7 +97,7 @@ TEST_CASE("Programs can be loaded from a stream", "[machine][memory]")
 TEST_CASE("Programs cannot be loaded from a stream larger than the memory",
     "[machine][memory]")
 {
-    auto const str = std::string(Memory{}.size() - program_address, '0');
+    auto const str = std::string(memory_size - program_address, '0');
     auto s = std::istringstream{str};
     auto const m = load_program(s);
     REQUIRE(m == std::nullopt);
@@ -121,7 +122,7 @@ TEST_CASE("Programs can be loaded from a file", "[machine][memory]")
 TEST_CASE("Programs cannot be loaded from a file larger than the memory",
     "[machine][memory]")
 {
-    auto const str = std::string(Memory{}.size() - program_address - 1, '0');
+    auto const str = std::string(memory_size - program_address - 1, '0');
     auto const p = std::filesystem::path{"machine-memory-test-file"};
 
     {

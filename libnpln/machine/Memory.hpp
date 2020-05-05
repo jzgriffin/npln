@@ -27,6 +27,7 @@ namespace libnpln::machine {
 using Memory = std::array<Byte, 0x1000>;
 
 constexpr Address program_address = 0x200;
+constexpr std::size_t memory_size = Memory{}.size();
 
 auto load_into_memory(std::istream& s, Memory& m, Address const a)
     -> bool;
