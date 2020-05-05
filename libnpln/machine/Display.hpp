@@ -69,7 +69,7 @@ private:
             : std::nullopt;
     }
 
-    std::array<Pixel, width * height> pixels_;
+    std::array<Pixel, width * height> pixels_{};
 };
 
 }

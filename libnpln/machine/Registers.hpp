@@ -72,29 +72,29 @@ struct Registers
     }
 
     // General-purpose
-    Byte v0;
-    Byte v1;
-    Byte v2;
-    Byte v3;
-    Byte v4;
-    Byte v5;
-    Byte v6;
-    Byte v7;
-    Byte v8;
-    Byte v9;
-    Byte va;
-    Byte vb;
-    Byte vc;
-    Byte vd;
-    Byte ve;
-    Byte vf;
+    Byte v0 = 0x00;
+    Byte v1 = 0x00;
+    Byte v2 = 0x00;
+    Byte v3 = 0x00;
+    Byte v4 = 0x00;
+    Byte v5 = 0x00;
+    Byte v6 = 0x00;
+    Byte v7 = 0x00;
+    Byte v8 = 0x00;
+    Byte v9 = 0x00;
+    Byte va = 0x00;
+    Byte vb = 0x00;
+    Byte vc = 0x00;
+    Byte vd = 0x00;
+    Byte ve = 0x00;
+    Byte vf = 0x00;
 
     // Timer
-    Byte dt;
-    Byte st;
+    Byte dt = 0x00;
+    Byte st = 0x00;
 
     // Index
-    Word i;
+    Word i = 0x0000;
 };
 
 }
