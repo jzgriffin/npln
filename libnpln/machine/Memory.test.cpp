@@ -32,6 +32,24 @@ TEST_CASE("Memory stores 4096 bytes", "[machine][memory]")
     REQUIRE(Memory{}.max_size() == memory_size);
 }
 
+TEST_CASE("Memory can be loaded from an iterator range", "[machine][memory]")
+{
+    auto const s = "test"s;
+    auto m = Memory{};
+    auto const a = Address{4};
+    REQUIRE(load_into_memory(std::begin(s), std::end(s), m, a));
+    REQUIRE(std::memcmp(s.data(), m.data() + a, s.size() + 1) == 0);
+}
+
+TEST_CASE("Memory cannot be loaded from an iterator range larger than the "
+    "memory", "[machine][memory]")
+{
+    auto const s = "some test data"s;
+    auto m = Memory{};
+    auto const a = static_cast<Address>(m.size() - s.size() + 1);
+    REQUIRE_FALSE(load_into_memory(std::begin(s), std::end(s), m, a));
+}
+
 TEST_CASE("Memory can be loaded from a stream", "[machine][memory]")
 {
     auto const str = "test"s;
@@ -131,5 +149,23 @@ TEST_CASE("Programs cannot be loaded from a file larger than the memory",
     }
 
     auto const m = load_program(p);
+    REQUIRE(m == std::nullopt);
+}
+
+TEST_CASE("Programs can be loaded from an iterator range",
+    "[machine][memory]")
+{
+    auto const s = "test"s;
+    auto const m = load_program(std::begin(s), std::end(s));
+    REQUIRE(m != std::nullopt);
+    REQUIRE(std::memcmp(s.data(), m->data() + program_address,
+        s.size() + 1) == 0);
+}
+
+TEST_CASE("Programs cannot be loaded from an iterator range larger than the "
+    "memory", "[machine][memory]")
+{
+    auto const s = std::string(memory_size - program_address + 1, '0');
+    auto const m = load_program(std::begin(s), std::end(s));
     REQUIRE(m == std::nullopt);
 }
