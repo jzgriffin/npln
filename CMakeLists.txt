@@ -42,6 +42,7 @@ add_library(libnpln
     libnpln/machine/BitCodecs.hpp
     libnpln/machine/DataUnits.hpp
     libnpln/machine/Display.hpp
+    libnpln/machine/Fault.hpp
     libnpln/machine/Instruction.hpp
     libnpln/machine/Key.hpp
     libnpln/machine/Keys.cpp
@@ -78,6 +79,7 @@ add_executable(test-libnpln
     libnpln/machine/DataUnits.test.cpp
     libnpln/machine/Display.test.cpp
     libnpln/machine/Instruction.test.cpp
+    libnpln/machine/Fault.test.cpp
     libnpln/machine/Key.test.cpp
     libnpln/machine/Keys.test.cpp
     libnpln/machine/Memory.test.cpp
