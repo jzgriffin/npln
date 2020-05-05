@@ -21,6 +21,10 @@ namespace libnpln::machine {
 auto load_into_memory(std::istream& s, Memory& m, Address const a)
     -> bool
 {
+    if (m.size() < a) {
+        return false;
+    }
+
     s.read(reinterpret_cast<char*>(m.data()) + a, m.size() - a);
     return s.fail() && s.eof() && !s.bad();
 }
