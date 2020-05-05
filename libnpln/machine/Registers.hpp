@@ -23,6 +23,34 @@ namespace libnpln::machine {
 
 struct Registers
 {
+    constexpr auto operator==(Registers const& rhs) const noexcept
+    {
+        return v0 == rhs.v0
+            && v1 == rhs.v1
+            && v2 == rhs.v2
+            && v3 == rhs.v3
+            && v4 == rhs.v4
+            && v5 == rhs.v5
+            && v6 == rhs.v6
+            && v7 == rhs.v7
+            && v8 == rhs.v8
+            && v9 == rhs.v9
+            && va == rhs.va
+            && vb == rhs.vb
+            && vc == rhs.vc
+            && vd == rhs.vd
+            && ve == rhs.ve
+            && vf == rhs.vf
+            && dt == rhs.dt
+            && st == rhs.st
+            && i == rhs.i;
+    }
+
+    constexpr auto operator!=(Registers const& rhs) const noexcept
+    {
+        return !(*this == rhs);
+    }
+
     constexpr auto operator[](Register const r) noexcept -> Byte&
     {
         switch (r) {

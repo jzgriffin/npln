@@ -29,6 +29,17 @@ public:
     using Proxy = Pixel*;
     using ConstProxy = Pixel const*;
 
+    auto operator==(Display const& rhs) const noexcept
+    {
+        // std::array::operator== is not constexpr until C++20.
+        return pixels_ == rhs.pixels_;
+    }
+
+    auto operator!=(Display const& rhs) const noexcept
+    {
+        return !(*this == rhs);
+    }
+
     constexpr auto pixel(std::size_t const x, std::size_t const y)
         const -> ConstProxy
     {
