@@ -143,7 +143,10 @@ auto Machine::execute_seq_v_b(Address const pc, VBOperands const& args) noexcept
 
 auto Machine::execute_sne_v_b(Address const pc, VBOperands const& args) noexcept -> Result
 {
-    // TODO
+    if (registers[args.vx] != args.byte) {
+        program_counter += sizeof(Word);
+    }
+
     return std::nullopt;
 }
 
