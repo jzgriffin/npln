@@ -1231,7 +1231,83 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         REQUIRE(m == m_expect);
     }
 
-    // TODO: wkp_v = 0xF00A,
+    SECTION("wkp_v")
+    {
+        SECTION("when no key is pressed within 100 cycles")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xF1, 0x0A, // WKP %V1
+            });
+            m.registers.v1 = 0xFF;
+
+            auto m_expect = m;
+
+            for (auto i = 0u; i < 100; ++i) {
+                CHECK(m.cycle());
+                REQUIRE(m == m_expect);
+            }
+        }
+
+        SECTION("when one key is pressed on the second cycle")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xF2, 0x0A, // WKP %V2
+            });
+            m.registers.v2 = 0xFF;
+
+            auto m_expect = m;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+
+            m.keys.set(to_index(Key::ka));
+
+            m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.v2 = 0x0A;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("when one key is pressed on the first cycle")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xFA, 0x0A, // WKP %VA
+            });
+            m.registers.va = 0xFF;
+            m.keys.set(to_index(Key::k4));
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.va = 0x04;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("when multiple keys are pressed on the first cycle")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xFF, 0x0A, // WKP %VF
+            });
+            m.registers.vf = 0xFF;
+            m.keys.set(to_index(Key::k0));
+            m.keys.set(to_index(Key::kf));
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.vf = 0x00;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+    }
+
     // TODO: mov_dt_v = 0xF015,
     // TODO: mov_st_v = 0xF018,
     // TODO: add_i_v = 0xF01E,

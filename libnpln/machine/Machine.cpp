@@ -347,7 +347,20 @@ auto Machine::execute_mov_v_dt(Address const pc, VOperands const& args) noexcept
 
 auto Machine::execute_wkp_v(Address const pc, VOperands const& args) noexcept -> Result
 {
-    // TODO
+    // This instruction will repeat until a key is pressed.  If a key is
+    // already pressed the first time this instruction runs, it will be
+    // considered the pressed key.
+
+    // Select the lowest key pressed.  If multiple keys are pressed, the key
+    // to choose for this instruction is arbitrary.
+    for (std::size_t i = 0; i < keys.size(); ++i) {
+        if (keys.test(i)) {
+            registers[args.vx] = static_cast<Byte>(i);
+            return std::nullopt;
+        }
+    }
+
+    program_counter = pc;
     return std::nullopt;
 }
 
