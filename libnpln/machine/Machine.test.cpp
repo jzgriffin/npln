@@ -1342,7 +1342,43 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         REQUIRE(m == m_expect);
     }
 
-    // TODO: add_i_v = 0xF01E,
+    SECTION("add_i_v")
+    {
+        SECTION("without overflow")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xF5, 0x1E, // ADD %I, %V5
+            });
+            m.registers.v5 = 0xAC;
+            m.registers.i = 0xDEA;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.i = 0xE96;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("with overflow")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xF0, 0x1E, // ADD %I, %V0
+            });
+            m.registers.v0 = 0x02;
+            m.registers.i = 0xFFF;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.i = 0x001;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+    }
+
     // TODO: font_v = 0xF029,
     // TODO: bcd_v = 0xF033,
     // TODO: mov_ii_v = 0xF055,

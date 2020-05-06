@@ -378,7 +378,8 @@ auto Machine::execute_mov_st_v(Address const pc, VOperands const& args) noexcept
 
 auto Machine::execute_add_i_v(Address const pc, VOperands const& args) noexcept -> Result
 {
-    // TODO
+    registers.i += registers[args.vx];
+    registers.i &= 0xFFF;
     return std::nullopt;
 }
 
