@@ -45,7 +45,14 @@ struct fmt::formatter<libnpln::machine::Keys>
     auto format(libnpln::machine::Keys const& value,
         FormatContext& context)
     {
-        return format_to(context.out(), "{}", value.to_string());
+        auto out = context.out();
+        for (std::size_t i = 0; i < value.size(); ++i) {
+            if (value.test(i)) {
+                out = format_to(out, "{}",
+                    static_cast<libnpln::machine::Key>(i));
+            }
+        }
+        return out;
     }
 };
 
