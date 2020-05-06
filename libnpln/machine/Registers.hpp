@@ -19,6 +19,8 @@
 #include <libnpln/machine/DataUnits.hpp>
 #include <libnpln/machine/Register.hpp>
 
+#include <fmt/format.h>
+
 namespace libnpln::machine {
 
 struct Registers
@@ -126,5 +128,32 @@ struct Registers
 };
 
 }
+
+template<>
+struct fmt::formatter<libnpln::machine::Registers>
+{
+    template<typename ParseContext>
+    constexpr auto parse(ParseContext& context)
+    {
+        return context.begin();
+    }
+
+    template<typename FormatContext>
+    auto format(libnpln::machine::Registers const& value,
+        FormatContext& context)
+    {
+        return format_to(context.out(),
+            "v0: {:02X}h, v1: {:02X}h, v2: {:02X}h, v3: {:02X}h,\n"
+            "v4: {:02X}h, v5: {:02X}h, v6: {:02X}h, v7: {:02X}h,\n"
+            "v8: {:02X}h, v9: {:02X}h, va: {:02X}h, vb: {:02X}h,\n"
+            "vc: {:02X}h, vd: {:02X}h, ve: {:02X}h, vf: {:02X}h,\n"
+            "dt: {:02X}h, st: {:02X}h, i: {:03X}h",
+            value.v0, value.v1, value.v2, value.v3,
+            value.v4, value.v5, value.v6, value.v7,
+            value.v8, value.v9, value.va, value.vb,
+            value.vc, value.vd, value.ve, value.vf,
+            value.dt, value.st, value.i);
+    }
+};
 
 #endif
