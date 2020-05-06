@@ -163,7 +163,60 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         REQUIRE(m == m_expect);
     }
 
-    // TODO: call_a = 0x2000,
+    SECTION("call_a")
+    {
+        SECTION("with a full stack")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x2E, 0xEE, // CALL EEEh
+            });
+            for (std::size_t i = 0; i < m.stack.max_size(); ++i) {
+                REQUIRE(m.stack.push(i));
+            }
+
+            auto m_expect = m;
+            m_expect.fault = Fault{Fault::Type::full_stack, m.program_counter};
+            m_expect.program_counter += sizeof(Word);
+
+            CHECK_FALSE(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("with an empty stack")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x2E, 0xEE, // CALL EEEh
+            });
+
+            auto m_expect = m;
+            m_expect.program_counter = 0xEEE;
+            m_expect.stack.push(0x202);
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("with an almost-full stack")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x2E, 0xEE, // CALL EEEh
+            });
+            for (std::size_t i = 0; i < m.stack.max_size() - 1; ++i) {
+                REQUIRE(m.stack.push(i));
+            }
+
+            auto m_expect = m;
+            m_expect.program_counter = 0xEEE;
+            m_expect.stack.push(0x202);
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+    }
+
     // TODO: seq_v_b = 0x3000,
     // TODO: sne_v_b = 0x4000,
     // TODO: seq_v_v = 0x5000,

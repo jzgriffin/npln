@@ -124,7 +124,11 @@ auto Machine::execute_jmp_a(Address const pc, AOperands const& args) noexcept ->
 
 auto Machine::execute_call_a(Address const pc, AOperands const& args) noexcept -> Result
 {
-    // TODO
+    if (!stack.push(pc + sizeof(Word))) {
+        return Fault::Type::full_stack;
+    }
+
+    program_counter = args.address;
     return std::nullopt;
 }
 
