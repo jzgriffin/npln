@@ -15,8 +15,11 @@
 #ifndef LIBNPLN_MACHINE_DISPLAY_HPP
 #define LIBNPLN_MACHINE_DISPLAY_HPP
 
+#include <fmt/format.h>
+
 #include <array>
 #include <cstddef>
+#include <iterator>
 #include <optional>
 
 namespace libnpln::machine {
@@ -84,5 +87,31 @@ private:
 };
 
 }
+
+template<>
+struct fmt::formatter<libnpln::machine::Display>
+{
+    template<typename ParseContext>
+    constexpr auto parse(ParseContext& context)
+    {
+        return context.begin();
+    }
+
+    template<typename FormatContext>
+    auto format(libnpln::machine::Display const& value,
+        FormatContext& context)
+    {
+        auto out = context.out();
+        for (std::size_t y = 0; y < value.height; ++y) {
+            if (y > 0) {
+                out = format_to(out, "\n");
+            }
+            for (std::size_t x = 0; x < value.width; ++x) {
+                out = format_to(out, "{}", *value.pixel(x, y) ? "X" : ".");
+            }
+        }
+        return out;
+    }
+};
 
 #endif
