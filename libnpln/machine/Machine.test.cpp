@@ -149,7 +149,20 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         }
     }
 
-    // TODO: jmp_a = 0x1000,
+    SECTION("jmp_a")
+    {
+        Machine m;
+        m.memory = create_program({
+            0x1F, 0x00, // JMP F00h
+        });
+
+        auto m_expect = m;
+        m_expect.program_counter = 0xF00;
+
+        CHECK(m.cycle());
+        REQUIRE(m == m_expect);
+    }
+
     // TODO: call_a = 0x2000,
     // TODO: seq_v_b = 0x3000,
     // TODO: sne_v_b = 0x4000,

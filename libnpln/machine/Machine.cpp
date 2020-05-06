@@ -118,7 +118,7 @@ auto Machine::execute_ret(Address const pc, NullaryOperands const& args) noexcep
 
 auto Machine::execute_jmp_a(Address const pc, AOperands const& args) noexcept -> Result
 {
-    // TODO
+    program_counter = args.address;
     return std::nullopt;
 }
 
