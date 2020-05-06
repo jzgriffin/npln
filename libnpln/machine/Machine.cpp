@@ -185,7 +185,7 @@ auto Machine::execute_or_v_v(Address const pc, VVOperands const& args) noexcept 
 
 auto Machine::execute_and_v_v(Address const pc, VVOperands const& args) noexcept -> Result
 {
-    // TODO
+    registers[args.vx] &= registers[args.vy];
     return std::nullopt;
 }
 
