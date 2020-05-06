@@ -224,7 +224,10 @@ auto Machine::execute_shr_v(Address const pc, VOperands const& args) noexcept ->
 
 auto Machine::execute_subn_v_v(Address const pc, VVOperands const& args) noexcept -> Result
 {
-    // TODO
+    auto const x = registers[args.vx];
+    auto const y = registers[args.vy];
+    registers.vf = !utility::subtraction_underflow(y, x); // Not borrow
+    registers[args.vx] = y - x;
     return std::nullopt;
 }
 
