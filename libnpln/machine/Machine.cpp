@@ -258,7 +258,10 @@ auto Machine::execute_shl_v(Address const pc, VOperands const& args) noexcept ->
 
 auto Machine::execute_sne_v_v(Address const pc, VVOperands const& args) noexcept -> Result
 {
-    // TODO
+    if (registers[args.vx] != registers[args.vy]) {
+        program_counter += sizeof(Word);
+    }
+
     return std::nullopt;
 }
 
