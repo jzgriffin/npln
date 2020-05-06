@@ -588,7 +588,61 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         }
     }
 
-    // TODO: shr_v = 0x8006,
+    SECTION("shr_v")
+    {
+        SECTION("without lsb")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x8A, 0x06, // SHR %VA
+            });
+            m.registers.va = 0x74;
+            m.registers.vf = 0xFF;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.va = 0x3A;
+            m_expect.registers.vf = 0x00;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("with lsb")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x80, 0x06, // SHR %V0
+            });
+            m.registers.v0 = 0xFF;
+            m.registers.vf = 0xFF;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.v0 = 0x7F;
+            m_expect.registers.vf = 0x01;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("into %VF")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x8F, 0x06, // SHR %VF
+            });
+            m.registers.vf = 0x7F;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.vf = 0x3F;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+    }
+
     // TODO: subn_v_v = 0x8007,
     // TODO: shl_v = 0x800E,
     // TODO: sne_v_v = 0x9000,

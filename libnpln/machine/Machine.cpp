@@ -216,7 +216,9 @@ auto Machine::execute_sub_v_v(Address const pc, VVOperands const& args) noexcept
 
 auto Machine::execute_shr_v(Address const pc, VOperands const& args) noexcept -> Result
 {
-    // TODO
+    auto const x = registers[args.vx];
+    registers.vf = utility::lsb(x);
+    registers[args.vx] = x >> 1;
     return std::nullopt;
 }
 
