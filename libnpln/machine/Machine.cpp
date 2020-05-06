@@ -273,7 +273,7 @@ auto Machine::execute_mov_i_a(Address const pc, AOperands const& args) noexcept 
 
 auto Machine::execute_jmp_v0_a(Address const pc, AOperands const& args) noexcept -> Result
 {
-    // TODO
+    program_counter = registers.v0 + args.address;
     return std::nullopt;
 }
 

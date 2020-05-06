@@ -824,7 +824,21 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         REQUIRE(m == m_expect);
     }
 
-    // TODO: jmp_v0_a = 0xB000,
+    SECTION("jmp_v0_a")
+    {
+        Machine m;
+        m.memory = create_program({
+            0xBA, 0xAA, // JMP AAAh(%V0)
+        });
+        m.registers.v0 = 0x22;
+
+        auto m_expect = m;
+        m_expect.program_counter = 0xACC;
+
+        CHECK(m.cycle());
+        REQUIRE(m == m_expect);
+    }
+
     // TODO: rnd_v_b = 0xC000,
     // TODO: drw_v_v_n = 0xD000,
     // TODO: skp_v = 0xE09E,
