@@ -167,7 +167,7 @@ auto Machine::execute_mov_v_b(Address const pc, VBOperands const& args) noexcept
 
 auto Machine::execute_add_v_b(Address const pc, VBOperands const& args) noexcept -> Result
 {
-    // TODO
+    registers[args.vx] += args.byte;
     return std::nullopt;
 }
 
