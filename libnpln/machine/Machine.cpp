@@ -233,7 +233,9 @@ auto Machine::execute_subn_v_v(Address const pc, VVOperands const& args) noexcep
 
 auto Machine::execute_shl_v(Address const pc, VOperands const& args) noexcept -> Result
 {
-    // TODO
+    auto const x = registers[args.vx];
+    registers.vf = utility::msb(x);
+    registers[args.vx] = x << 1;
     return std::nullopt;
 }
 

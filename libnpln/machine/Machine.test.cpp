@@ -719,7 +719,61 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         }
     }
 
-    // TODO: shl_v = 0x800E,
+    SECTION("shl_v")
+    {
+        SECTION("without msb")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x8A, 0x0E, // SHL %VA
+            });
+            m.registers.va = 0b01111111;
+            m.registers.vf = 0xFF;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.va = 0b11111110;
+            m_expect.registers.vf = 0x00;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("with msb")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x80, 0x0E, // SHL %V0
+            });
+            m.registers.v0 = 0b11111111;
+            m.registers.vf = 0xFF;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.v0 = 0b11111110;
+            m_expect.registers.vf = 0x01;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("into %VF")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x8F, 0x0E, // SHL %VF
+            });
+            m.registers.vf = 0b01111111;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.vf = 0b11111110;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+    }
+
     // TODO: sne_v_v = 0x9000,
     // TODO: mov_i_a = 0xA000,
     // TODO: jmp_v0_a = 0xB000,
