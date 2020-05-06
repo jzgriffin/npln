@@ -27,6 +27,21 @@ struct Catch::StringMaker<Machine>
     }
 };
 
+namespace {
+
+auto create_checkerboard() -> Display
+{
+    Display d;
+    for (std::size_t y = 0; y < d.height; ++y) {
+        for (std::size_t x = 0; x < d.width; ++x) {
+            *d.pixel(x, y) = (x + y) % 2 == 0;
+        }
+    }
+    return d;
+}
+
+}
+
 // By inspecting the entire state of the machine after each cycle, we verify
 // that no instruction has an unintended side-effect.
 
@@ -100,13 +115,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         m.memory = create_program({
             0x00, 0xE0, // CLS
         });
-
-        // Checkerboard pattern
-        for (std::size_t y = 0; y < m.display.height; ++y) {
-            for (std::size_t x = 0; x < m.display.width; ++x) {
-                *m.display.pixel(x, y) = (x + y) % 2 == 0;
-            }
-        }
+        m.display = create_checkerboard();
 
         auto m_expect = m;
         m_expect.program_counter += sizeof(Word);
@@ -893,7 +902,152 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         }
     }
 
-    // TODO: drw_v_v_n = 0xD000,
+    SECTION("drw_v_v_n")
+    {
+        SECTION("with zero rows")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xD0, 0x10, // DRW %V0, %V1, $0h
+            });
+            m.registers.v0 = 0x00;
+            m.registers.v1 = 0x00;
+            m.registers.vf = 0xFF;
+            m.registers.i = 0x300;
+            m.memory[0x300] = 0b10101010;
+            m.display = create_checkerboard();
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.vf = 0x00;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("with one row")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xD1, 0x21, // DRW %V1, %V2, $1h
+            });
+            m.registers.v1 = 0x01;
+            m.registers.v2 = 0x02;
+            m.registers.vf = 0xFF;
+            m.registers.i = 0x300;
+            m.memory[0x300] = 0b10100111;
+            *m.display.pixel(0, 0) = true;
+            *m.display.pixel(0, 2) = true;
+            *m.display.pixel(1, 2) = true;
+            *m.display.pixel(2, 2) = true;
+            *m.display.pixel(3, 2) = true;
+            *m.display.pixel(4, 2) = true;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.vf = 0x01;
+            *m_expect.display.pixel(1, 2) = false;
+            *m_expect.display.pixel(3, 2) = false;
+            *m_expect.display.pixel(6, 2) = true;
+            *m_expect.display.pixel(7, 2) = true;
+            *m_expect.display.pixel(8, 2) = true;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("without clearing pixels")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xD0, 0x11, // DRW %V0, %V1, $1h
+            });
+            m.registers.v0 = 0x00;
+            m.registers.v1 = 0x00;
+            m.registers.vf = 0xFF;
+            m.registers.i = 0x300;
+            m.memory[0x300] = 0b00000000;
+            m.display = create_checkerboard();
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.vf = 0x00;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("outside of bounds")
+        {
+            // Draw an 8x15 sprite at the bottom-right corner of the screen
+            // such that only one-quarter of the sprite is visible.
+            Machine m;
+            m.memory = create_program({
+                0xD0, 0x1F, // DRW %V0, %V1, $Fh
+            });
+            m.registers.v0 = 0x3C;
+            m.registers.v1 = 0x18;
+            m.registers.vf = 0xFF;
+            m.registers.i = 0x300;
+            m.memory[0x300] = 0b11001111;
+            m.memory[0x301] = 0b01101111;
+            m.memory[0x302] = 0b00111111;
+            m.memory[0x303] = 0b00011111;
+            m.memory[0x304] = 0b00001111;
+            m.memory[0x305] = 0b00011111;
+            m.memory[0x306] = 0b00111111;
+            m.memory[0x307] = 0b01101111;
+            m.memory[0x308] = 0b11001111;
+            m.memory[0x309] = 0b11111111;
+            m.memory[0x30A] = 0b11111111;
+            m.memory[0x30B] = 0b11111111;
+            m.memory[0x30C] = 0b11111111;
+            m.memory[0x30D] = 0b11111111;
+            m.memory[0x30E] = 0b11111111;
+            m.memory[0x30F] = 0b11111111;
+            m.display = create_checkerboard();
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.vf = 0x01;
+            *m_expect.display.pixel(60, 24) = false;
+            *m_expect.display.pixel(61, 24) = true;
+            *m_expect.display.pixel(62, 24) = true;
+            *m_expect.display.pixel(63, 24) = false;
+            *m_expect.display.pixel(60, 25) = false;
+            *m_expect.display.pixel(61, 25) = false;
+            *m_expect.display.pixel(62, 25) = true;
+            *m_expect.display.pixel(63, 25) = true;
+            *m_expect.display.pixel(60, 26) = true;
+            *m_expect.display.pixel(61, 26) = false;
+            *m_expect.display.pixel(62, 26) = false;
+            *m_expect.display.pixel(63, 26) = true;
+            *m_expect.display.pixel(60, 27) = false;
+            *m_expect.display.pixel(61, 27) = true;
+            *m_expect.display.pixel(62, 27) = false;
+            *m_expect.display.pixel(63, 27) = false;
+            *m_expect.display.pixel(60, 28) = true;
+            *m_expect.display.pixel(61, 28) = false;
+            *m_expect.display.pixel(62, 28) = true;
+            *m_expect.display.pixel(63, 28) = false;
+            *m_expect.display.pixel(60, 29) = false;
+            *m_expect.display.pixel(61, 29) = true;
+            *m_expect.display.pixel(62, 29) = false;
+            *m_expect.display.pixel(63, 29) = false;
+            *m_expect.display.pixel(60, 30) = true;
+            *m_expect.display.pixel(61, 30) = false;
+            *m_expect.display.pixel(62, 30) = false;
+            *m_expect.display.pixel(63, 30) = true;
+            *m_expect.display.pixel(60, 31) = false;
+            *m_expect.display.pixel(61, 31) = false;
+            *m_expect.display.pixel(62, 31) = true;
+            *m_expect.display.pixel(63, 31) = true;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+    }
+
     // TODO: skp_v = 0xE09E,
     // TODO: sknp_v = 0xE0A1,
     // TODO: mov_v_dt = 0xF007,

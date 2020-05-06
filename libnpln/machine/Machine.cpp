@@ -287,7 +287,35 @@ auto Machine::execute_rnd_v_b(Address const pc, VBOperands const& args) noexcept
 
 auto Machine::execute_drw_v_v_n(Address const pc, VVNOperands const& args) noexcept -> Result
 {
-    // TODO
+    if (registers.i + args.nibble >= memory.size()) {
+        return Fault::Type::invalid_address;
+    }
+
+    // Each byte of sprite data is drawn on its own row.
+    // Each bit of sprite row data is a pixel.
+    static constexpr auto row_bits = std::numeric_limits<Byte>::digits;
+    auto x = registers[args.vx];
+    auto y = registers[args.vy];
+    registers.vf = false; // Pixel cleared
+    for (std::size_t i = 0; i < args.nibble; ++i) {
+        auto const y = registers[args.vy] + i;
+        auto const a = registers.i + i;
+        auto const row = memory[a];
+        for (std::size_t j = 0; j < row_bits; ++j) {
+            auto const x = registers[args.vx] + j;
+            auto p = display.pixel(x, y);
+            if (p == nullptr) {
+                break; // Prevent drawing outside of the display
+            }
+
+            auto const bit = (row & (1 << (row_bits - j - 1))) != 0;
+            if (*p && bit) {
+                registers.vf = true; // Pixel cleared
+            }
+            *p = bit != *p;
+        }
+    }
+
     return std::nullopt;
 }
 
