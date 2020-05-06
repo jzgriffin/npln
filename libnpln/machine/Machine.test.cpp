@@ -1048,7 +1048,89 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         }
     }
 
-    // TODO: skp_v = 0xE09E,
+    SECTION("skp_v")
+    {
+        SECTION("when only that key is pressed")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xE0, 0x9E, // SKP %V0
+            });
+            m.registers.v0 = 0x00;
+            m.keys.set(to_index(Key::k0));
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word) * 2;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("when pressed among other keys")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xEA, 0x9E, // SKP %VA
+            });
+            m.registers.va = 0x0F;
+            m.keys.set(to_index(Key::k0));
+            m.keys.set(to_index(Key::kf));
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word) * 2;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("when only other keys are pressed")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xE1, 0x9E, // SKP %V1
+            });
+            m.registers.v1 = 0x0A;
+            m.keys.set(to_index(Key::kb));
+            m.keys.set(to_index(Key::ke));
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("when no key is pressed")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xE2, 0x9E, // SKP %V2
+            });
+            m.registers.v2 = 0x0C;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("when the key is out of bounds")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xE3, 0x9E, // SKP %V3
+            });
+            m.registers.v3 = 0xFF;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+    }
+
     // TODO: sknp_v = 0xE0A1,
     // TODO: mov_v_dt = 0xF007,
     // TODO: wkp_v = 0xF00A,

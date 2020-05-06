@@ -321,7 +321,11 @@ auto Machine::execute_drw_v_v_n(Address const pc, VVNOperands const& args) noexc
 
 auto Machine::execute_skp_v(Address const pc, VOperands const& args) noexcept -> Result
 {
-    // TODO
+    auto const x = registers[args.vx];
+    if (x < keys.size() && keys.test(x)) { // Unknown keys are never pressed
+        program_counter += sizeof(Word);
+    }
+
     return std::nullopt;
 }
 
