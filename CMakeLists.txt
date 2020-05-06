@@ -57,6 +57,7 @@ add_library(libnpln
     libnpln/machine/Stack.hpp
     libnpln/utility/BitSetDifference.hpp
     libnpln/utility/FixedSizeStack.hpp
+    libnpln/utility/HexDump.hpp
 )
 target_compile_features(libnpln
     PUBLIC
