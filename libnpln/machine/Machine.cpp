@@ -279,7 +279,9 @@ auto Machine::execute_jmp_v0_a(Address const pc, AOperands const& args) noexcept
 
 auto Machine::execute_rnd_v_b(Address const pc, VBOperands const& args) noexcept -> Result
 {
-    // TODO
+    static std::uniform_int_distribution<Byte> byte_dist;
+
+    registers[args.vx] = byte_dist(random_engine) & args.byte;
     return std::nullopt;
 }
 

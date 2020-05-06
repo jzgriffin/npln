@@ -839,7 +839,60 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         REQUIRE(m == m_expect);
     }
 
-    // TODO: rnd_v_b = 0xC000,
+    SECTION("rnd_v_b")
+    {
+        SECTION("with an empty mask")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xCA, 0x00, // RND %VA, $00h
+            });
+
+            auto const pc_expect = m.program_counter + sizeof(Word);
+
+            CHECK(m.cycle());
+
+            auto m_expect = m;
+            m_expect.program_counter = pc_expect;
+            REQUIRE(m == m_expect);
+            REQUIRE((m.registers.va & ~0x00) == 0x00);
+        }
+
+        SECTION("with with a partial mask")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xCA, 0xA5, // RND %VA, $A5h
+            });
+
+            auto const pc_expect = m.program_counter + sizeof(Word);
+
+            CHECK(m.cycle());
+
+            auto m_expect = m;
+            m_expect.program_counter = pc_expect;
+            REQUIRE(m == m_expect);
+            REQUIRE((m.registers.va & ~0xA5) == 0x00);
+        }
+
+        SECTION("with with a full mask")
+        {
+            Machine m;
+            m.memory = create_program({
+                0xCA, 0xFF, // RND %VA, $FFh
+            });
+
+            auto const pc_expect = m.program_counter + sizeof(Word);
+
+            CHECK(m.cycle());
+
+            auto m_expect = m;
+            m_expect.program_counter = pc_expect;
+            REQUIRE(m == m_expect);
+            REQUIRE((m.registers.va & ~0xFF) == 0x00);
+        }
+    }
+
     // TODO: drw_v_v_n = 0xD000,
     // TODO: skp_v = 0xE09E,
     // TODO: sknp_v = 0xE0A1,

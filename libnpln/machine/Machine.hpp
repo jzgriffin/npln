@@ -28,6 +28,7 @@
 #include <fmt/format.h>
 
 #include <optional>
+#include <random>
 
 namespace libnpln::machine {
 
@@ -58,6 +59,8 @@ struct Machine
     Memory memory{};
     Keys keys;
     Display display;
+
+    std::default_random_engine random_engine{std::random_device{}()};
 
 private:
     using Result = std::optional<Fault::Type>;
