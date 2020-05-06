@@ -60,6 +60,7 @@ add_library(libnpln
     libnpln/utility/BitSetDifference.hpp
     libnpln/utility/FixedSizeStack.hpp
     libnpln/utility/HexDump.hpp
+    libnpln/utility/Numeric.hpp
 )
 target_compile_features(libnpln
     PUBLIC
@@ -95,6 +96,7 @@ add_executable(test-libnpln
     libnpln/machine/Stack.test.cpp
     libnpln/utility/BitSetDifference.test.cpp
     libnpln/utility/FixedSizeStack.test.cpp
+    libnpln/utility/Numeric.test.cpp
 )
 target_link_libraries(test-libnpln
     libnpln
