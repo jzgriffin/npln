@@ -267,7 +267,7 @@ auto Machine::execute_sne_v_v(Address const pc, VVOperands const& args) noexcept
 
 auto Machine::execute_mov_i_a(Address const pc, AOperands const& args) noexcept -> Result
 {
-    // TODO
+    registers.i = args.address;
     return std::nullopt;
 }
 

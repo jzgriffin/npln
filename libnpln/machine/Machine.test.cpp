@@ -809,7 +809,21 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         }
     }
 
-    // TODO: mov_i_a = 0xA000,
+    SECTION("mov_i_a")
+    {
+        Machine m;
+        m.memory = create_program({
+            0xAE, 0xEE, // MOV %I, $EEEh
+        });
+
+        auto m_expect = m;
+        m_expect.program_counter += sizeof(Word);
+        m_expect.registers.i = 0xEEE;
+
+        CHECK(m.cycle());
+        REQUIRE(m == m_expect);
+    }
+
     // TODO: jmp_v0_a = 0xB000,
     // TODO: rnd_v_b = 0xC000,
     // TODO: drw_v_v_n = 0xD000,
