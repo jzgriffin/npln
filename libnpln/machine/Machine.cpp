@@ -341,7 +341,7 @@ auto Machine::execute_sknp_v(Address const pc, VOperands const& args) noexcept -
 
 auto Machine::execute_mov_v_dt(Address const pc, VOperands const& args) noexcept -> Result
 {
-    // TODO
+    registers[args.vx] = registers.dt;
     return std::nullopt;
 }
 
