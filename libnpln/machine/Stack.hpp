@@ -18,10 +18,38 @@
 #include <libnpln/machine/DataUnits.hpp>
 #include <libnpln/utility/FixedSizeStack.hpp>
 
+#include <fmt/format.h>
+
+#include <iterator>
+
 namespace libnpln::machine {
 
 using Stack = utility::FixedSizeStack<Address, 16>;
 
 }
+
+template<>
+struct fmt::formatter<libnpln::machine::Stack>
+{
+    template<typename ParseContext>
+    constexpr auto parse(ParseContext& context)
+    {
+        return context.begin();
+    }
+
+    template<typename FormatContext>
+    auto format(libnpln::machine::Stack const& value,
+        FormatContext& context)
+    {
+        auto out = context.out();
+        for (auto i = std::begin(value); i != std::end(value); ++i) {
+            if (i != std::begin(value)) {
+                out = format_to(out, ", ");
+            }
+            out = format_to(out, "{:03X}h", *i);
+        }
+        return out;
+    }
+};
 
 #endif
