@@ -116,7 +116,39 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         REQUIRE(m == m_expect);
     }
 
-    // TODO: ret = 0x00EE,
+    SECTION("ret")
+    {
+        SECTION("with an empty stack")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x00, 0xEE, // RET
+            });
+
+            auto m_expect = m;
+            m_expect.fault = Fault{Fault::Type::empty_stack, m.program_counter};
+            m_expect.program_counter += sizeof(Word);
+
+            CHECK_FALSE(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("with a non-empty stack")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x00, 0xEE, // RET
+            });
+            m.stack.push(m.program_counter);
+
+            auto m_expect = m;
+            m_expect.stack.pop();
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+    }
+
     // TODO: jmp_a = 0x1000,
     // TODO: call_a = 0x2000,
     // TODO: seq_v_b = 0x3000,

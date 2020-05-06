@@ -107,7 +107,12 @@ auto Machine::execute_cls(Address const pc, NullaryOperands const& args) noexcep
 
 auto Machine::execute_ret(Address const pc, NullaryOperands const& args) noexcept -> Result
 {
-    // TODO
+    auto const a = stack.pop();
+    if (a == std::nullopt) {
+        return Fault::Type::empty_stack;
+    }
+
+    program_counter = *a;
     return std::nullopt;
 }
 
