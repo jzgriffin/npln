@@ -101,7 +101,7 @@ auto Machine::execute(Address const pc, Instruction const& instr) noexcept -> Re
 
 auto Machine::execute_cls(Address const pc, NullaryOperands const& args) noexcept -> Result
 {
-    // TODO
+    display.clear();
     return std::nullopt;
 }
 

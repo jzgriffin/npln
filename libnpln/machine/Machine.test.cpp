@@ -94,7 +94,28 @@ TEST_CASE("Invalid instructions trigger a fault", "[machine][cycle]")
 
 TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
 {
-    // TODO: cls = 0x00E0,
+    SECTION("cls")
+    {
+        Machine m;
+        m.memory = create_program({
+            0x00, 0xE0, // CLS
+        });
+
+        // Checkerboard pattern
+        for (std::size_t y = 0; y < m.display.height; ++y) {
+            for (std::size_t x = 0; x < m.display.width; ++x) {
+                *m.display.pixel(x, y) = (x + y) % 2 == 0;
+            }
+        }
+
+        auto m_expect = m;
+        m_expect.program_counter += sizeof(Word);
+        m_expect.display = {};
+
+        CHECK(m.cycle());
+        REQUIRE(m == m_expect);
+    }
+
     // TODO: ret = 0x00EE,
     // TODO: jmp_a = 0x1000,
     // TODO: call_a = 0x2000,
