@@ -47,6 +47,8 @@ add_library(libnpln
     libnpln/machine/Key.hpp
     libnpln/machine/Keys.cpp
     libnpln/machine/Keys.hpp
+    libnpln/machine/Machine.cpp
+    libnpln/machine/Machine.hpp
     libnpln/machine/Memory.cpp
     libnpln/machine/Memory.hpp
     libnpln/machine/Operand.hpp
@@ -83,6 +85,7 @@ add_executable(test-libnpln
     libnpln/machine/Fault.test.cpp
     libnpln/machine/Key.test.cpp
     libnpln/machine/Keys.test.cpp
+    libnpln/machine/Machine.test.cpp
     libnpln/machine/Memory.test.cpp
     libnpln/machine/Operand.test.cpp
     libnpln/machine/Operands.test.cpp
