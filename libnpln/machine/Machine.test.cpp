@@ -283,7 +283,41 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         }
     }
 
-    // TODO: seq_v_v = 0x5000,
+    SECTION("seq_v_v")
+    {
+        SECTION("when equal")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x51, 0xE0, // SEQ %V1, %VE
+            });
+            m.registers.v1 = 0xAA;
+            m.registers.ve = 0xAA;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word) * 2;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("when not equal")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x54, 0x00, // SEQ %V4, %V0
+            });
+            m.registers.v4 = 0xEE;
+            m.registers.v0 = 0x2E;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+    }
+
     // TODO: mov_v_b = 0x6000,
     // TODO: add_v_b = 0x7000,
     // TODO: mov_v_v = 0x8000,
