@@ -15,6 +15,7 @@
 #include <libnpln/machine/Machine.hpp>
 
 #include <libnpln/detail/unreachable.hpp>
+#include <libnpln/utility/Numeric.hpp>
 
 namespace libnpln::machine {
 
@@ -197,7 +198,10 @@ auto Machine::execute_xor_v_v(Address const pc, VVOperands const& args) noexcept
 
 auto Machine::execute_add_v_v(Address const pc, VVOperands const& args) noexcept -> Result
 {
-    // TODO
+    auto const x = registers[args.vx];
+    auto const y = registers[args.vy];
+    registers.vf = utility::addition_overflow(x, y); // Carry
+    registers[args.vx] = x + y;
     return std::nullopt;
 }
 

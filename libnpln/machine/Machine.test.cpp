@@ -436,7 +436,82 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         REQUIRE(m == m_expect);
     }
 
-    // TODO: add_v_v = 0x8004,
+    SECTION("add_v_v")
+    {
+        SECTION("without overflow")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x8A, 0xC4, // ADD %VA, %VC
+            });
+            m.registers.va = 0x0A;
+            m.registers.vc = 0x75;
+            m.registers.vf = 0xFF;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.va = 0x7F;
+            m_expect.registers.vf = 0x00;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("with overflow")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x80, 0x14, // ADD %V0, %V1
+            });
+            m.registers.v0 = 0xFF;
+            m.registers.v1 = 0x09;
+            m.registers.vf = 0xFF;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.v0 = 0x08;
+            m_expect.registers.vf = 0x01;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("into %VF")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x8F, 0x04, // ADD %VF, %V0
+            });
+            m.registers.vf = 0x7F;
+            m.registers.v0 = 0x21;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.vf = 0xA0;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("from %VF")
+        {
+            Machine m;
+            m.memory = create_program({
+                0x87, 0xF4, // ADD %V7, %VF
+            });
+            m.registers.v7 = 0xA4;
+            m.registers.vf = 0x4A;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.v7 = 0xEE;
+            m_expect.registers.vf = 0x00;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+    }
+
     // TODO: sub_v_v = 0x8005,
     // TODO: shr_v = 0x8006,
     // TODO: subn_v_v = 0x8007,
