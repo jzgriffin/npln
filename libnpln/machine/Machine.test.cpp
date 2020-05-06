@@ -1325,7 +1325,23 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         REQUIRE(m == m_expect);
     }
 
-    // TODO: mov_st_v = 0xF018,
+    SECTION("mov_st_v")
+    {
+        Machine m;
+        m.memory = create_program({
+            0xF7, 0x18, // MOV %ST, %V7
+        });
+        m.registers.v7 = 0x77;
+        m.registers.st = 0xFF;
+
+        auto m_expect = m;
+        m_expect.program_counter += sizeof(Word);
+        m_expect.registers.st = 0x77;
+
+        CHECK(m.cycle());
+        REQUIRE(m == m_expect);
+    }
+
     // TODO: add_i_v = 0xF01E,
     // TODO: font_v = 0xF029,
     // TODO: bcd_v = 0xF033,

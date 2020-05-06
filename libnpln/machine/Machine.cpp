@@ -372,7 +372,7 @@ auto Machine::execute_mov_dt_v(Address const pc, VOperands const& args) noexcept
 
 auto Machine::execute_mov_st_v(Address const pc, VOperands const& args) noexcept -> Result
 {
-    // TODO
+    registers.st = registers[args.vx];
     return std::nullopt;
 }
 
