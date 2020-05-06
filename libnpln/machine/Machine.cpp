@@ -196,6 +196,23 @@ auto Machine::execute_xor_v_v(Address const pc, VVOperands const& args) noexcept
     return std::nullopt;
 }
 
+// The following instructions, which modify the %VF register to indicate some
+// flag, must take the following special considerations into account because
+// %VF can also be an operand register:
+// - Using a reference to an operand register can result in aliasing.
+//   Modifying %VF can also change the referenced value, affecting subsequent
+//   operations on that register.
+// - In-place operations on an operand register is also affected by aliasing.
+//   After %VF is modified to set/clear the appropriate flag, if it is also
+//   the destination register, any in-place operation on the destination
+//   register will use the flag output rather than the original value.
+// - The order in which operations are applied will change the output. If %VF
+//   is set/cleared after the destination register is updated, its status as a
+//   flag register will take priority over its status as the destination and
+//   vice-versa.
+// The test cases for these instructions are designed to verify that using %VF
+// as an operand register takes precedence over its status as a flag register.
+
 auto Machine::execute_add_v_v(Address const pc, VVOperands const& args) noexcept -> Result
 {
     auto const x = registers[args.vx];
