@@ -30,7 +30,7 @@ struct Fault
     {
         invalid_address,
         invalid_instruction,
-        invalid_pixel,
+        invalid_digit,
         empty_stack,
         full_stack,
     };
@@ -56,7 +56,7 @@ constexpr auto get_name(Fault::Type const t) -> std::string_view
     switch (t) {
         case Fault::Type::invalid_address: return "invalid_address";
         case Fault::Type::invalid_instruction: return "invalid_instruction";
-        case Fault::Type::invalid_pixel: return "invalid_pixel";
+        case Fault::Type::invalid_digit: return "invalid_digit";
         case Fault::Type::empty_stack: return "empty_stack";
         case Fault::Type::full_stack: return "full_stack";
     }

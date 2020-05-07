@@ -15,9 +15,19 @@
 #include <libnpln/machine/Machine.hpp>
 
 #include <libnpln/detail/unreachable.hpp>
+#include <libnpln/machine/Font.hpp>
 #include <libnpln/utility/Numeric.hpp>
 
+#include <stdexcept>
+
 namespace libnpln::machine {
+
+Machine::Machine()
+{
+    if (!load_font_into_memory(memory, font_address)) {
+        throw std::logic_error{"Unable to load font into machine memory"};
+    }
+}
 
 auto Machine::cycle() noexcept -> bool
 {
@@ -385,7 +395,12 @@ auto Machine::execute_add_i_v(Address const pc, VOperands const& args) noexcept 
 
 auto Machine::execute_font_v(Address const pc, VOperands const& args) noexcept -> Result
 {
-    // TODO
+    auto const offset = get_glyph_offset(registers[args.vx]);
+    if (offset == std::nullopt) {
+        return Fault::Type::invalid_digit;
+    }
+
+    registers.i = font_address + *offset;
     return std::nullopt;
 }
 

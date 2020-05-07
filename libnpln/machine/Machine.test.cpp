@@ -14,6 +14,8 @@
 
 #include <libnpln/machine/Machine.hpp>
 
+#include <libnpln/machine/Font.hpp>
+
 #include <catch2/catch.hpp>
 
 using namespace libnpln::machine;
@@ -1379,7 +1381,51 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         }
     }
 
-    // TODO: font_v = 0xF029,
+    SECTION("font_v")
+    {
+        SECTION("with known values")
+        {
+            for (Nibble digit = 0; digit < 0x10; ++digit) {
+                Machine m;
+                load_into_memory<Machine::program_address>({
+                    0xF1, 0x29, // FONT %V1
+                }, m.memory);
+                m.registers.v1 = digit;
+                m.registers.i = 0xFFF;
+
+                auto m_expect = m;
+                m_expect.program_counter += sizeof(Word);
+                m_expect.registers.i = Machine::font_address + *get_glyph_offset(digit);
+
+                CHECK(m.cycle());
+                REQUIRE(m == m_expect);
+
+                auto const& g = font_glyphs[digit];
+                REQUIRE(std::equal(
+                    std::next(std::begin(m.memory), m.registers.i),
+                    std::next(std::begin(m.memory), m.registers.i + glyph_size),
+                    std::begin(g), std::end(g)));
+            }
+        }
+
+        SECTION("with an unknown value")
+        {
+            Machine m;
+            load_into_memory<Machine::program_address>({
+                0xFC, 0x29, // FONT %VC
+            }, m.memory);
+            m.registers.vc = 0x10;
+            m.registers.i = 0xFFF;
+
+            auto m_expect = m;
+            m_expect.fault = Fault{Fault::Type::invalid_digit, m.program_counter};
+            m_expect.program_counter += sizeof(Word);
+
+            CHECK_FALSE(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+    }
+
     // TODO: bcd_v = 0xF033,
     // TODO: mov_ii_v = 0xF055,
     // TODO: mov_v_ii = 0xF065,

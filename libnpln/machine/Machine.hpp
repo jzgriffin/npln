@@ -34,6 +34,8 @@ namespace libnpln::machine {
 
 struct Machine
 {
+    Machine();
+
     auto operator==(Machine const& rhs) const noexcept
     {
         return fault == rhs.fault
@@ -62,6 +64,7 @@ struct Machine
 
     std::default_random_engine random_engine{std::random_device{}()};
 
+    static constexpr Address font_address = 0x100;
     static constexpr Address program_address = 0x200;
 
 private:
