@@ -62,6 +62,8 @@ struct Machine
 
     std::default_random_engine random_engine{std::random_device{}()};
 
+    static constexpr Address program_address = 0x200;
+
 private:
     using Result = std::optional<Fault::Type>;
 

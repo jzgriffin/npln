@@ -36,19 +36,4 @@ auto load_into_memory(std::filesystem::path const& p, Memory& m,
     return s ? load_into_memory(s, m, a) : false;
 }
 
-auto load_program(std::istream& s) -> std::optional<Memory>
-{
-    auto m = Memory{};
-    return load_into_memory(s, m, program_address)
-        ? std::optional{m} : std::nullopt;
-}
-
-auto load_program(std::filesystem::path const& p) ->
-    std::optional<Memory>
-{
-    auto m = Memory{};
-    return load_into_memory(p, m, program_address)
-        ? std::optional{m} : std::nullopt;
-}
-
 }

@@ -59,10 +59,10 @@ TEST_CASE("Cycles fail after a fault", "[machine][cycle]")
 TEST_CASE("Cycles can resume after clearing a fault", "[machine][cycle]")
 {
     Machine m;
-    m.memory = create_program({
+    load_into_memory<Machine::program_address>({
         0x80, 0x08,
         0x00, 0xE0, // CLS
-    });
+    }, m.memory);
 
     auto m_expect = m;
     m_expect.fault = Fault{Fault::Type::invalid_instruction, m.program_counter};
@@ -95,9 +95,9 @@ TEST_CASE("Invalid addresses trigger a fault", "[machine][cycle]")
 TEST_CASE("Invalid instructions trigger a fault", "[machine][cycle]")
 {
     Machine m;
-    m.memory = create_program({
+    load_into_memory<Machine::program_address>({
         0x00, 0x00,
-    });
+    }, m.memory);
 
     auto m_expect = m;
     m_expect.fault = Fault{Fault::Type::invalid_instruction, m.program_counter};
@@ -112,9 +112,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
     SECTION("cls")
     {
         Machine m;
-        m.memory = create_program({
+        load_into_memory<Machine::program_address>({
             0x00, 0xE0, // CLS
-        });
+        }, m.memory);
         m.display = create_checkerboard();
 
         auto m_expect = m;
@@ -130,9 +130,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with an empty stack")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x00, 0xEE, // RET
-            });
+            }, m.memory);
 
             auto m_expect = m;
             m_expect.fault = Fault{Fault::Type::empty_stack, m.program_counter};
@@ -145,9 +145,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with a non-empty stack")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x00, 0xEE, // RET
-            });
+            }, m.memory);
             m.stack.push(m.program_counter);
 
             auto m_expect = m;
@@ -161,9 +161,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
     SECTION("jmp_a")
     {
         Machine m;
-        m.memory = create_program({
+        load_into_memory<Machine::program_address>({
             0x1F, 0x00, // JMP F00h
-        });
+        }, m.memory);
 
         auto m_expect = m;
         m_expect.program_counter = 0xF00;
@@ -177,9 +177,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with a full stack")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x2E, 0xEE, // CALL EEEh
-            });
+            }, m.memory);
             for (std::size_t i = 0; i < m.stack.max_size(); ++i) {
                 REQUIRE(m.stack.push(i));
             }
@@ -195,9 +195,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with an empty stack")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x2E, 0xEE, // CALL EEEh
-            });
+            }, m.memory);
 
             auto m_expect = m;
             m_expect.program_counter = 0xEEE;
@@ -210,9 +210,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with an almost-full stack")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x2E, 0xEE, // CALL EEEh
-            });
+            }, m.memory);
             for (std::size_t i = 0; i < m.stack.max_size() - 1; ++i) {
                 REQUIRE(m.stack.push(i));
             }
@@ -231,9 +231,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when equal")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x3A, 0xEE, // SEQ %VA, $EEh
-            });
+            }, m.memory);
             m.registers.va = 0xEE;
 
             auto m_expect = m;
@@ -246,9 +246,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when not equal")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x3A, 0xEE, // SEQ %VA, $EEh
-            });
+            }, m.memory);
             m.registers.va = 0xFF;
 
             auto m_expect = m;
@@ -264,9 +264,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when not equal")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x4A, 0xEE, // SNE %VA, $EEh
-            });
+            }, m.memory);
             m.registers.va = 0xAA;
 
             auto m_expect = m;
@@ -279,9 +279,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when equal")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x4A, 0xEE, // SNE %VA, $EEh
-            });
+            }, m.memory);
             m.registers.va = 0xEE;
 
             auto m_expect = m;
@@ -297,9 +297,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when equal")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x51, 0xE0, // SEQ %V1, %VE
-            });
+            }, m.memory);
             m.registers.v1 = 0xAA;
             m.registers.ve = 0xAA;
 
@@ -313,9 +313,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when not equal")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x54, 0x00, // SEQ %V4, %V0
-            });
+            }, m.memory);
             m.registers.v4 = 0xEE;
             m.registers.v0 = 0x2E;
 
@@ -330,9 +330,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
     SECTION("mov_v_b")
     {
         Machine m;
-        m.memory = create_program({
+        load_into_memory<Machine::program_address>({
             0x6C, 0x7F, // MOV %VC, $7Fh
-        });
+        }, m.memory);
 
         auto m_expect = m;
         m_expect.program_counter += sizeof(Word);
@@ -347,9 +347,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with overflow")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x7C, 0xFF, // ADD %VC, $FFh
-            });
+            }, m.memory);
             m.registers.vc = 0x03;
 
             auto m_expect = m;
@@ -363,9 +363,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("without overflow")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x78, 0x20, // ADD %V8, $FFh
-            });
+            }, m.memory);
             m.registers.v8 = 0x34;
 
             auto m_expect = m;
@@ -380,9 +380,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
     SECTION("mov_v_v")
     {
         Machine m;
-        m.memory = create_program({
+        load_into_memory<Machine::program_address>({
             0x8A, 0xB0, // MOV %VA, %VB
-        });
+        }, m.memory);
         m.registers.va = 0x12;
         m.registers.vb = 0x36;
 
@@ -397,9 +397,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
     SECTION("or_v_v")
     {
         Machine m;
-        m.memory = create_program({
+        load_into_memory<Machine::program_address>({
             0x80, 0x11, // OR %V0, %V1
-        });
+        }, m.memory);
         m.registers.v0 = 0b10101010;
         m.registers.v1 = 0b00011111;
 
@@ -414,9 +414,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
     SECTION("and_v_v")
     {
         Machine m;
-        m.memory = create_program({
+        load_into_memory<Machine::program_address>({
             0x82, 0xE2, // AND %V2, %VE
-        });
+        }, m.memory);
         m.registers.v2 = 0b10101010;
         m.registers.ve = 0b00011111;
 
@@ -431,9 +431,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
     SECTION("xor_v_v")
     {
         Machine m;
-        m.memory = create_program({
+        load_into_memory<Machine::program_address>({
             0x87, 0x33, // XOR %V7, %V3
-        });
+        }, m.memory);
         m.registers.v7 = 0b10101010;
         m.registers.v3 = 0b00011111;
 
@@ -450,9 +450,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("without overflow")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x8A, 0xC4, // ADD %VA, %VC
-            });
+            }, m.memory);
             m.registers.va = 0x0A;
             m.registers.vc = 0x75;
             m.registers.vf = 0xFF;
@@ -469,9 +469,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with overflow")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x80, 0x14, // ADD %V0, %V1
-            });
+            }, m.memory);
             m.registers.v0 = 0xFF;
             m.registers.v1 = 0x09;
             m.registers.vf = 0xFF;
@@ -488,9 +488,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("into %VF")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x8F, 0x04, // ADD %VF, %V0
-            });
+            }, m.memory);
             m.registers.vf = 0x7F;
             m.registers.v0 = 0x21;
 
@@ -505,9 +505,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("from %VF")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x87, 0xF4, // ADD %V7, %VF
-            });
+            }, m.memory);
             m.registers.v7 = 0xA4;
             m.registers.vf = 0x4A;
 
@@ -526,9 +526,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("without underflow")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x8A, 0xC5, // SUB %VA, %VC
-            });
+            }, m.memory);
             m.registers.va = 0x75;
             m.registers.vc = 0x05;
             m.registers.vf = 0xFF;
@@ -545,9 +545,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with underflow")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x80, 0x15, // SUB %V0, %V1
-            });
+            }, m.memory);
             m.registers.v0 = 0x00;
             m.registers.v1 = 0x01;
             m.registers.vf = 0xFF;
@@ -564,9 +564,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("into %VF")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x8F, 0x05, // SUB %VF, %V0
-            });
+            }, m.memory);
             m.registers.vf = 0x7F;
             m.registers.v0 = 0x21;
 
@@ -581,9 +581,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("from %VF")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x87, 0xF5, // SUB %V7, %VF
-            });
+            }, m.memory);
             m.registers.v7 = 0xA4;
             m.registers.vf = 0x4A;
 
@@ -602,9 +602,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("without lsb")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x8A, 0x06, // SHR %VA
-            });
+            }, m.memory);
             m.registers.va = 0x74;
             m.registers.vf = 0xFF;
 
@@ -620,9 +620,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with lsb")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x80, 0x06, // SHR %V0
-            });
+            }, m.memory);
             m.registers.v0 = 0xFF;
             m.registers.vf = 0xFF;
 
@@ -638,9 +638,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("into %VF")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x8F, 0x06, // SHR %VF
-            });
+            }, m.memory);
             m.registers.vf = 0x7F;
 
             auto m_expect = m;
@@ -657,9 +657,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("without underflow")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x8A, 0xC7, // SUBN %VA, %VC
-            });
+            }, m.memory);
             m.registers.va = 0x05;
             m.registers.vc = 0x75;
             m.registers.vf = 0xFF;
@@ -676,9 +676,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with underflow")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x80, 0x17, // SUBN %V0, %V1
-            });
+            }, m.memory);
             m.registers.v0 = 0x01;
             m.registers.v1 = 0x00;
             m.registers.vf = 0xFF;
@@ -695,9 +695,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("into %VF")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x8F, 0x07, // SUBN %VF, %V0
-            });
+            }, m.memory);
             m.registers.vf = 0x21;
             m.registers.v0 = 0x7F;
 
@@ -712,9 +712,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("from %VF")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x87, 0xF7, // SUBN %V7, %VF
-            });
+            }, m.memory);
             m.registers.v7 = 0x4A;
             m.registers.vf = 0xA4;
 
@@ -733,9 +733,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("without msb")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x8A, 0x0E, // SHL %VA
-            });
+            }, m.memory);
             m.registers.va = 0b01111111;
             m.registers.vf = 0xFF;
 
@@ -751,9 +751,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with msb")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x80, 0x0E, // SHL %V0
-            });
+            }, m.memory);
             m.registers.v0 = 0b11111111;
             m.registers.vf = 0xFF;
 
@@ -769,9 +769,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("into %VF")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x8F, 0x0E, // SHL %VF
-            });
+            }, m.memory);
             m.registers.vf = 0b01111111;
 
             auto m_expect = m;
@@ -788,9 +788,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when not equal")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x9A, 0xE0, // SNE %VA, %VE
-            });
+            }, m.memory);
             m.registers.va = 0xAA;
             m.registers.ve = 0x11;
 
@@ -804,9 +804,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when equal")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0x9A, 0xE0, // SNE %VA, %VE
-            });
+            }, m.memory);
             m.registers.va = 0xEE;
             m.registers.ve = 0xEE;
 
@@ -821,9 +821,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
     SECTION("mov_i_a")
     {
         Machine m;
-        m.memory = create_program({
+        load_into_memory<Machine::program_address>({
             0xAE, 0xEE, // MOV %I, $EEEh
-        });
+        }, m.memory);
 
         auto m_expect = m;
         m_expect.program_counter += sizeof(Word);
@@ -836,9 +836,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
     SECTION("jmp_v0_a")
     {
         Machine m;
-        m.memory = create_program({
+        load_into_memory<Machine::program_address>({
             0xBA, 0xAA, // JMP AAAh(%V0)
-        });
+        }, m.memory);
         m.registers.v0 = 0x22;
 
         auto m_expect = m;
@@ -853,9 +853,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with an empty mask")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xCA, 0x00, // RND %VA, $00h
-            });
+            }, m.memory);
 
             auto const pc_expect = m.program_counter + sizeof(Word);
 
@@ -870,9 +870,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with with a partial mask")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xCA, 0xA5, // RND %VA, $A5h
-            });
+            }, m.memory);
 
             auto const pc_expect = m.program_counter + sizeof(Word);
 
@@ -887,9 +887,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with with a full mask")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xCA, 0xFF, // RND %VA, $FFh
-            });
+            }, m.memory);
 
             auto const pc_expect = m.program_counter + sizeof(Word);
 
@@ -907,9 +907,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with zero rows")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xD0, 0x10, // DRW %V0, %V1, $0h
-            });
+            }, m.memory);
             m.registers.v0 = 0x00;
             m.registers.v1 = 0x00;
             m.registers.vf = 0xFF;
@@ -928,9 +928,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with one row")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xD1, 0x21, // DRW %V1, %V2, $1h
-            });
+            }, m.memory);
             m.registers.v1 = 0x01;
             m.registers.v2 = 0x02;
             m.registers.vf = 0xFF;
@@ -959,9 +959,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("without clearing pixels")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xD0, 0x11, // DRW %V0, %V1, $1h
-            });
+            }, m.memory);
             m.registers.v0 = 0x00;
             m.registers.v1 = 0x00;
             m.registers.vf = 0xFF;
@@ -982,9 +982,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             // Draw an 8x15 sprite at the bottom-right corner of the screen
             // such that only one-quarter of the sprite is visible.
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xD0, 0x1F, // DRW %V0, %V1, $Fh
-            });
+            }, m.memory);
             m.registers.v0 = 0x3C;
             m.registers.v1 = 0x18;
             m.registers.vf = 0xFF;
@@ -1053,9 +1053,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when only that key is pressed")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xE0, 0x9E, // SKP %V0
-            });
+            }, m.memory);
             m.registers.v0 = 0x00;
             m.keys.set(to_index(Key::k0));
 
@@ -1069,9 +1069,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when pressed among other keys")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xEA, 0x9E, // SKP %VA
-            });
+            }, m.memory);
             m.registers.va = 0x0F;
             m.keys.set(to_index(Key::k0));
             m.keys.set(to_index(Key::kf));
@@ -1086,9 +1086,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when only other keys are pressed")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xE1, 0x9E, // SKP %V1
-            });
+            }, m.memory);
             m.registers.v1 = 0x0A;
             m.keys.set(to_index(Key::kb));
             m.keys.set(to_index(Key::ke));
@@ -1103,9 +1103,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when no key is pressed")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xE2, 0x9E, // SKP %V2
-            });
+            }, m.memory);
             m.registers.v2 = 0x0C;
 
             auto m_expect = m;
@@ -1118,9 +1118,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when the key is out of bounds")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xE3, 0x9E, // SKP %V3
-            });
+            }, m.memory);
             m.registers.v3 = 0xFF;
 
             auto m_expect = m;
@@ -1136,9 +1136,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when only that key is pressed")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xE0, 0xA1, // SKNP %V0
-            });
+            }, m.memory);
             m.registers.v0 = 0x00;
             m.keys.set(to_index(Key::k0));
 
@@ -1152,9 +1152,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when pressed among other keys")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xEA, 0xA1, // SKNP %VA
-            });
+            }, m.memory);
             m.registers.va = 0x0F;
             m.keys.set(to_index(Key::k0));
             m.keys.set(to_index(Key::kf));
@@ -1169,9 +1169,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when only other keys are pressed")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xE1, 0xA1, // SKNP %V1
-            });
+            }, m.memory);
             m.registers.v1 = 0x0A;
             m.keys.set(to_index(Key::kb));
             m.keys.set(to_index(Key::ke));
@@ -1186,9 +1186,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when no key is pressed")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xE2, 0xA1, // SKNP %V2
-            });
+            }, m.memory);
             m.registers.v2 = 0x0C;
 
             auto m_expect = m;
@@ -1201,9 +1201,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when the key is out of bounds")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xE3, 0xA1, // SKNP %V3
-            });
+            }, m.memory);
             m.registers.v3 = 0xFF;
 
             auto m_expect = m;
@@ -1217,9 +1217,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
     SECTION("mov_v_dt")
     {
         Machine m;
-        m.memory = create_program({
+        load_into_memory<Machine::program_address>({
             0xFC, 0x07, // MOV %VC, %DT
-        });
+        }, m.memory);
         m.registers.vc = 0xFF;
         m.registers.dt = 0xAC;
 
@@ -1236,9 +1236,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when no key is pressed within 100 cycles")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xF1, 0x0A, // WKP %V1
-            });
+            }, m.memory);
             m.registers.v1 = 0xFF;
 
             auto m_expect = m;
@@ -1252,9 +1252,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when one key is pressed on the second cycle")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xF2, 0x0A, // WKP %V2
-            });
+            }, m.memory);
             m.registers.v2 = 0xFF;
 
             auto m_expect = m;
@@ -1275,9 +1275,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when one key is pressed on the first cycle")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xFA, 0x0A, // WKP %VA
-            });
+            }, m.memory);
             m.registers.va = 0xFF;
             m.keys.set(to_index(Key::k4));
 
@@ -1292,9 +1292,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("when multiple keys are pressed on the first cycle")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xFF, 0x0A, // WKP %VF
-            });
+            }, m.memory);
             m.registers.vf = 0xFF;
             m.keys.set(to_index(Key::k0));
             m.keys.set(to_index(Key::kf));
@@ -1311,9 +1311,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
     SECTION("mov_dt_v")
     {
         Machine m;
-        m.memory = create_program({
+        load_into_memory<Machine::program_address>({
             0xFD, 0x15, // MOV %DT, %VD
-        });
+        }, m.memory);
         m.registers.vd = 0xCD;
         m.registers.dt = 0xFF;
 
@@ -1328,9 +1328,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
     SECTION("mov_st_v")
     {
         Machine m;
-        m.memory = create_program({
+        load_into_memory<Machine::program_address>({
             0xF7, 0x18, // MOV %ST, %V7
-        });
+        }, m.memory);
         m.registers.v7 = 0x77;
         m.registers.st = 0xFF;
 
@@ -1347,9 +1347,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("without overflow")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xF5, 0x1E, // ADD %I, %V5
-            });
+            }, m.memory);
             m.registers.v5 = 0xAC;
             m.registers.i = 0xDEA;
 
@@ -1364,9 +1364,9 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         SECTION("with overflow")
         {
             Machine m;
-            m.memory = create_program({
+            load_into_memory<Machine::program_address>({
                 0xF0, 0x1E, // ADD %I, %V0
-            });
+            }, m.memory);
             m.registers.v0 = 0x02;
             m.registers.i = 0xFFF;
 
