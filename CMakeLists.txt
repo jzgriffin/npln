@@ -41,6 +41,7 @@ add_library(libnpln
     libnpln/machine/BitCodec.hpp
     libnpln/machine/BitCodecs.hpp
     libnpln/machine/DataUnits.hpp
+    libnpln/machine/Display.cpp
     libnpln/machine/Display.hpp
     libnpln/machine/Fault.hpp
     libnpln/machine/Font.cpp

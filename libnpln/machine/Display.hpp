@@ -20,6 +20,7 @@
 #include <array>
 #include <cstddef>
 #include <iterator>
+#include <memory>
 #include <optional>
 
 namespace libnpln::machine {
@@ -32,49 +33,27 @@ public:
     using Proxy = Pixel*;
     using ConstProxy = Pixel const*;
 
-    auto operator==(Display const& rhs) const noexcept
-    {
-        // std::array::operator== is not constexpr until C++20.
-        return pixels_ == rhs.pixels_;
-    }
+    Display();
+    Display(Display const& other);
+    Display(Display&& other) = default;
 
-    auto operator!=(Display const& rhs) const noexcept
-    {
-        return !(*this == rhs);
-    }
+    auto operator=(Display const& other) -> Display&;
+    auto operator=(Display&& other) -> Display& = default;
 
-    constexpr auto pixel(std::size_t const x, std::size_t const y)
-        const -> ConstProxy
-    {
-        if (auto const z = offset(x, y); z != std::nullopt) {
-            return &pixels_[*z];
-        }
+    auto operator==(Display const& rhs) const noexcept -> bool;
+    auto operator!=(Display const& rhs) const noexcept -> bool;
 
-        return nullptr;
-    }
+    auto pixel(std::size_t const x, std::size_t const y) const -> ConstProxy;
+    auto pixel(std::size_t const x, std::size_t const y) -> Proxy;
 
-    constexpr auto pixel(std::size_t const x, std::size_t const y)
-        -> Proxy
-    {
-        if (auto const z = offset(x, y); z != std::nullopt) {
-            return &pixels_[*z];
-        }
-
-        return nullptr;
-    }
-
-    constexpr auto clear() noexcept -> void
-    {
-        // std::fill is not constexpr until C++20.
-        for (auto& p : pixels_) {
-            p = false;
-        }
-    }
+    auto clear() noexcept -> void;
 
     static constexpr std::size_t width = 64;
     static constexpr std::size_t height = 32;
 
 private:
+    using Pixels = std::array<Pixel, width * height>;
+
     static constexpr auto offset(std::size_t const x,
         std::size_t const y) -> std::optional<std::size_t>
     {
@@ -83,7 +62,7 @@ private:
             : std::nullopt;
     }
 
-    std::array<Pixel, width * height> pixels_{};
+    std::unique_ptr<Pixels> const pixels_;
 };
 
 }

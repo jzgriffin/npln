@@ -110,7 +110,7 @@ public:
     }
 
 private:
-    std::array<value_type, max_size()> elements_;
+    std::array<value_type, max_size()> elements_{};
     size_type size_ = 0;
 };
 

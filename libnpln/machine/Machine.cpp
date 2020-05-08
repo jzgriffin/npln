@@ -23,10 +23,36 @@
 namespace libnpln::machine {
 
 Machine::Machine()
+    : memory_(std::make_unique<Memory>())
+    , memory(*memory_)
 {
     if (!load_font_into_memory(memory, font_address)) {
         throw std::logic_error{"Unable to load font into machine memory"};
     }
+}
+
+Machine::Machine(Machine const& other)
+    : memory_(std::make_unique<Memory>(other.memory))
+    , fault(other.fault)
+    , program_counter(other.program_counter)
+    , registers(other.registers)
+    , stack(other.stack)
+    , memory(other.memory)
+    , keys(other.keys)
+    , display(other.display)
+{
+}
+
+auto Machine::operator=(Machine const& other) -> Machine&
+{
+    fault = other.fault;
+    program_counter = other.program_counter;
+    registers = other.registers;
+    stack = other.stack;
+    memory = other.memory;
+    keys = other.keys;
+    display = other.display;
+    return *this;
 }
 
 auto Machine::cycle() noexcept -> bool
@@ -289,9 +315,12 @@ auto Machine::execute_jmp_v0_a(Address const pc, AOperands const& args) noexcept
 
 auto Machine::execute_rnd_v_b(Address const pc, VBOperands const& args) noexcept -> Result
 {
-    static std::uniform_int_distribution<Byte> byte_dist;
+    static std::uniform_int_distribution<std::size_t> byte_dist{
+        std::numeric_limits<Byte>::min(),
+        std::numeric_limits<Byte>::max(),
+    };
 
-    registers[args.vx] = byte_dist(random_engine) & args.byte;
+    registers[args.vx] = static_cast<Byte>(byte_dist(random_engine) & args.byte);
     return std::nullopt;
 }
 

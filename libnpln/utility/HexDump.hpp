@@ -27,7 +27,7 @@ namespace libnpln::utility {
 template<std::size_t N>
 auto to_hex_dump(std::array<std::uint8_t, N> const& a) -> std::string
 {
-    constexpr auto index_nibbles =
+    const auto index_nibbles =
         static_cast<std::size_t>(std::ceil(std::log(a.size()) / std::log(16)));
 
     std::string str;
