@@ -435,7 +435,15 @@ auto Machine::execute_font_v(Address const pc, VOperands const& args) noexcept -
 
 auto Machine::execute_bcd_v(Address const pc, VOperands const& args) noexcept -> Result
 {
-    // TODO
+    if (registers.i + 2 >= memory.size()) {
+        return Fault::Type::invalid_address;
+    }
+
+    auto const x = registers[args.vx];
+    // TODO: Refactor this into a more general algorithm
+    memory[registers.i + 0] = x / 100;
+    memory[registers.i + 1] = (x % 100) / 10;
+    memory[registers.i + 2] = ((x % 100) % 10) / 1;
     return std::nullopt;
 }
 

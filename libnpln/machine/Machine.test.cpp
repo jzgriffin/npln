@@ -1426,7 +1426,45 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         }
     }
 
-    // TODO: bcd_v = 0xF033,
+    SECTION("bcd_v")
+    {
+        SECTION("inside memory bounds")
+        {
+            Machine m;
+            load_into_memory<Machine::program_address>({
+                0xF3, 0x33, // BCD %V3
+            }, m.memory);
+            m.registers.v3 = 123;
+            m.registers.i = 0x300;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.memory[0x300] = 1;
+            m_expect.memory[0x301] = 2;
+            m_expect.memory[0x302] = 3;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("outside memory bounds")
+        {
+            Machine m;
+            load_into_memory<Machine::program_address>({
+                0xF3, 0x33, // BCD %V3
+            }, m.memory);
+            m.registers.v3 = 123;
+            m.registers.i = 0xFFE; // The ones index will be at 0x1000
+
+            auto m_expect = m;
+            m_expect.fault = Fault{Fault::Type::invalid_address, m.program_counter};
+            m_expect.program_counter += sizeof(Word);
+
+            CHECK_FALSE(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+    }
+
     // TODO: mov_ii_v = 0xF055,
     // TODO: mov_v_ii = 0xF065,
 }
