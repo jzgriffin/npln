@@ -58,6 +58,7 @@ add_library(libnpln
     libnpln/machine/Operands.hpp
     libnpln/machine/Operator.hpp
     libnpln/machine/Register.hpp
+    libnpln/machine/RegisterRange.hpp
     libnpln/machine/Registers.hpp
     libnpln/machine/Stack.hpp
     libnpln/utility/BitSetDifference.hpp
@@ -96,6 +97,7 @@ add_executable(test-libnpln
     libnpln/machine/Operands.test.cpp
     libnpln/machine/Operator.test.cpp
     libnpln/machine/Register.test.cpp
+    libnpln/machine/RegisterRange.test.cpp
     libnpln/machine/Registers.test.cpp
     libnpln/machine/Stack.test.cpp
     libnpln/utility/BitSetDifference.test.cpp
