@@ -1558,5 +1558,128 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         }
     }
 
-    // TODO: mov_v_ii = 0xF065,
+    SECTION("mov_v_ii")
+    {
+        SECTION("inside memory bounds")
+        {
+            Machine m;
+            load_into_memory<Machine::program_address>({
+                0xF5, 0x65, // MOV %V0..%V5, (%I)
+            }, m.memory);
+            m.registers.v0 = 0xFF;
+            m.registers.v1 = 0xFF;
+            m.registers.v2 = 0xFF;
+            m.registers.v3 = 0xFF;
+            m.registers.v4 = 0xFF;
+            m.registers.v5 = 0xFF;
+            m.registers.v6 = 0xFF; // %V6..%VF should not change
+            m.registers.v7 = 0xFF;
+            m.registers.v8 = 0xFF;
+            m.registers.v9 = 0xFF;
+            m.registers.va = 0xFF;
+            m.registers.vb = 0xFF;
+            m.registers.vc = 0xFF;
+            m.registers.vd = 0xFF;
+            m.registers.ve = 0xFF;
+            m.registers.vf = 0xFF;
+            m.registers.i = 0x300;
+            m.memory[0x300] = 0x12;
+            m.memory[0x301] = 0x23;
+            m.memory[0x302] = 0x34;
+            m.memory[0x303] = 0x45;
+            m.memory[0x304] = 0x56;
+            m.memory[0x305] = 0x67;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.v0 = 0x12;
+            m_expect.registers.v1 = 0x23;
+            m_expect.registers.v2 = 0x34;
+            m_expect.registers.v3 = 0x45;
+            m_expect.registers.v4 = 0x56;
+            m_expect.registers.v5 = 0x67;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("outside memory bounds")
+        {
+            Machine m;
+            load_into_memory<Machine::program_address>({
+                0xFF, 0x65, // MOV %V0..%VF, (%I)
+            }, m.memory);
+            m.registers.i = 0xFFE; // %V2 will come from 0x1000 and above
+
+            auto m_expect = m;
+            m_expect.fault = Fault{Fault::Type::invalid_address, m.program_counter};
+            m_expect.program_counter += sizeof(Word);
+
+            CHECK_FALSE(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("with all registers")
+        {
+            Machine m;
+            load_into_memory<Machine::program_address>({
+                0xFF, 0x65, // MOV %V0..%VF, (%I)
+            }, m.memory);
+            m.registers.v0 = 0xFF;
+            m.registers.v1 = 0xFF;
+            m.registers.v2 = 0xFF;
+            m.registers.v3 = 0xFF;
+            m.registers.v4 = 0xFF;
+            m.registers.v5 = 0xFF;
+            m.registers.v6 = 0xFF;
+            m.registers.v7 = 0xFF;
+            m.registers.v8 = 0xFF;
+            m.registers.v9 = 0xFF;
+            m.registers.va = 0xFF;
+            m.registers.vb = 0xFF;
+            m.registers.vc = 0xFF;
+            m.registers.vd = 0xFF;
+            m.registers.ve = 0xFF;
+            m.registers.vf = 0xFF;
+            m.registers.i = 0x300;
+            m.memory[0x300] = 0x12;
+            m.memory[0x301] = 0x23;
+            m.memory[0x302] = 0x34;
+            m.memory[0x303] = 0x45;
+            m.memory[0x304] = 0x56;
+            m.memory[0x305] = 0x67;
+            m.memory[0x306] = 0x78;
+            m.memory[0x307] = 0x89;
+            m.memory[0x308] = 0x9A;
+            m.memory[0x309] = 0xAB;
+            m.memory[0x30A] = 0xBC;
+            m.memory[0x30B] = 0xCD;
+            m.memory[0x30C] = 0xDE;
+            m.memory[0x30D] = 0xEF;
+            m.memory[0x30E] = 0xFF;
+            m.memory[0x30F] = 0xF0;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.registers.v0 = 0x12;
+            m_expect.registers.v1 = 0x23;
+            m_expect.registers.v2 = 0x34;
+            m_expect.registers.v3 = 0x45;
+            m_expect.registers.v4 = 0x56;
+            m_expect.registers.v5 = 0x67;
+            m_expect.registers.v6 = 0x78;
+            m_expect.registers.v7 = 0x89;
+            m_expect.registers.v8 = 0x9A;
+            m_expect.registers.v9 = 0xAB;
+            m_expect.registers.va = 0xBC;
+            m_expect.registers.vb = 0xCD;
+            m_expect.registers.vc = 0xDE;
+            m_expect.registers.vd = 0xEF;
+            m_expect.registers.ve = 0xFF;
+            m_expect.registers.vf = 0xF0;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+    }
 }

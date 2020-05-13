@@ -465,7 +465,17 @@ auto Machine::execute_mov_ii_v(Address const pc, VOperands const& args) noexcept
 
 auto Machine::execute_mov_v_ii(Address const pc, VOperands const& args) noexcept -> Result
 {
-    // TODO
+    auto const rs = RegisterRange{args.vx};
+    auto const d = std::distance(std::begin(rs), std::end(rs));
+
+    if (registers.i + d >= memory.size()) {
+        return Fault::Type::invalid_address;
+    }
+
+    auto i = std::next(std::begin(memory), registers.i);
+    for (auto&& r : rs) {
+        registers[r] = *i++;
+    }
     return std::nullopt;
 }
 
