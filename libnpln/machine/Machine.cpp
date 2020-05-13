@@ -41,6 +41,9 @@ Machine::Machine(Machine const& other)
     , memory(other.memory)
     , keys(other.keys)
     , display(other.display)
+    , master_clock_rate(other.master_clock_rate)
+    , delay_cycles(other.delay_cycles)
+    , sound_cycles(other.sound_cycles)
 {
 }
 
@@ -53,6 +56,9 @@ auto Machine::operator=(Machine const& other) -> Machine&
     memory = other.memory;
     keys = other.keys;
     display = other.display;
+    master_clock_rate = other.master_clock_rate;
+    delay_cycles = other.delay_cycles;
+    sound_cycles = other.delay_cycles;
     return *this;
 }
 
@@ -79,6 +85,22 @@ auto Machine::cycle() noexcept -> bool
     if (ft != std::nullopt) {
         fault = Fault{*ft, pc};
         return false;
+    }
+
+    ++delay_cycles;
+    if (master_clock_rate / delay_cycles <= delay_clock_rate) {
+        delay_cycles = 0;
+        if (registers.dt > 0) {
+            --registers.dt;
+        }
+    }
+
+    ++sound_cycles;
+    if (master_clock_rate / sound_cycles <= sound_clock_rate) {
+        sound_cycles = 0;
+        if (registers.st > 0) {
+            --registers.st;
+        }
     }
 
     return true;

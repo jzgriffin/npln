@@ -1683,3 +1683,195 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         }
     }
 }
+
+TEST_CASE("Delay timer counts down correctly", "[machine][cycle]")
+{
+    SECTION("when the master clock rate is the delay clock rate")
+    {
+        Byte const ticks = 0xFF;
+
+        Machine m;
+        load_into_memory<Machine::program_address>({
+            0x12, 0x00, // JMP 200h
+        }, m.memory);
+        m.registers.dt = ticks;
+        m.master_clock_rate = Machine::delay_clock_rate;
+
+        std::size_t cycles = 0;
+        while (m.registers.dt > 0) {
+            REQUIRE(m.cycle());
+            ++cycles;
+        }
+
+        REQUIRE(cycles == ticks);
+
+        REQUIRE(m.cycle());
+        REQUIRE(m.registers.dt == 0);
+    }
+
+    SECTION("when the master clock rate is less than the delay clock rate")
+    {
+        Byte const ticks = 0xFF;
+
+        Machine m;
+        load_into_memory<Machine::program_address>({
+            0x12, 0x00, // JMP 200h
+        }, m.memory);
+        m.registers.dt = ticks;
+        m.master_clock_rate = Machine::delay_clock_rate - 11;
+
+        std::size_t cycles = 0;
+        while (m.registers.dt > 0) {
+            REQUIRE(m.cycle());
+            ++cycles;
+        }
+
+        REQUIRE(cycles == ticks);
+
+        REQUIRE(m.cycle());
+        REQUIRE(m.registers.dt == 0);
+    }
+
+    SECTION("when the master clock rate is greater than the delay clock rate")
+    {
+        Byte const ticks = 0xFF;
+
+        Machine m;
+        load_into_memory<Machine::program_address>({
+            0x12, 0x00, // JMP 200h
+        }, m.memory);
+        m.registers.dt = ticks;
+        m.master_clock_rate = Machine::delay_clock_rate + 11;
+
+        std::size_t cycles = 0;
+        while (m.registers.dt > 0) {
+            REQUIRE(m.cycle());
+            ++cycles;
+        }
+
+        REQUIRE(cycles == ticks * 2); // Round up to the next multiple
+
+        REQUIRE(m.cycle());
+        REQUIRE(m.registers.dt == 0);
+    }
+
+    SECTION("when the master clock rate is a multiple of the delay clock rate")
+    {
+        Byte const ticks = 0xFF;
+        std::size_t const multiplier = 4;
+
+        Machine m;
+        load_into_memory<Machine::program_address>({
+            0x12, 0x00, // JMP 200h
+        }, m.memory);
+        m.registers.dt = ticks;
+        m.master_clock_rate = Machine::delay_clock_rate * multiplier;
+
+        std::size_t cycles = 0;
+        while (m.registers.dt > 0) {
+            REQUIRE(m.cycle());
+            ++cycles;
+        }
+
+        REQUIRE(cycles == ticks * multiplier);
+
+        REQUIRE(m.cycle());
+        REQUIRE(m.registers.dt == 0);
+    }
+}
+
+TEST_CASE("Sound timer counts down correctly", "[machine][cycle]")
+{
+    SECTION("when the master clock rate is the sound clock rate")
+    {
+        Byte const ticks = 0xFF;
+
+        Machine m;
+        load_into_memory<Machine::program_address>({
+            0x12, 0x00, // JMP 200h
+        }, m.memory);
+        m.registers.st = ticks;
+        m.master_clock_rate = Machine::sound_clock_rate;
+
+        std::size_t cycles = 0;
+        while (m.registers.st > 0) {
+            REQUIRE(m.cycle());
+            ++cycles;
+        }
+
+        REQUIRE(cycles == ticks);
+
+        REQUIRE(m.cycle());
+        REQUIRE(m.registers.st == 0);
+    }
+
+    SECTION("when the master clock rate is less than the sound clock rate")
+    {
+        Byte const ticks = 0xFF;
+
+        Machine m;
+        load_into_memory<Machine::program_address>({
+            0x12, 0x00, // JMP 200h
+        }, m.memory);
+        m.registers.st = ticks;
+        m.master_clock_rate = Machine::sound_clock_rate - 11;
+
+        std::size_t cycles = 0;
+        while (m.registers.st > 0) {
+            REQUIRE(m.cycle());
+            ++cycles;
+        }
+
+        REQUIRE(cycles == ticks);
+
+        REQUIRE(m.cycle());
+        REQUIRE(m.registers.st == 0);
+    }
+
+    SECTION("when the master clock rate is greater than the sound clock rate")
+    {
+        Byte const ticks = 0xFF;
+
+        Machine m;
+        load_into_memory<Machine::program_address>({
+            0x12, 0x00, // JMP 200h
+        }, m.memory);
+        m.registers.st = ticks;
+        m.master_clock_rate = Machine::sound_clock_rate + 11;
+
+        std::size_t cycles = 0;
+        while (m.registers.st > 0) {
+            REQUIRE(m.cycle());
+            ++cycles;
+        }
+
+        REQUIRE(cycles == ticks * 2); // Round up to the next multiple
+
+        REQUIRE(m.cycle());
+        REQUIRE(m.registers.st == 0);
+    }
+
+    SECTION("when the master clock rate is a multiple of the sound clock rate")
+    {
+        Byte const ticks = 0xFF;
+        std::size_t const multiplier = 4;
+
+        Machine m;
+        load_into_memory<Machine::program_address>({
+            0x12, 0x00, // JMP 200h
+        }, m.memory);
+        m.registers.st = ticks;
+        m.master_clock_rate = Machine::sound_clock_rate * multiplier;
+
+        std::size_t cycles = 0;
+        while (m.registers.st > 0) {
+            REQUIRE(m.cycle());
+            ++cycles;
+        }
+
+        REQUIRE(cycles == ticks * multiplier);
+
+        REQUIRE(m.cycle());
+        REQUIRE(m.registers.st == 0);
+    }
+}

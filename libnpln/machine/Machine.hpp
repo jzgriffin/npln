@@ -73,6 +73,10 @@ public:
     Keys keys;
     Display display;
 
+    std::size_t master_clock_rate = 120; // Hz
+    static constexpr std::size_t delay_clock_rate = 60; // Hz
+    static constexpr std::size_t sound_clock_rate = 60; // Hz
+
     std::default_random_engine random_engine{std::random_device{}()};
 
     static constexpr Address font_address = 0x100;
@@ -117,6 +121,11 @@ private:
     auto execute_bcd_v(Address const pc, VOperands const& args) noexcept -> Result;
     auto execute_mov_ii_v(Address const pc, VOperands const& args) noexcept -> Result;
     auto execute_mov_v_ii(Address const pc, VOperands const& args) noexcept -> Result;
+
+    // These counters represent the number of master cycles since the last
+    // decrement of the respective timer register.
+    std::size_t delay_cycles = 0;
+    std::size_t sound_cycles = 0;
 };
 
 }
