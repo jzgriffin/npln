@@ -1465,6 +1465,98 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         }
     }
 
-    // TODO: mov_ii_v = 0xF055,
+    SECTION("mov_ii_v")
+    {
+        SECTION("inside memory bounds")
+        {
+            Machine m;
+            load_into_memory<Machine::program_address>({
+                0xF5, 0x55, // MOV (%I), %V0..%V5
+            }, m.memory);
+            m.registers.v0 = 0x12;
+            m.registers.v1 = 0x23;
+            m.registers.v2 = 0x34;
+            m.registers.v3 = 0x45;
+            m.registers.v4 = 0x56;
+            m.registers.v5 = 0x67;
+            m.registers.i = 0x300;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.memory[0x300] = 0x12;
+            m_expect.memory[0x301] = 0x23;
+            m_expect.memory[0x302] = 0x34;
+            m_expect.memory[0x303] = 0x45;
+            m_expect.memory[0x304] = 0x56;
+            m_expect.memory[0x305] = 0x67;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("outside memory bounds")
+        {
+            Machine m;
+            load_into_memory<Machine::program_address>({
+                0xFF, 0x55, // MOV (%I), %V0..%VF
+            }, m.memory);
+            m.registers.i = 0xFFE; // %V2 will go to 0x1000 and above
+
+            auto m_expect = m;
+            m_expect.fault = Fault{Fault::Type::invalid_address, m.program_counter};
+            m_expect.program_counter += sizeof(Word);
+
+            CHECK_FALSE(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("with all registers")
+        {
+            Machine m;
+            load_into_memory<Machine::program_address>({
+                0xFF, 0x55, // MOV (%I), %V0..%VF
+            }, m.memory);
+            m.registers.v0 = 0x12;
+            m.registers.v1 = 0x23;
+            m.registers.v2 = 0x34;
+            m.registers.v3 = 0x45;
+            m.registers.v4 = 0x56;
+            m.registers.v5 = 0x67;
+            m.registers.v6 = 0x78;
+            m.registers.v7 = 0x89;
+            m.registers.v8 = 0x9A;
+            m.registers.v9 = 0xAB;
+            m.registers.va = 0xBC;
+            m.registers.vb = 0xCD;
+            m.registers.vc = 0xDE;
+            m.registers.vd = 0xEF;
+            m.registers.ve = 0xFF;
+            m.registers.vf = 0xF0;
+            m.registers.i = 0x300;
+
+            auto m_expect = m;
+            m_expect.program_counter += sizeof(Word);
+            m_expect.memory[0x300] = 0x12;
+            m_expect.memory[0x301] = 0x23;
+            m_expect.memory[0x302] = 0x34;
+            m_expect.memory[0x303] = 0x45;
+            m_expect.memory[0x304] = 0x56;
+            m_expect.memory[0x305] = 0x67;
+            m_expect.memory[0x306] = 0x78;
+            m_expect.memory[0x307] = 0x89;
+            m_expect.memory[0x308] = 0x9A;
+            m_expect.memory[0x309] = 0xAB;
+            m_expect.memory[0x30A] = 0xBC;
+            m_expect.memory[0x30B] = 0xCD;
+            m_expect.memory[0x30C] = 0xDE;
+            m_expect.memory[0x30D] = 0xEF;
+            m_expect.memory[0x30E] = 0xFF;
+            m_expect.memory[0x30F] = 0xF0;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+    }
+
     // TODO: mov_v_ii = 0xF065,
 }

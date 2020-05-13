@@ -16,6 +16,7 @@
 
 #include <libnpln/detail/unreachable.hpp>
 #include <libnpln/machine/Font.hpp>
+#include <libnpln/machine/RegisterRange.hpp>
 #include <libnpln/utility/Numeric.hpp>
 
 #include <stdexcept>
@@ -449,7 +450,16 @@ auto Machine::execute_bcd_v(Address const pc, VOperands const& args) noexcept ->
 
 auto Machine::execute_mov_ii_v(Address const pc, VOperands const& args) noexcept -> Result
 {
-    // TODO
+    auto const rs = RegisterRange{args.vx};
+    auto const d = std::distance(std::begin(rs), std::end(rs));
+
+    if (registers.i + d >= memory.size()) {
+        return Fault::Type::invalid_address;
+    }
+
+    auto const i = std::next(std::begin(memory), registers.i);
+    std::transform(std::begin(rs), std::end(rs), i,
+        [this](Register const r) { return registers[r]; });
     return std::nullopt;
 }
 
