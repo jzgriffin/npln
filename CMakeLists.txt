@@ -113,10 +113,21 @@ target_link_libraries(test-libnpln
 catch_discover_tests(test-libnpln)
 
 # npln target
+configure_file(
+    npln/Build.hpp.in
+    npln/Build.hpp
+    @ONLY
+)
 add_executable(npln
+    ${CMAKE_CURRENT_BINARY_DIR}/npln/Build.hpp
     npln/main.cpp
 )
 target_link_libraries(npln
     libnpln
     CLI11::CLI11
+)
+target_include_directories(npln
+    PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
 )
