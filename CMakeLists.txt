@@ -21,7 +21,7 @@ endif()
 # Project-wide
 project(npln
     VERSION 0.1.0
-    DESCRIPTION "A programming environment for CHIP-8 on PL/0"
+    DESCRIPTION "A programming environment for PL/0 on CHIP-8"
     LANGUAGES CXX
 )
 
