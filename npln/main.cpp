@@ -12,9 +12,22 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+#include <CLI/App.hpp>
+#include <CLI/Config.hpp>
+#include <CLI/Formatter.hpp>
+
 #include <cstdlib>
 
-auto main(int const argc, char** const argv) -> int
+auto main(int argc, char** argv) -> int
 {
+    CLI::App app{"PL/0 on CHIP-8 programming environment", "npln"};
+
+    try {
+        app.parse(argc, argv);
+    }
+    catch (CLI::ParseError const& e) {
+        return app.exit(e);
+    }
+
     return EXIT_SUCCESS;
 }

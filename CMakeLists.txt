@@ -33,6 +33,8 @@ find_package(fmt 6.0.0 REQUIRED)
 find_package(Catch2 2.2.0 REQUIRED)
 include(Catch)
 
+find_package(CLI11 1.9.0 REQUIRED)
+
 # libnpln target
 add_library(libnpln
     libnpln/detail/ContainerCast.hpp
@@ -116,4 +118,5 @@ add_executable(npln
 )
 target_link_libraries(npln
     libnpln
+    CLI11::CLI11
 )

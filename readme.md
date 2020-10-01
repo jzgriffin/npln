@@ -16,6 +16,7 @@ that appear in the CHIP-8 architecture.
 - CMake 3.13
 - Catch 2.2
 - fmt 6.0
+- CLI11 1.9
 
 ### Instructions
 
