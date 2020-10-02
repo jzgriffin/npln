@@ -73,3 +73,4 @@ Name                                                | Version | License
 [Glad](https://glad.dav1d.de)                       | 0.1.34  | Public domain
 [fmtlib](https://fmt.dev)                           | 6.0     | MIT
 [scope_guard](https://github.com/ricab/scope_guard) | 0.2.3   | Public domain
+[CHIP-8 Games Pack](https://www.zophar.net/pdroms/chip8/chip-8-games-pack.html) | | Public Domain
