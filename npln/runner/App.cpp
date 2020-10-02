@@ -12,10 +12,13 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+#define GLFW_INCLUDE_NONE
+
 #include <npln/runner/App.hpp>
 
 #include <CLI/App.hpp>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 #include <scope_guard.hpp>
 
 #include <iostream>
@@ -57,9 +60,15 @@ auto App::run() -> int
     }
 
     glfwMakeContextCurrent(window);
+    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
+        std::cerr << "Error: Unable to initialize GLAD\n";
+        return EXIT_FAILURE;
+    }
+
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
+        glClear(GL_COLOR_BUFFER_BIT);
         glfwSwapBuffers(window);
     }
 
