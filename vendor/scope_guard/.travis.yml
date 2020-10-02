@@ -1,0 +1,120 @@
+language: c++
+
+git:
+  depth: 10 # leave margin for ci skips
+
+env:
+  global:
+    - MAKEFLAGS="-j2"
+    - CATCH_DIR="~/catch"
+    - CATCH_REMOTE="https://github.com/catchorg/Catch2.git"
+
+matrix:
+  include:
+    - os: linux
+      compiler: gcc # default version
+    - os: linux
+      addons:
+        apt:
+          sources: ubuntu-toolchain-r-test
+          packages: g++-4.9
+      env: MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
+    - os: linux
+      addons:
+        apt:
+          sources: ubuntu-toolchain-r-test
+          packages: g++-5
+      env: MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
+    - os: linux
+      addons:
+        apt:
+          sources: ubuntu-toolchain-r-test
+          packages: g++-6
+      env: MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+    - os: linux
+      addons:
+        apt:
+          sources: ubuntu-toolchain-r-test
+          packages: g++-7
+      env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+    - os: linux
+      addons:
+        apt:
+          sources: ubuntu-toolchain-r-test
+          packages: g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+        - CMAKE_COV="-DENABLE_COVERAGE:BOOL=ON" # coverage build
+    - os: linux
+      addons:
+        apt:
+          sources: llvm-toolchain-trusty-3.6
+          packages: clang-3.6
+      env:
+        - MATRIX_EVAL="CC=clang-3.6 && CXX=clang++-3.6"
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+            - ubuntu-toolchain-r-test
+          packages:
+            - clang-5.0
+            - g++-7
+      env: MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-6.0
+            - ubuntu-toolchain-r-test
+          packages:
+            - clang-6.0
+            - g++-7
+      env: MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
+    - os: osx
+      compiler: clang
+    - os: osx
+      compiler: gcc
+    - os: osx
+      os_image: xcode9.3
+      compiler: gcc
+      env: >- # preamble works around #8826 (https://is.gd/Ajub8r)
+        MATRIX_EVAL="brew cask uninstall oclint
+        && brew install gcc && CC=gcc-7 && CXX=g++-7"
+
+before_install:
+  - eval "${MATRIX_EVAL}" # determine overriding compiler, if set
+
+install:
+  - git clone ${CATCH_REMOTE} ${CATCH_DIR}
+  - pushd ${CATCH_DIR}
+  - git checkout -q $(git describe --tags --abbrev=0)
+  - mkdir build
+  - cd build
+  - cmake -DBUILD_TESTING:BOOL=FALSE ..
+  - cmake --build .
+  - sudo make install
+  - popd # reset current directory
+
+script:
+  - export VERBOSE=1
+  - mkdir build
+  - cd build
+  - cmake -Wdev -Werror=dev -DCMAKE_BUILD_TYPE=Debug ${CMAKE_COV} ..
+  - cmake --build .
+  - cmake --build . --target test
+
+after_success: |-
+  if [ ! -z "${CMAKE_COV}" ]; then
+    echo "Producing coverage reports..."
+    find . -name catch_tests.cpp.gcno -exec gcov-7 -pb {} +
+
+    echo "Finding relevant report..."
+    cov_report=$(find . -name "*scope_guard.hpp.gcov" -exec readlink -e {} +)
+
+    echo "The report is ${cov_report}. Uploading to codecov..."
+    bash <(curl -s https://codecov.io/bash) -f $cov_report
+  fi
+
+after_failure: cat ./Testing/Temporary/LastTest.log

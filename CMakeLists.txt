@@ -38,6 +38,13 @@ include(Catch)
 
 find_package(CLI11 1.9.0 REQUIRED)
 
+# Vendored dependencies
+add_library(scope_guard INTERFACE)
+target_include_directories(scope_guard
+    INTERFACE
+    vendor/scope_guard
+)
+
 # libnpln target
 add_library(libnpln
     libnpln/detail/ContainerCast.hpp
@@ -136,6 +143,7 @@ add_executable(npln
 )
 target_link_libraries(npln
     libnpln
+    scope_guard
     CLI11::CLI11
     ${npln_RUNNER_LIBRARIES}
 )
