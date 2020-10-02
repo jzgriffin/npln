@@ -15,7 +15,10 @@
 #include <npln/runner/App.hpp>
 
 #include <CLI/App.hpp>
+#include <GLFW/glfw3.h>
+#include <scope_guard.hpp>
 
+#include <iostream>
 #include <cstdlib>
 
 namespace npln::runner {
@@ -32,6 +35,34 @@ App::App(CLI::App& app)
 
 auto App::run() -> int
 {
+    if (!glfwInit()) {
+        return EXIT_FAILURE;
+    }
+
+    auto glfw_guard = sg::make_scope_guard([] { glfwTerminate(); });
+
+    glfwSetErrorCallback([](int error, char const* desc) {
+        std::cerr << "Error: GLFW reported code " << error << ": " << desc << '\n';
+    });
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifdef __APPLE__
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
+    auto window = glfwCreateWindow(1280, 720, "npln", nullptr, nullptr);
+    if (window == nullptr) {
+        return EXIT_FAILURE;
+    }
+
+    glfwMakeContextCurrent(window);
+    while (!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
+
+        glfwSwapBuffers(window);
+    }
+
     return EXIT_SUCCESS;
 }
 
