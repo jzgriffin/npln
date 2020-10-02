@@ -17,6 +17,7 @@ that appear in the CHIP-8 architecture.
 - Catch 2.2
 - fmt 6.0
 - CLI11 1.9
+- GLFW 3.3 (runner only)
 
 ### Instructions
 
@@ -68,5 +69,6 @@ Name                                                | Version | License
 --------------------------------------------------- | ------- | --------------
 [Catch](https://github.com/catchorg/Catch2)         | 2.2     | BSL-1.0
 [CLI11](https://github.com/CLIUtils/CLI11)          | 1.9     | BSD
+[GLFW](https://www.glfw.org)                        | 3.3     | zlib/libpng
 [fmtlib](https://fmt.dev)                           | 6.0     | MIT
 [scope_guard](https://github.com/ricab/scope_guard) | 0.2.3   | Public domain

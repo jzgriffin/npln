@@ -38,6 +38,10 @@ include(Catch)
 
 find_package(CLI11 1.9.0 REQUIRED)
 
+if(BUILD_RUNNER)
+    find_package(glfw3 3.3.0 REQUIRED)
+endif()
+
 # Vendored dependencies
 add_library(scope_guard INTERFACE)
 target_include_directories(scope_guard
@@ -129,6 +133,7 @@ if(BUILD_RUNNER)
         npln/runner/App.hpp
     )
     set(npln_RUNNER_LIBRARIES
+        glfw
     )
 endif()
 configure_file(
