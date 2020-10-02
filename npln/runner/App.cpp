@@ -12,9 +12,27 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef NPLN_BUILD_HPP
-#define NPLN_BUILD_HPP
+#include <npln/runner/App.hpp>
 
-#cmakedefine BUILD_RUNNER
+#include <CLI/App.hpp>
 
-#endif
+#include <cstdlib>
+
+namespace npln::runner {
+
+App::App(CLI::App& app)
+{
+    auto run_app = app.add_subcommand("run", "Run a CHIP-8 executable");
+    run_app->add_option("path", path, "Path to the executable file to run")
+        ->required();
+    run_app->final_callback([this]() {
+        throw CLI::RuntimeError{run()};
+    });
+}
+
+auto App::run() -> int
+{
+    return EXIT_SUCCESS;
+}
+
+}

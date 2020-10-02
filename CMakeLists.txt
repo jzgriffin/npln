@@ -27,6 +27,9 @@ project(npln
 
 include(CTest)
 
+# Options
+option(BUILD_RUNNER "Build the runner graphical interface" TRUE)
+
 # Dependencies
 find_package(fmt 6.0.0 REQUIRED)
 
@@ -113,6 +116,14 @@ target_link_libraries(test-libnpln
 catch_discover_tests(test-libnpln)
 
 # npln target
+if(BUILD_RUNNER)
+    set(npln_RUNNER_SOURCE
+        npln/runner/App.cpp
+        npln/runner/App.hpp
+    )
+    set(npln_RUNNER_LIBRARIES
+    )
+endif()
 configure_file(
     npln/Build.hpp.in
     npln/Build.hpp
@@ -120,11 +131,13 @@ configure_file(
 )
 add_executable(npln
     ${CMAKE_CURRENT_BINARY_DIR}/npln/Build.hpp
+    ${npln_RUNNER_SOURCE}
     npln/main.cpp
 )
 target_link_libraries(npln
     libnpln
     CLI11::CLI11
+    ${npln_RUNNER_LIBRARIES}
 )
 target_include_directories(npln
     PRIVATE

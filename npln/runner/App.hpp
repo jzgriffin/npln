@@ -12,9 +12,27 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef NPLN_BUILD_HPP
-#define NPLN_BUILD_HPP
+#ifndef NPLN_RUNNER_APP_HPP
+#define NPLN_RUNNER_APP_HPP
 
-#cmakedefine BUILD_RUNNER
+#include <filesystem>
+
+namespace CLI {
+class App;
+}
+
+namespace npln::runner {
+
+struct App
+{
+    explicit App(CLI::App& app);
+
+    std::filesystem::path path;
+
+private:
+    auto run() -> int;
+};
+
+}
 
 #endif

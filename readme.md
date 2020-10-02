@@ -31,6 +31,16 @@ cmake --build .
 ctest # to run the test suite
 ```
 
+## Usage
+
+### Running a CHIP-8 executable
+
+The `run` subcommand can be used to run a CHIP-8 executable in a hardware-
+accelerated virtual machine:
+```sh
+npln run <path-to-executable>
+```
+
 ## License
 
 npln is licensed under the terms of the permissive ISC open source

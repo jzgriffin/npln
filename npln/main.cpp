@@ -14,6 +14,10 @@
 
 #include <npln/Build.hpp>
 
+#ifdef BUILD_RUNNER
+    #include <npln/runner/App.hpp>
+#endif
+
 #include <CLI/App.hpp>
 #include <CLI/Config.hpp>
 #include <CLI/Formatter.hpp>
@@ -23,6 +27,11 @@
 auto main(int argc, char** argv) -> int
 {
     CLI::App app{"PL/0 on CHIP-8 programming environment", "npln"};
+    app.require_subcommand();
+
+#ifdef BUILD_RUNNER
+    npln::runner::App runner(app);
+#endif
 
     try {
         app.parse(argc, argv);
