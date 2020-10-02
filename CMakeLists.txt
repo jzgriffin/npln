@@ -13,7 +13,6 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 cmake_minimum_required(VERSION 3.1...3.15)
-
 if(${CMAKE_VERSION} VERSION_LESS 3.12)
     cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
 endif()
@@ -22,13 +21,16 @@ endif()
 project(npln
     VERSION 0.1.0
     DESCRIPTION "A programming environment for PL/0 on CHIP-8"
-    LANGUAGES CXX
+    LANGUAGES C CXX
 )
 
 include(CTest)
 
 # Options
 option(BUILD_RUNNER "Build the runner graphical interface" TRUE)
+if(BUILD_RUNNER)
+    set(BUILD_RENDERER ON)
+endif()
 
 # Dependencies
 find_package(fmt 6.0.0 REQUIRED)
@@ -48,6 +50,18 @@ target_include_directories(scope_guard
     INTERFACE
     vendor/scope_guard
 )
+
+if(BUILD_RENDERER)
+    add_library(glad STATIC
+        vendor/glad/include/KHR/khrplatform.h
+        vendor/glad/include/glad/glad.h
+        vendor/glad/src/glad.c
+    )
+    target_include_directories(glad
+        PUBLIC
+        vendor/glad/include
+    )
+endif()
 
 # libnpln target
 add_library(libnpln
@@ -128,12 +142,20 @@ catch_discover_tests(test-libnpln)
 
 # npln target
 if(BUILD_RUNNER)
+    set(BUILD_RENDERER ON)
     set(npln_RUNNER_SOURCE
         npln/runner/App.cpp
         npln/runner/App.hpp
     )
     set(npln_RUNNER_LIBRARIES
         glfw
+    )
+endif()
+if(BUILD_RENDERER)
+    set(npln_RENDERER_SOURCE
+    )
+    set(npln_RENDERER_LIBRARIES
+        glad
     )
 endif()
 configure_file(
@@ -143,6 +165,7 @@ configure_file(
 )
 add_executable(npln
     ${CMAKE_CURRENT_BINARY_DIR}/npln/Build.hpp
+    ${npln_RENDERER_SOURCE}
     ${npln_RUNNER_SOURCE}
     npln/main.cpp
 )
@@ -150,6 +173,7 @@ target_link_libraries(npln
     libnpln
     scope_guard
     CLI11::CLI11
+    ${npln_RENDERER_LIBRARIES}
     ${npln_RUNNER_LIBRARIES}
 )
 target_include_directories(npln
