@@ -57,6 +57,10 @@ if(BUILD_RENDERER)
         vendor/glad/include/glad/glad.h
         vendor/glad/src/glad.c
     )
+    target_link_libraries(glad
+        PUBLIC
+        ${CMAKE_DL_LIBS}
+    )
     target_include_directories(glad
         PUBLIC
         vendor/glad/include
@@ -160,11 +164,11 @@ if(BUILD_RENDERER)
 endif()
 configure_file(
     npln/Build.hpp.in
-    npln/Build.hpp
+    conf/npln/Build.hpp
     @ONLY
 )
 add_executable(npln
-    ${CMAKE_CURRENT_BINARY_DIR}/npln/Build.hpp
+    ${CMAKE_CURRENT_BINARY_DIR}/conf/npln/Build.hpp
     ${npln_RENDERER_SOURCE}
     ${npln_RUNNER_SOURCE}
     npln/main.cpp
@@ -179,5 +183,5 @@ target_link_libraries(npln
 target_include_directories(npln
     PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/conf>
 )
