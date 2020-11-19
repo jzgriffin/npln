@@ -12,35 +12,19 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#include <npln/Build.hpp>
+#ifndef NPLN_RUNNER_INTERFACE_HPP
+#define NPLN_RUNNER_INTERFACE_HPP
 
-#ifdef BUILD_RUNNER
-    #include <npln/runner/Interface.hpp>
-    #include <npln/runner/Parameters.hpp>
-#endif
-
-#include <CLI/App.hpp>
-#include <CLI/Config.hpp>
-#include <CLI/Formatter.hpp>
-
-#include <cstdlib>
-
-auto main(int argc, char** argv) -> int
-{
-    CLI::App app{"PL/0 on CHIP-8 programming environment", "npln"};
-    app.require_subcommand();
-
-#ifdef BUILD_RUNNER
-    npln::runner::Parameters runner_params;
-    npln::runner::install_interface(app, runner_params);
-#endif
-
-    try {
-        app.parse(argc, argv);
-    }
-    catch (CLI::ParseError const& e) {
-        return app.exit(e);
-    }
-
-    return EXIT_SUCCESS;
+namespace CLI {
+class App;
 }
+
+namespace npln::runner {
+
+struct Parameters;
+
+auto install_interface(CLI::App& app, Parameters& params) -> CLI::App*;
+
+}
+
+#endif

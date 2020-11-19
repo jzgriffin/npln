@@ -12,35 +12,39 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#include <npln/Build.hpp>
+#ifndef NPLN_RUNNER_RUNNER_HPP
+#define NPLN_RUNNER_RUNNER_HPP
 
-#ifdef BUILD_RUNNER
-    #include <npln/runner/Interface.hpp>
-    #include <npln/runner/Parameters.hpp>
-#endif
+#include <chrono>
 
-#include <CLI/App.hpp>
-#include <CLI/Config.hpp>
-#include <CLI/Formatter.hpp>
+struct GLFWwindow;
 
-#include <cstdlib>
+namespace npln::runner {
 
-auto main(int argc, char** argv) -> int
+struct Parameters;
+
+class Runner
 {
-    CLI::App app{"PL/0 on CHIP-8 programming environment", "npln"};
-    app.require_subcommand();
+public:
+    explicit Runner(Parameters const& params);
+    ~Runner();
 
-#ifdef BUILD_RUNNER
-    npln::runner::Parameters runner_params;
-    npln::runner::install_interface(app, runner_params);
-#endif
+    auto run() -> int;
 
-    try {
-        app.parse(argc, argv);
-    }
-    catch (CLI::ParseError const& e) {
-        return app.exit(e);
-    }
+private:
+    using FrameClock = std::chrono::high_resolution_clock;
 
-    return EXIT_SUCCESS;
+    auto install_error_callback() -> void;
+    auto create_window() -> void;
+    auto install_window_callbacks() -> void;
+
+    auto process_key(int key, int scan_code, int action, int mods) -> void;
+    auto update(FrameClock::duration const& frame_time) -> void;
+    auto render() -> void;
+
+    GLFWwindow* window = nullptr;
+};
+
 }
+
+#endif

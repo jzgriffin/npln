@@ -148,8 +148,11 @@ catch_discover_tests(test-libnpln)
 if(BUILD_RUNNER)
     set(BUILD_RENDERER ON)
     set(npln_RUNNER_SOURCE
-        npln/runner/App.cpp
-        npln/runner/App.hpp
+        npln/runner/Interface.cpp
+        npln/runner/Interface.hpp
+        npln/runner/Parameters.hpp
+        npln/runner/Runner.cpp
+        npln/runner/Runner.hpp
     )
     set(npln_RUNNER_LIBRARIES
         glfw

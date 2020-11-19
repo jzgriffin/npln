@@ -12,27 +12,35 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef NPLN_RUNNER_APP_HPP
-#define NPLN_RUNNER_APP_HPP
+#include <npln/runner/Interface.hpp>
 
-#include <filesystem>
+#include <npln/runner/Parameters.hpp>
+#include <npln/runner/Runner.hpp>
 
-namespace CLI {
-class App;
-}
+#include <CLI/App.hpp>
+
+#include <cstdlib>
+#include <exception>
+#include <iostream>
 
 namespace npln::runner {
 
-struct App
+auto install_interface(CLI::App& app, Parameters& params) -> CLI::App*
 {
-    explicit App(CLI::App& app);
-
-    std::filesystem::path path;
-
-private:
-    auto run() -> int;
-};
-
+    auto run_app = app.add_subcommand("run", "Run a CHIP-8 executable");
+    run_app
+        ->add_option("path", params.path, "Path to the executable file to run")
+        ->required();
+    run_app->final_callback([&params]() {
+        try {
+            Runner{params}.run();
+        }
+        catch (std::exception const& e) {
+            std::cerr << "Error: " << e.what() << '\n';
+            throw CLI::RuntimeError{EXIT_FAILURE};
+        }
+    });
+    return run_app;
 }
 
-#endif
+}
