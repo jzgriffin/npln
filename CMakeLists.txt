@@ -35,9 +35,6 @@ endif()
 # Dependencies
 find_package(fmt 6.0.0 REQUIRED)
 
-find_package(Catch2 2.2.0 REQUIRED)
-include(Catch)
-
 find_package(CLI11 1.9.0 REQUIRED)
 
 if(BUILD_RUNNER)
@@ -45,6 +42,8 @@ if(BUILD_RUNNER)
 endif()
 
 # Vendored dependencies
+add_subdirectory(vendor/catch2)
+include(vendor/catch2/contrib/Catch.cmake)
 add_subdirectory(vendor/gsl)
 
 add_library(scope_guard INTERFACE)
