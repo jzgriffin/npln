@@ -45,6 +45,8 @@ if(BUILD_RUNNER)
 endif()
 
 # Vendored dependencies
+add_subdirectory(vendor/gsl)
+
 add_library(scope_guard INTERFACE)
 target_include_directories(scope_guard
     INTERFACE
@@ -106,6 +108,7 @@ target_compile_features(libnpln
 )
 target_link_libraries(libnpln
     PUBLIC
+    Microsoft.GSL::GSL
     fmt::fmt
 )
 target_include_directories(libnpln
