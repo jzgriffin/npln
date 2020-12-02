@@ -1,0 +1,15 @@
+---
+Checks: >
+  *,
+  -abseil*,
+  -google*,
+  -fuchsia*,
+  -llvm-header-guard,
+  -llvm-namespace-comment,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -readability-magic-numbers,
+CheckOptions:
+  - key:    misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
+    value:  '1'
+HeaderFilterRegex: '.*(?!/vendor/).*'
+...

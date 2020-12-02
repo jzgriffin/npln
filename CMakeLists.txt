@@ -26,6 +26,21 @@ project(npln
 
 include(CTest)
 
+# Helpers
+function(disable_clang_tidy target)
+    get_target_property(target_type ${target} TYPE)
+    get_target_property(target_alias ${target} ALIASED_TARGET)
+    if((NOT target_type STREQUAL "INTERFACE_LIBRARY") AND (target_alias STREQUAL ""))
+        # Clear the *_CLANG_TIDY properties so that any global setting is
+        # discarded.  This prevents clang-tidy from being run on this target.
+        set_target_properties(${target}
+            PROPERTIES
+            C_CLANG_TIDY ""
+            CXX_CLANG_TIDY ""
+        )
+    endif()
+endfunction()
+
 # Options
 option(BUILD_RUNNER "Build the runner graphical interface" TRUE)
 if(BUILD_RUNNER)
@@ -44,13 +59,17 @@ endif()
 # Vendored dependencies
 add_subdirectory(vendor/catch2)
 include(vendor/catch2/contrib/Catch.cmake)
+disable_clang_tidy(Catch2::Catch2)
+
 add_subdirectory(vendor/gsl)
+disable_clang_tidy(Microsoft.GSL::GSL)
 
 add_library(scope_guard INTERFACE)
 target_include_directories(scope_guard
     INTERFACE
     vendor/scope_guard
 )
+disable_clang_tidy(scope_guard)
 
 if(BUILD_RENDERER)
     add_library(glad STATIC
@@ -66,6 +85,7 @@ if(BUILD_RENDERER)
         PUBLIC
         vendor/glad/include
     )
+    disable_clang_tidy(glad)
 endif()
 
 # libnpln target
