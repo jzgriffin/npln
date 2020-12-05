@@ -334,7 +334,7 @@ auto Machine::execute_add_v_v(VVOperands const& args) noexcept -> Result
 {
     auto const x = registers[args.vx];
     auto const y = registers[args.vy];
-    registers.vf = utility::addition_overflow(x, y); // Carry
+    registers.vf = utility::addition_overflow(x, y) ? 1U : 0U; // Carry
     registers[args.vx] = x + y;
 
     program_counter += Instruction::width;
@@ -345,7 +345,7 @@ auto Machine::execute_sub_v_v(VVOperands const& args) noexcept -> Result
 {
     auto const x = registers[args.vx];
     auto const y = registers[args.vy];
-    registers.vf = !utility::subtraction_underflow(x, y); // Not borrow
+    registers.vf = utility::subtraction_underflow(x, y) ? 0U : 1U; // Not borrow
     registers[args.vx] = x - y;
 
     program_counter += Instruction::width;
@@ -355,7 +355,7 @@ auto Machine::execute_sub_v_v(VVOperands const& args) noexcept -> Result
 auto Machine::execute_shr_v(VOperands const& args) noexcept -> Result
 {
     auto const x = registers[args.vx];
-    registers.vf = utility::lsb(x);
+    registers.vf = utility::lsb(x) ? 1U : 0U;
     registers[args.vx] = x >> 1;
 
     program_counter += Instruction::width;
@@ -366,7 +366,7 @@ auto Machine::execute_subn_v_v(VVOperands const& args) noexcept -> Result
 {
     auto const x = registers[args.vx];
     auto const y = registers[args.vy];
-    registers.vf = !utility::subtraction_underflow(y, x); // Not borrow
+    registers.vf = utility::subtraction_underflow(y, x) ? 0U : 1U; // Not borrow
     registers[args.vx] = y - x;
 
     program_counter += Instruction::width;
@@ -376,7 +376,7 @@ auto Machine::execute_subn_v_v(VVOperands const& args) noexcept -> Result
 auto Machine::execute_shl_v(VOperands const& args) noexcept -> Result
 {
     auto const x = registers[args.vx];
-    registers.vf = utility::msb(x);
+    registers.vf = utility::msb(x) ? 1U : 0U;
     registers[args.vx] = x << 1;
 
     program_counter += Instruction::width;
@@ -431,7 +431,7 @@ auto Machine::execute_drw_v_v_n(VVNOperands const& args) noexcept -> Result
     static constexpr auto row_bits = std::numeric_limits<Byte>::digits;
     auto x = registers[args.vx];
     auto y = registers[args.vy];
-    registers.vf = false; // Pixel cleared
+    registers.vf = 0U; // Pixel cleared
     for (std::size_t i = 0; i < args.nibble; ++i) {
         auto const y = registers[args.vy] + i;
         auto const a = registers.i + i;
@@ -445,7 +445,7 @@ auto Machine::execute_drw_v_v_n(VVNOperands const& args) noexcept -> Result
 
             auto const bit = (row & (1 << (row_bits - j - 1))) != 0;
             if (*p && bit) {
-                registers.vf = true; // Pixel cleared
+                registers.vf = 1U; // Pixel cleared
             }
             *p = bit != *p;
         }
