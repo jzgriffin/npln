@@ -28,8 +28,27 @@ Display::Display(Display const& other)
 {
 }
 
+// This move constructor cannot be noexcept because it must allocate memory.
+// NOLINTNEXTLINE(performance-noexcept-move-constructor, hicpp-noexcept-move)
+Display::Display(Display&& other)
+    : pixels_(std::make_unique<Pixels>(*other.pixels_))
+{
+    // Decays to copy semantics because pixels_ cannot be moved from.
+}
+
 auto Display::operator=(Display const& other) -> Display&
 {
+    *pixels_ = *other.pixels_;
+    return *this;
+}
+
+auto Display::operator=(Display&& other) noexcept -> Display&
+{
+    if (this == &other) {
+        return *this;
+    }
+
+    // Decays to copy semantics because pixels_ cannot be moved from.
     *pixels_ = *other.pixels_;
     return *this;
 }

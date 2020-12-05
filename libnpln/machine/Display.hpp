@@ -16,6 +16,7 @@
 #define LIBNPLN_MACHINE_DISPLAY_HPP
 
 #include <fmt/format.h>
+#include <gsl/gsl>
 
 #include <array>
 #include <cstddef>
@@ -35,10 +36,10 @@ public:
 
     Display();
     Display(Display const& other);
-    Display(Display&& other) = default;
+    Display(Display&& other);
 
     auto operator=(Display const& other) -> Display&;
-    auto operator=(Display&& other) -> Display& = default;
+    auto operator=(Display&& other) noexcept -> Display&;
 
     auto operator==(Display const& rhs) const noexcept -> bool;
     auto operator!=(Display const& rhs) const noexcept -> bool;
@@ -62,7 +63,7 @@ private:
             : std::nullopt;
     }
 
-    std::unique_ptr<Pixels> const pixels_;
+    gsl::not_null<std::unique_ptr<Pixels>> const pixels_;
 };
 
 }
