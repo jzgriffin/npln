@@ -438,7 +438,7 @@ auto Machine::execute_drw_v_v_n(VVNOperands const& args) noexcept -> Result
         auto const row = memory[a];
         for (std::size_t j = 0; j < row_bits; ++j) {
             auto const x = x0 + j;
-            auto p = display.pixel(x, y);
+            auto* p = display.pixel(x, y);
             if (p == nullptr) {
                 break; // Prevent drawing outside of the display
             }
@@ -568,8 +568,8 @@ auto Machine::execute_mov_ii_v(VOperands const& args) noexcept -> Result
         return Fault::Type::invalid_address;
     }
 
-    auto const i = std::next(std::begin(memory), registers.i);
-    std::transform(std::begin(rs), std::end(rs), i,
+    std::transform(std::begin(rs), std::end(rs),
+        std::next(std::begin(memory), registers.i),
         [this](Register const r) { return registers[r]; });
 
     program_counter += Instruction::width;
@@ -585,7 +585,7 @@ auto Machine::execute_mov_v_ii(VOperands const& args) noexcept -> Result
         return Fault::Type::invalid_address;
     }
 
-    auto i = std::next(std::begin(memory), registers.i);
+    auto* i = std::next(std::begin(memory), registers.i);
     for (auto&& r : rs) {
         registers[r] = *i++;
     }
