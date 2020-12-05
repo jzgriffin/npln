@@ -50,13 +50,14 @@ public:
 
     auto operator==(Machine const& rhs) const noexcept
     {
+        // Compare display and memory last because they are expensive to compare.
         return fault == rhs.fault
             && program_counter == rhs.program_counter
             && registers == rhs.registers
             && stack == rhs.stack
-            && memory == rhs.memory
             && keys == rhs.keys
-            && display == rhs.display;
+            && display == rhs.display
+            && memory == rhs.memory;
     }
 
     auto operator!=(Machine const& rhs) const noexcept
