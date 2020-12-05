@@ -61,14 +61,13 @@ TEST_CASE("Cycles fail after a fault", "[machine][cycle]")
 TEST_CASE("Cycles can resume after clearing a fault", "[machine][cycle]")
 {
     Machine m;
+    m.fault = Fault{Fault::Type::invalid_address, 0x000};
     load_into_memory<Machine::program_address>({
-        0x80, 0x08,
         0x00, 0xE0, // CLS
     }, m.memory);
+    *m.display.pixel(0, 0) = true;
 
     auto m_expect = m;
-    m_expect.fault = Fault{Fault::Type::invalid_instruction, m.program_counter};
-    m_expect.program_counter += sizeof(Word);
 
     CHECK_FALSE(m.cycle());
     REQUIRE(m == m_expect);
@@ -76,7 +75,8 @@ TEST_CASE("Cycles can resume after clearing a fault", "[machine][cycle]")
     m.fault = std::nullopt;
 
     m_expect = m;
-    m_expect.program_counter += sizeof(Word);
+    m_expect.program_counter += Instruction::width;
+    *m_expect.display.pixel(0, 0) = false;
 
     CHECK(m.cycle());
     REQUIRE(m == m_expect);
@@ -103,7 +103,6 @@ TEST_CASE("Invalid instructions trigger a fault", "[machine][cycle]")
 
     auto m_expect = m;
     m_expect.fault = Fault{Fault::Type::invalid_instruction, m.program_counter};
-    m_expect.program_counter += sizeof(Word);
 
     CHECK_FALSE(m.cycle());
     REQUIRE(m == m_expect);
@@ -120,7 +119,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         m.display = create_checkerboard();
 
         auto m_expect = m;
-        m_expect.program_counter += sizeof(Word);
+        m_expect.program_counter += Instruction::width;
         m_expect.display = {};
 
         CHECK(m.cycle());
@@ -138,7 +137,6 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
 
             auto m_expect = m;
             m_expect.fault = Fault{Fault::Type::empty_stack, m.program_counter};
-            m_expect.program_counter += sizeof(Word);
 
             CHECK_FALSE(m.cycle());
             REQUIRE(m == m_expect);
@@ -188,7 +186,6 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
 
             auto m_expect = m;
             m_expect.fault = Fault{Fault::Type::full_stack, m.program_counter};
-            m_expect.program_counter += sizeof(Word);
 
             CHECK_FALSE(m.cycle());
             REQUIRE(m == m_expect);
@@ -239,7 +236,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.va = 0xEE;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word) * 2;
+            m_expect.program_counter += Instruction::width * 2;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -254,7 +251,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.va = 0xFF;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -272,7 +269,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.va = 0xAA;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word) * 2;
+            m_expect.program_counter += Instruction::width * 2;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -287,7 +284,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.va = 0xEE;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -306,7 +303,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.ve = 0xAA;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word) * 2;
+            m_expect.program_counter += Instruction::width * 2;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -322,7 +319,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.v0 = 0x2E;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -337,7 +334,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         }, m.memory);
 
         auto m_expect = m;
-        m_expect.program_counter += sizeof(Word);
+        m_expect.program_counter += Instruction::width;
         m_expect.registers.vc = 0x7F;
 
         CHECK(m.cycle());
@@ -355,7 +352,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vc = 0x03;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.vc = 0x02;
 
             CHECK(m.cycle());
@@ -371,7 +368,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.v8 = 0x34;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.v8 = 0x54;
 
             CHECK(m.cycle());
@@ -389,7 +386,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         m.registers.vb = 0x36;
 
         auto m_expect = m;
-        m_expect.program_counter += sizeof(Word);
+        m_expect.program_counter += Instruction::width;
         m_expect.registers.va = 0x36;
 
         CHECK(m.cycle());
@@ -406,7 +403,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         m.registers.v1 = 0b00011111;
 
         auto m_expect = m;
-        m_expect.program_counter += sizeof(Word);
+        m_expect.program_counter += Instruction::width;
         m_expect.registers.v0 = 0b10111111;
 
         CHECK(m.cycle());
@@ -423,7 +420,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         m.registers.ve = 0b00011111;
 
         auto m_expect = m;
-        m_expect.program_counter += sizeof(Word);
+        m_expect.program_counter += Instruction::width;
         m_expect.registers.v2 = 0b00001010;
 
         CHECK(m.cycle());
@@ -440,7 +437,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         m.registers.v3 = 0b00011111;
 
         auto m_expect = m;
-        m_expect.program_counter += sizeof(Word);
+        m_expect.program_counter += Instruction::width;
         m_expect.registers.v7 = 0b10110101;
 
         CHECK(m.cycle());
@@ -460,7 +457,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vf = 0xFF;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.va = 0x7F;
             m_expect.registers.vf = 0x00;
 
@@ -479,7 +476,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vf = 0xFF;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.v0 = 0x08;
             m_expect.registers.vf = 0x01;
 
@@ -497,7 +494,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.v0 = 0x21;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.vf = 0xA0;
 
             CHECK(m.cycle());
@@ -514,7 +511,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vf = 0x4A;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.v7 = 0xEE;
             m_expect.registers.vf = 0x00;
 
@@ -536,7 +533,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vf = 0xFF;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.va = 0x70;
             m_expect.registers.vf = 0x01;
 
@@ -555,7 +552,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vf = 0xFF;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.v0 = 0xFF;
             m_expect.registers.vf = 0x00;
 
@@ -573,7 +570,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.v0 = 0x21;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.vf = 0x5E;
 
             CHECK(m.cycle());
@@ -590,7 +587,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vf = 0x4A;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.v7 = 0x5A;
             m_expect.registers.vf = 0x01;
 
@@ -611,7 +608,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vf = 0xFF;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.va = 0x3A;
             m_expect.registers.vf = 0x00;
 
@@ -629,7 +626,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vf = 0xFF;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.v0 = 0x7F;
             m_expect.registers.vf = 0x01;
 
@@ -646,7 +643,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vf = 0x7F;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.vf = 0x3F;
 
             CHECK(m.cycle());
@@ -667,7 +664,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vf = 0xFF;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.va = 0x70;
             m_expect.registers.vf = 0x01;
 
@@ -686,7 +683,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vf = 0xFF;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.v0 = 0xFF;
             m_expect.registers.vf = 0x00;
 
@@ -704,7 +701,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.v0 = 0x7F;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.vf = 0x5E;
 
             CHECK(m.cycle());
@@ -721,7 +718,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vf = 0xA4;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.v7 = 0x5A;
             m_expect.registers.vf = 0x01;
 
@@ -742,7 +739,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vf = 0xFF;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.va = 0b11111110;
             m_expect.registers.vf = 0x00;
 
@@ -760,7 +757,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vf = 0xFF;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.v0 = 0b11111110;
             m_expect.registers.vf = 0x01;
 
@@ -777,7 +774,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.vf = 0b01111111;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.vf = 0b11111110;
 
             CHECK(m.cycle());
@@ -797,7 +794,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.ve = 0x11;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word) * 2;
+            m_expect.program_counter += Instruction::width * 2;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -813,7 +810,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.ve = 0xEE;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -828,7 +825,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         }, m.memory);
 
         auto m_expect = m;
-        m_expect.program_counter += sizeof(Word);
+        m_expect.program_counter += Instruction::width;
         m_expect.registers.i = 0xEEE;
 
         CHECK(m.cycle());
@@ -859,7 +856,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
                 0xCA, 0x00, // RND %VA, $00h
             }, m.memory);
 
-            auto const pc_expect = m.program_counter + sizeof(Word);
+            auto const pc_expect = m.program_counter + Instruction::width;
 
             CHECK(m.cycle());
 
@@ -876,7 +873,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
                 0xCA, 0xA5, // RND %VA, $A5h
             }, m.memory);
 
-            auto const pc_expect = m.program_counter + sizeof(Word);
+            auto const pc_expect = m.program_counter + Instruction::width;
 
             CHECK(m.cycle());
 
@@ -893,7 +890,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
                 0xCA, 0xFF, // RND %VA, $FFh
             }, m.memory);
 
-            auto const pc_expect = m.program_counter + sizeof(Word);
+            auto const pc_expect = m.program_counter + Instruction::width;
 
             CHECK(m.cycle());
 
@@ -920,7 +917,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.display = create_checkerboard();
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.vf = 0x00;
 
             CHECK(m.cycle());
@@ -946,7 +943,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             *m.display.pixel(4, 2) = true;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.vf = 0x01;
             *m_expect.display.pixel(1, 2) = false;
             *m_expect.display.pixel(3, 2) = false;
@@ -972,7 +969,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.display = create_checkerboard();
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.vf = 0x00;
 
             CHECK(m.cycle());
@@ -1010,7 +1007,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.display = create_checkerboard();
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.vf = 0x01;
             *m_expect.display.pixel(60, 24) = false;
             *m_expect.display.pixel(61, 24) = true;
@@ -1062,7 +1059,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.keys.set(to_index(Key::k0));
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word) * 2;
+            m_expect.program_counter += Instruction::width * 2;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -1079,7 +1076,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.keys.set(to_index(Key::kf));
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word) * 2;
+            m_expect.program_counter += Instruction::width * 2;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -1096,7 +1093,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.keys.set(to_index(Key::ke));
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -1111,7 +1108,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.v2 = 0x0C;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -1126,7 +1123,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.v3 = 0xFF;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -1145,7 +1142,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.keys.set(to_index(Key::k0));
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -1162,7 +1159,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.keys.set(to_index(Key::kf));
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -1179,7 +1176,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.keys.set(to_index(Key::ke));
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word) * 2;
+            m_expect.program_counter += Instruction::width * 2;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -1194,7 +1191,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.v2 = 0x0C;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word) * 2;
+            m_expect.program_counter += Instruction::width * 2;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -1209,7 +1206,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.v3 = 0xFF;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word) * 2;
+            m_expect.program_counter += Instruction::width * 2;
 
             CHECK(m.cycle());
             REQUIRE(m == m_expect);
@@ -1226,7 +1223,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         m.registers.dt = 0xAC;
 
         auto m_expect = m;
-        m_expect.program_counter += sizeof(Word);
+        m_expect.program_counter += Instruction::width;
         m_expect.registers.vc = 0xAC;
 
         CHECK(m.cycle());
@@ -1267,7 +1264,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.keys.set(to_index(Key::ka));
 
             m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.v2 = 0x0A;
 
             CHECK(m.cycle());
@@ -1284,7 +1281,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.keys.set(to_index(Key::k4));
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.va = 0x04;
 
             CHECK(m.cycle());
@@ -1302,7 +1299,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.keys.set(to_index(Key::kf));
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.vf = 0x00;
 
             CHECK(m.cycle());
@@ -1320,7 +1317,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         m.registers.dt = 0xFF;
 
         auto m_expect = m;
-        m_expect.program_counter += sizeof(Word);
+        m_expect.program_counter += Instruction::width;
         m_expect.registers.dt = 0xCD;
 
         CHECK(m.cycle());
@@ -1337,7 +1334,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
         m.registers.st = 0xFF;
 
         auto m_expect = m;
-        m_expect.program_counter += sizeof(Word);
+        m_expect.program_counter += Instruction::width;
         m_expect.registers.st = 0x77;
 
         CHECK(m.cycle());
@@ -1356,7 +1353,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.i = 0xDEA;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.i = 0xE96;
 
             CHECK(m.cycle());
@@ -1373,7 +1370,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.i = 0xFFF;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.i = 0x001;
 
             CHECK(m.cycle());
@@ -1394,7 +1391,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
                 m.registers.i = 0xFFF;
 
                 auto m_expect = m;
-                m_expect.program_counter += sizeof(Word);
+                m_expect.program_counter += Instruction::width;
                 m_expect.registers.i = Machine::font_address + *get_glyph_offset(digit);
 
                 CHECK(m.cycle());
@@ -1419,7 +1416,6 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
 
             auto m_expect = m;
             m_expect.fault = Fault{Fault::Type::invalid_digit, m.program_counter};
-            m_expect.program_counter += sizeof(Word);
 
             CHECK_FALSE(m.cycle());
             REQUIRE(m == m_expect);
@@ -1438,7 +1434,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.i = 0x300;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.memory[0x300] = 1;
             m_expect.memory[0x301] = 2;
             m_expect.memory[0x302] = 3;
@@ -1458,7 +1454,6 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
 
             auto m_expect = m;
             m_expect.fault = Fault{Fault::Type::invalid_address, m.program_counter};
-            m_expect.program_counter += sizeof(Word);
 
             CHECK_FALSE(m.cycle());
             REQUIRE(m == m_expect);
@@ -1482,7 +1477,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.i = 0x300;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.memory[0x300] = 0x12;
             m_expect.memory[0x301] = 0x23;
             m_expect.memory[0x302] = 0x34;
@@ -1504,7 +1499,6 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
 
             auto m_expect = m;
             m_expect.fault = Fault{Fault::Type::invalid_address, m.program_counter};
-            m_expect.program_counter += sizeof(Word);
 
             CHECK_FALSE(m.cycle());
             REQUIRE(m == m_expect);
@@ -1535,7 +1529,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.i = 0x300;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.memory[0x300] = 0x12;
             m_expect.memory[0x301] = 0x23;
             m_expect.memory[0x302] = 0x34;
@@ -1591,7 +1585,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.memory[0x305] = 0x67;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.v0 = 0x12;
             m_expect.registers.v1 = 0x23;
             m_expect.registers.v2 = 0x34;
@@ -1613,7 +1607,6 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
 
             auto m_expect = m;
             m_expect.fault = Fault{Fault::Type::invalid_address, m.program_counter};
-            m_expect.program_counter += sizeof(Word);
 
             CHECK_FALSE(m.cycle());
             REQUIRE(m == m_expect);
@@ -1660,7 +1653,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.memory[0x30F] = 0xF0;
 
             auto m_expect = m;
-            m_expect.program_counter += sizeof(Word);
+            m_expect.program_counter += Instruction::width;
             m_expect.registers.v0 = 0x12;
             m_expect.registers.v1 = 0x23;
             m_expect.registers.v2 = 0x34;
