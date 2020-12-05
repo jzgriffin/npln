@@ -866,7 +866,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             REQUIRE((m.registers.va & ~0x00) == 0x00);
         }
 
-        SECTION("with with a partial mask")
+        SECTION("with a partial mask")
         {
             Machine m;
             load_into_memory<Machine::program_address>({
@@ -883,7 +883,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             REQUIRE((m.registers.va & ~0xA5) == 0x00);
         }
 
-        SECTION("with with a full mask")
+        SECTION("with a full mask")
         {
             Machine m;
             load_into_memory<Machine::program_address>({
