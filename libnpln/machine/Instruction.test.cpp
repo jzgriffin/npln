@@ -18,6 +18,11 @@
 
 using namespace libnpln::machine;
 
+TEST_CASE("Instructions are of acceptable widths", "[machine][instruction]")
+{
+    REQUIRE(Instruction::width == 2 * sizeof(Byte));
+}
+
 TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 {
     SECTION("cls")

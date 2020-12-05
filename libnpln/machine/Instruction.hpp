@@ -42,6 +42,8 @@ struct Instruction
             std::visit([](auto&& a) { return a.encode(); }, args);
     }
 
+    static constexpr auto width = sizeof(Word);
+
     Operator op;
     Operands args;
 
