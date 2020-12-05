@@ -903,6 +903,95 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
 
     SECTION("drw_v_v_n")
     {
+        SECTION("with %VF as X register")
+        {
+            Machine m;
+            load_into_memory<Machine::program_address>({
+                0xDF, 0x21, // DRW %VF, %V2, $1h
+            }, m.memory);
+            m.registers.vf = 0x02;
+            m.registers.v2 = 0x01;
+            m.registers.i = 0x300;
+            m.memory[0x300] = 0b10100111;
+            *m.display.pixel(0, 0) = true;
+            *m.display.pixel(0, 2) = true;
+            *m.display.pixel(2, 1) = true;
+            *m.display.pixel(3, 1) = true;
+            *m.display.pixel(4, 1) = true;
+            *m.display.pixel(5, 1) = true;
+
+            auto m_expect = m;
+            m_expect.program_counter += Instruction::width;
+            m_expect.registers.vf = 0x01;
+            *m_expect.display.pixel(2, 1) = false;
+            *m_expect.display.pixel(4, 1) = false;
+            *m_expect.display.pixel(7, 1) = true;
+            *m_expect.display.pixel(8, 1) = true;
+            *m_expect.display.pixel(9, 1) = true;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("with %VF as Y register")
+        {
+            Machine m;
+            load_into_memory<Machine::program_address>({
+                0xD1, 0xF1, // DRW %V1, %VF, $1h
+            }, m.memory);
+            m.registers.v1 = 0x01;
+            m.registers.vf = 0x02;
+            m.registers.i = 0x300;
+            m.memory[0x300] = 0b10100111;
+            *m.display.pixel(0, 0) = true;
+            *m.display.pixel(0, 2) = true;
+            *m.display.pixel(1, 2) = true;
+            *m.display.pixel(2, 2) = true;
+            *m.display.pixel(3, 2) = true;
+            *m.display.pixel(4, 2) = true;
+
+            auto m_expect = m;
+            m_expect.program_counter += Instruction::width;
+            m_expect.registers.vf = 0x01;
+            *m_expect.display.pixel(1, 2) = false;
+            *m_expect.display.pixel(3, 2) = false;
+            *m_expect.display.pixel(6, 2) = true;
+            *m_expect.display.pixel(7, 2) = true;
+            *m_expect.display.pixel(8, 2) = true;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
+        SECTION("with %VF as X & Y registers")
+        {
+            Machine m;
+            load_into_memory<Machine::program_address>({
+                0xDF, 0xF1, // DRW %VF, %VF, $1h
+            }, m.memory);
+            m.registers.vf = 0x02;
+            m.registers.i = 0x300;
+            m.memory[0x300] = 0b10100111;
+            *m.display.pixel(0, 0) = true;
+            *m.display.pixel(0, 2) = true;
+            *m.display.pixel(2, 2) = true;
+            *m.display.pixel(3, 2) = true;
+            *m.display.pixel(4, 2) = true;
+            *m.display.pixel(5, 2) = true;
+
+            auto m_expect = m;
+            m_expect.program_counter += Instruction::width;
+            m_expect.registers.vf = 0x01;
+            *m_expect.display.pixel(2, 2) = false;
+            *m_expect.display.pixel(4, 2) = false;
+            *m_expect.display.pixel(7, 2) = true;
+            *m_expect.display.pixel(8, 2) = true;
+            *m_expect.display.pixel(9, 2) = true;
+
+            CHECK(m.cycle());
+            REQUIRE(m == m_expect);
+        }
+
         SECTION("with zero rows")
         {
             Machine m;
