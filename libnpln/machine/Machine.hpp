@@ -89,8 +89,8 @@ private:
 
     auto fetch() noexcept -> std::optional<Word>;
     auto execute(Instruction const& instr) noexcept -> Result;
-    auto execute_cls(NullaryOperands const& args) noexcept -> Result;
-    auto execute_ret(NullaryOperands const& args) noexcept -> Result;
+    auto execute_cls() noexcept -> Result;
+    auto execute_ret() noexcept -> Result;
     auto execute_jmp_a(AOperands const& args) noexcept -> Result;
     auto execute_call_a(AOperands const& args) noexcept -> Result;
     auto execute_seq_v_b(VBOperands const& args) noexcept -> Result;

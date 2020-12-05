@@ -161,8 +161,8 @@ auto Machine::fetch() noexcept -> std::optional<Word>
 auto Machine::execute(Instruction const& instr) noexcept -> Result
 {
     switch (instr.op) {
-        case Operator::cls: return execute_cls(std::get<NullaryOperands>(instr.args));
-        case Operator::ret: return execute_ret(std::get<NullaryOperands>(instr.args));
+        case Operator::cls: return execute_cls();
+        case Operator::ret: return execute_ret();
         case Operator::jmp_a: return execute_jmp_a(std::get<AOperands>(instr.args));
         case Operator::call_a: return execute_call_a(std::get<AOperands>(instr.args));
         case Operator::seq_v_b: return execute_seq_v_b(std::get<VBOperands>(instr.args));
@@ -200,7 +200,7 @@ auto Machine::execute(Instruction const& instr) noexcept -> Result
     LIBNPLN_DETAIL_UNREACHABLE
 }
 
-auto Machine::execute_cls(NullaryOperands const& args) noexcept -> Result
+auto Machine::execute_cls() noexcept -> Result
 {
     display.clear();
 
@@ -208,7 +208,7 @@ auto Machine::execute_cls(NullaryOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_ret(NullaryOperands const& args) noexcept -> Result
+auto Machine::execute_ret() noexcept -> Result
 {
     auto const a = stack.pop();
     if (a == std::nullopt) {
