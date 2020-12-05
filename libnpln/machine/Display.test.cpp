@@ -29,9 +29,9 @@ SCENARIO("Display pixels can be get and set", "[machine][display]")
         {
             THEN("every pixel is unset")
             {
-                for (auto x = 0u; x < d.width; x++) {
-                    for (auto y = 0u; y < d.height; y++) {
-                        auto p = d.pixel(x, y);
+                for (auto x = 0U; x < decltype(d)::width; x++) {
+                    for (auto y = 0U; y < decltype(d)::height; y++) {
+                        auto* p = d.pixel(x, y);
                         REQUIRE(p);
                         REQUIRE_FALSE(*p);
                     }
@@ -43,13 +43,13 @@ SCENARIO("Display pixels can be get and set", "[machine][display]")
         {
             auto const x = 0;
             auto const y = 0;
-            auto p = d.pixel(x, y);
+            auto* p = d.pixel(x, y);
             REQUIRE(p);
             *p = true;
 
             THEN("its value can be read back")
             {
-                auto p_const = d_const.pixel(x, y);
+                auto const* p_const = d_const.pixel(x, y);
                 REQUIRE(p_const);
                 REQUIRE(*p);
             }
@@ -57,15 +57,15 @@ SCENARIO("Display pixels can be get and set", "[machine][display]")
 
         WHEN("the top-right pixel is set")
         {
-            auto const x = d.width - 1;
+            auto const x = decltype(d)::width - 1;
             auto const y = 0;
-            auto p = d.pixel(x, y);
+            auto* p = d.pixel(x, y);
             REQUIRE(p);
             *p = true;
 
             THEN("its value can be read back")
             {
-                auto p_const = d_const.pixel(x, y);
+                auto const* p_const = d_const.pixel(x, y);
                 REQUIRE(p_const);
                 REQUIRE(*p);
             }
@@ -74,14 +74,14 @@ SCENARIO("Display pixels can be get and set", "[machine][display]")
         WHEN("the bottom-left pixel is set")
         {
             auto const x = 0;
-            auto const y = d.height - 1;
-            auto p = d.pixel(x, y);
+            auto const y = decltype(d)::height - 1;
+            auto* p = d.pixel(x, y);
             REQUIRE(p);
             *p = true;
 
             THEN("its value can be read back")
             {
-                auto p_const = d_const.pixel(x, y);
+                auto const* p_const = d_const.pixel(x, y);
                 REQUIRE(p_const);
                 REQUIRE(*p);
             }
@@ -89,15 +89,15 @@ SCENARIO("Display pixels can be get and set", "[machine][display]")
 
         WHEN("the bottom-right pixel is set")
         {
-            auto const x = d.width - 1;
-            auto const y = d.height - 1;
-            auto p = d.pixel(x, y);
+            auto const x = decltype(d)::width - 1;
+            auto const y = decltype(d)::height - 1;
+            auto* p = d.pixel(x, y);
             REQUIRE(p);
             *p = true;
 
             THEN("its value can be read back")
             {
-                auto p_const = d_const.pixel(x, y);
+                auto const* p_const = d_const.pixel(x, y);
                 REQUIRE(p_const);
                 REQUIRE(*p);
             }
@@ -107,9 +107,9 @@ SCENARIO("Display pixels can be get and set", "[machine][display]")
         {
             THEN("its proxy is invalid")
             {
-                REQUIRE_FALSE(d.pixel(d.width, 0));
-                REQUIRE_FALSE(d.pixel(0, d.height));
-                REQUIRE_FALSE(d.pixel(d.width, d.height));
+                REQUIRE_FALSE(d.pixel(decltype(d)::width, 0));
+                REQUIRE_FALSE(d.pixel(0, decltype(d)::height));
+                REQUIRE_FALSE(d.pixel(decltype(d)::width, decltype(d)::height));
             }
         }
     }
@@ -121,9 +121,9 @@ SCENARIO("Display can be cleared", "[machine][display]")
     GIVEN("A solid display")
     {
         auto d = Display{};
-        for (auto x = 0u; x < d.width; x++) {
-            for (auto y = 0u; y < d.height; y++) {
-                auto p = d.pixel(x, y);
+        for (auto x = 0U; x < decltype(d)::width; x++) {
+            for (auto y = 0U; y < decltype(d)::height; y++) {
+                auto* p = d.pixel(x, y);
                 REQUIRE(p);
                 *p = true;
             }
@@ -135,9 +135,9 @@ SCENARIO("Display can be cleared", "[machine][display]")
 
             THEN("every pixel is unset")
             {
-                for (auto x = 0u; x < d.width; x++) {
-                    for (auto y = 0u; y < d.height; y++) {
-                        auto p = d.pixel(x, y);
+                for (auto x = 0U; x < decltype(d)::width; x++) {
+                    for (auto y = 0U; y < decltype(d)::height; y++) {
+                        auto* p = d.pixel(x, y);
                         REQUIRE(p);
                         REQUIRE_FALSE(*p);
                     }
