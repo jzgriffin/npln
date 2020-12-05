@@ -26,6 +26,7 @@
 #include <libnpln/utility/HexDump.hpp>
 
 #include <fmt/format.h>
+#include <gsl/gsl>
 
 #include <optional>
 #include <random>
@@ -37,15 +38,15 @@ class Machine
 private:
     // This must be declared prior to the memory reference so that the pointer
     // is initialized in time for the reference to be made.
-    std::unique_ptr<Memory> const memory_;
+    gsl::not_null<std::unique_ptr<Memory>> const memory_;
 
 public:
     Machine();
     Machine(Machine const& other);
-    Machine(Machine&& other) = default;
+    Machine(Machine&& other);
 
     auto operator=(Machine const& other) -> Machine&;
-    auto operator=(Machine&& other) -> Machine& = default;
+    auto operator=(Machine&& other) noexcept -> Machine&;
 
     auto operator==(Machine const& rhs) const noexcept
     {

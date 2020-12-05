@@ -47,8 +47,46 @@ Machine::Machine(Machine const& other)
 {
 }
 
+// This move constructor cannot be noexcept because it must allocate memory.
+// NOLINTNEXTLINE(performance-noexcept-move-constructor, hicpp-noexcept-move)
+Machine::Machine(Machine&& other)
+    : memory_(std::make_unique<Memory>(other.memory))
+    , fault(other.fault)
+    , program_counter(other.program_counter)
+    , registers(other.registers)
+    , stack(other.stack)
+    , memory(other.memory)
+    , keys(other.keys)
+    , display(other.display)
+    , master_clock_rate(other.master_clock_rate)
+    , delay_cycles(other.delay_cycles)
+    , sound_cycles(other.sound_cycles)
+{
+    // Decays to copy semantics because memory_ cannot be moved from.
+}
+
 auto Machine::operator=(Machine const& other) -> Machine&
 {
+    fault = other.fault;
+    program_counter = other.program_counter;
+    registers = other.registers;
+    stack = other.stack;
+    memory = other.memory;
+    keys = other.keys;
+    display = other.display;
+    master_clock_rate = other.master_clock_rate;
+    delay_cycles = other.delay_cycles;
+    sound_cycles = other.delay_cycles;
+    return *this;
+}
+
+auto Machine::operator=(Machine&& other) noexcept -> Machine&
+{
+    if (this == &other) {
+        return *this;
+    }
+
+    // Decays to copy semantics because memory_ cannot be moved from.
     fault = other.fault;
     program_counter = other.program_counter;
     registers = other.registers;
