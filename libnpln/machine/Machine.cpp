@@ -356,7 +356,7 @@ auto Machine::execute_shr_v(VOperands const& args) noexcept -> Result
 {
     auto const x = registers[args.vx];
     registers.vf = utility::lsb(x) ? 1U : 0U;
-    registers[args.vx] = x >> 1;
+    registers[args.vx] = x >> 1U;
 
     program_counter += Instruction::width;
     return std::nullopt;
@@ -377,7 +377,7 @@ auto Machine::execute_shl_v(VOperands const& args) noexcept -> Result
 {
     auto const x = registers[args.vx];
     registers.vf = utility::msb(x) ? 1U : 0U;
-    registers[args.vx] = x << 1;
+    registers[args.vx] = x << 1U;
 
     program_counter += Instruction::width;
     return std::nullopt;
@@ -443,7 +443,7 @@ auto Machine::execute_drw_v_v_n(VVNOperands const& args) noexcept -> Result
                 break; // Prevent drawing outside of the display
             }
 
-            auto const bit = (row & (1 << (row_bits - j - 1))) != 0;
+            auto const bit = (row & (1U << (row_bits - j - 1))) != 0;
             if (*p && bit) {
                 registers.vf = 1U; // Pixel cleared
             }
@@ -524,7 +524,7 @@ auto Machine::execute_mov_st_v(VOperands const& args) noexcept -> Result
 auto Machine::execute_add_i_v(VOperands const& args) noexcept -> Result
 {
     registers.i += registers[args.vx];
-    registers.i &= 0xFFF;
+    registers.i &= 0xFFFU;
 
     program_counter += Instruction::width;
     return std::nullopt;
