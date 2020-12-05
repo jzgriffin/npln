@@ -67,6 +67,10 @@ Machine::Machine(Machine&& other)
 
 auto Machine::operator=(Machine const& other) -> Machine&
 {
+    if (this == &other) {
+        return *this;
+    }
+
     fault = other.fault;
     program_counter = other.program_counter;
     registers = other.registers;
