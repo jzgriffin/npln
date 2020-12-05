@@ -38,6 +38,10 @@ Display::Display(Display&& other)
 
 auto Display::operator=(Display const& other) -> Display&
 {
+    if (this == &other) {
+        return *this;
+    }
+
     *pixels_ = *other.pixels_;
     return *this;
 }
