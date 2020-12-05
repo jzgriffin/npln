@@ -17,6 +17,7 @@
 #include <libnpln/machine/Font.hpp>
 
 #include <catch2/catch.hpp>
+#include <gsl/gsl>
 
 using namespace libnpln::machine;
 
@@ -34,8 +35,8 @@ namespace {
 auto create_checkerboard() -> Display
 {
     Display d;
-    for (std::size_t y = 0; y < d.height; ++y) {
-        for (std::size_t x = 0; x < d.width; ++x) {
+    for (std::size_t y = 0; y < decltype(d)::height; ++y) {
+        for (std::size_t x = 0; x < decltype(d)::width; ++x) {
             *d.pixel(x, y) = (x + y) % 2 == 0;
         }
     }
@@ -108,6 +109,7 @@ TEST_CASE("Invalid instructions trigger a fault", "[machine][cycle]")
     REQUIRE(m == m_expect);
 }
 
+// NOLINTNEXTLINE(readability-function-size, hicpp-function-size)
 TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
 {
     SECTION("cls")
@@ -180,7 +182,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             load_into_memory<Machine::program_address>({
                 0x2E, 0xEE, // CALL EEEh
             }, m.memory);
-            for (std::size_t i = 0; i < m.stack.max_size(); ++i) {
+            for (std::size_t i = 0; i < decltype(m.stack)::max_size(); ++i) {
                 REQUIRE(m.stack.push(i));
             }
 
@@ -212,7 +214,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             load_into_memory<Machine::program_address>({
                 0x2E, 0xEE, // CALL EEEh
             }, m.memory);
-            for (std::size_t i = 0; i < m.stack.max_size() - 1; ++i) {
+            for (std::size_t i = 0; i < decltype(m.stack)::max_size() - 1; ++i) {
                 REQUIRE(m.stack.push(i));
             }
 
@@ -863,7 +865,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             auto m_expect = m;
             m_expect.program_counter = pc_expect;
             REQUIRE(m == m_expect);
-            REQUIRE((m.registers.va & ~0x00) == 0x00);
+            REQUIRE((m.registers.va & ~0x00U) == 0x00);
         }
 
         SECTION("with a partial mask")
@@ -880,7 +882,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             auto m_expect = m;
             m_expect.program_counter = pc_expect;
             REQUIRE(m == m_expect);
-            REQUIRE((m.registers.va & ~0xA5) == 0x00);
+            REQUIRE((m.registers.va & ~0xA5U) == 0x00);
         }
 
         SECTION("with a full mask")
@@ -897,7 +899,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             auto m_expect = m;
             m_expect.program_counter = pc_expect;
             REQUIRE(m == m_expect);
-            REQUIRE((m.registers.va & ~0xFF) == 0x00);
+            REQUIRE((m.registers.va & ~0xFFU) == 0x00);
         }
     }
 
@@ -1331,7 +1333,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
 
             auto m_expect = m;
 
-            for (auto i = 0u; i < 100; ++i) {
+            for (auto i = 0U; i < 100; ++i) {
                 CHECK(m.cycle());
                 REQUIRE(m == m_expect);
             }
@@ -1486,7 +1488,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
                 CHECK(m.cycle());
                 REQUIRE(m == m_expect);
 
-                auto const& g = font_glyphs[digit];
+                auto const& g = gsl::at(font_glyphs, digit);
                 REQUIRE(std::equal(
                     std::next(std::begin(m.memory), m.registers.i),
                     std::next(std::begin(m.memory), m.registers.i + glyph_size),
