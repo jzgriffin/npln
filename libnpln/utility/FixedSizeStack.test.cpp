@@ -115,7 +115,7 @@ SCENARIO("FixedSizeStack respects its size constraint",
 
         WHEN("it is filled")
         {
-            for (auto i = 0u; i < s.max_size(); ++i) {
+            for (auto i = 0U; i < decltype(s)::max_size(); ++i) {
                 REQUIRE(s.push(false));
             }
 
@@ -202,7 +202,7 @@ SCENARIO("FixedSizeStack implements push and pop",
         WHEN("it is filled")
         {
             auto xs = std::vector<decltype(s)::value_type>{};
-            xs.resize(s.max_size());
+            xs.resize(decltype(s)::max_size());
             std::iota(std::begin(xs), std::end(xs), 0);
 
             for (auto&& x : xs) {
