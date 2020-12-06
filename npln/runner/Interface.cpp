@@ -27,7 +27,7 @@ namespace npln::runner {
 
 auto install_interface(CLI::App& app, Parameters& params) -> CLI::App*
 {
-    auto run_app = app.add_subcommand("run", "Run a CHIP-8 executable");
+    auto* run_app = app.add_subcommand("run", "Run a CHIP-8 executable");
     run_app
         ->add_option("path", params.path, "Path to the executable file to run")
         ->required();
