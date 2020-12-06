@@ -23,6 +23,7 @@ TEST_CASE("Instructions are of acceptable widths", "[machine][instruction]")
     REQUIRE(Instruction::width == 2 * sizeof(Byte));
 }
 
+// NOLINTNEXTLINE(readability-function-size, hicpp-function-size)
 TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 {
     SECTION("cls")
