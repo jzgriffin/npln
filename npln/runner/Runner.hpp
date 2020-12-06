@@ -34,7 +34,7 @@ public:
 private:
     using FrameClock = std::chrono::high_resolution_clock;
 
-    auto install_error_callback() -> void;
+    static auto install_error_callback() -> void;
     auto create_window() -> void;
     auto install_window_callbacks() -> void;
 

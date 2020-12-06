@@ -29,6 +29,8 @@ namespace npln::runner {
 
 Runner::Runner(Parameters const& params)
 {
+    (void)params;
+
     if (glfwInit() == GLFW_FALSE) {
         throw std::runtime_error{"Unable to initialize GLFW"};
     }
@@ -59,7 +61,9 @@ auto Runner::create_window() -> void
     glfwSetWindowUserPointer(window, this);
 
     glfwMakeContextCurrent(window);
-    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
+    // Interfacing with this C API requires reinterpret_cast.
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
+    if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == 0) {
         throw std::runtime_error{"Unable to initialize GLAD"};
     }
 
@@ -69,7 +73,7 @@ auto Runner::create_window() -> void
 auto Runner::install_window_callbacks() -> void
 {
     glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scan_code, int action, int mods) {
-        auto self = reinterpret_cast<Runner*>(glfwGetWindowUserPointer(window));
+        auto* self = static_cast<Runner*>(glfwGetWindowUserPointer(window));
         if (self != nullptr) {
             self->process_key(key, scan_code, action, mods);
         }
@@ -84,7 +88,7 @@ Runner::~Runner()
 auto Runner::run() -> int
 {
     auto frame_time = FrameClock::duration{};
-    while (!glfwWindowShouldClose(window)) {
+    while (glfwWindowShouldClose(window) == GLFW_FALSE) {
         auto const start_time = FrameClock::now();
 
         glfwPollEvents();
@@ -99,15 +103,11 @@ auto Runner::run() -> int
 
 auto Runner::process_key(int key, int scan_code, int action, int mods) -> void
 {
-    switch (key) {
-        case GLFW_KEY_ESCAPE:
-            if (action == GLFW_RELEASE) {
-                glfwSetWindowShouldClose(window, GLFW_TRUE);
-            }
-            break;
+    (void)scan_code;
+    (void)mods;
 
-        default:
-            break;
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
 }
 
