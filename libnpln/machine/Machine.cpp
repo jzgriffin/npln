@@ -23,9 +23,7 @@
 
 namespace libnpln::machine {
 
-Machine::Machine()
-    : memory_(std::make_unique<Memory>())
-    , memory(*memory_)
+Machine::Machine() : memory_(std::make_unique<Memory>()), memory(*memory_)
 {
     if (!load_font_into_memory(memory, font_address)) {
         throw std::logic_error{"Unable to load font into machine memory"};
@@ -44,8 +42,7 @@ Machine::Machine(Machine const& other)
     , master_clock_rate(other.master_clock_rate)
     , delay_cycles(other.delay_cycles)
     , sound_cycles(other.sound_cycles)
-{
-}
+{}
 
 // This move constructor cannot be noexcept because it must allocate memory.
 // NOLINTNEXTLINE(performance-noexcept-move-constructor, hicpp-noexcept-move)
@@ -161,40 +158,66 @@ auto Machine::fetch() noexcept -> std::optional<Word>
 auto Machine::execute(Instruction const& instr) noexcept -> Result
 {
     switch (instr.op) {
-        case Operator::cls: return execute_cls();
-        case Operator::ret: return execute_ret();
-        case Operator::jmp_a: return execute_jmp_a(std::get<AOperands>(instr.args));
-        case Operator::call_a: return execute_call_a(std::get<AOperands>(instr.args));
-        case Operator::seq_v_b: return execute_seq_v_b(std::get<VBOperands>(instr.args));
-        case Operator::sne_v_b: return execute_sne_v_b(std::get<VBOperands>(instr.args));
-        case Operator::seq_v_v: return execute_seq_v_v(std::get<VVOperands>(instr.args));
-        case Operator::mov_v_b: return execute_mov_v_b(std::get<VBOperands>(instr.args));
-        case Operator::add_v_b: return execute_add_v_b(std::get<VBOperands>(instr.args));
-        case Operator::mov_v_v: return execute_mov_v_v(std::get<VVOperands>(instr.args));
-        case Operator::or_v_v: return execute_or_v_v(std::get<VVOperands>(instr.args));
-        case Operator::and_v_v: return execute_and_v_v(std::get<VVOperands>(instr.args));
-        case Operator::xor_v_v: return execute_xor_v_v(std::get<VVOperands>(instr.args));
-        case Operator::add_v_v: return execute_add_v_v(std::get<VVOperands>(instr.args));
-        case Operator::sub_v_v: return execute_sub_v_v(std::get<VVOperands>(instr.args));
-        case Operator::shr_v: return execute_shr_v(std::get<VOperands>(instr.args));
-        case Operator::subn_v_v: return execute_subn_v_v(std::get<VVOperands>(instr.args));
-        case Operator::shl_v: return execute_shl_v(std::get<VOperands>(instr.args));
-        case Operator::sne_v_v: return execute_sne_v_v(std::get<VVOperands>(instr.args));
-        case Operator::mov_i_a: return execute_mov_i_a(std::get<AOperands>(instr.args));
-        case Operator::jmp_v0_a: return execute_jmp_v0_a(std::get<AOperands>(instr.args));
-        case Operator::rnd_v_b: return execute_rnd_v_b(std::get<VBOperands>(instr.args));
-        case Operator::drw_v_v_n: return execute_drw_v_v_n(std::get<VVNOperands>(instr.args));
-        case Operator::skp_v: return execute_skp_v(std::get<VOperands>(instr.args));
-        case Operator::sknp_v: return execute_sknp_v(std::get<VOperands>(instr.args));
-        case Operator::mov_v_dt: return execute_mov_v_dt(std::get<VOperands>(instr.args));
-        case Operator::wkp_v: return execute_wkp_v(std::get<VOperands>(instr.args));
-        case Operator::mov_dt_v: return execute_mov_dt_v(std::get<VOperands>(instr.args));
-        case Operator::mov_st_v: return execute_mov_st_v(std::get<VOperands>(instr.args));
-        case Operator::add_i_v: return execute_add_i_v(std::get<VOperands>(instr.args));
-        case Operator::font_v: return execute_font_v(std::get<VOperands>(instr.args));
-        case Operator::bcd_v: return execute_bcd_v(std::get<VOperands>(instr.args));
-        case Operator::mov_ii_v: return execute_mov_ii_v(std::get<VOperands>(instr.args));
-        case Operator::mov_v_ii: return execute_mov_v_ii(std::get<VOperands>(instr.args));
+    case Operator::cls: return execute_cls();
+    case Operator::ret: return execute_ret();
+    case Operator::jmp_a: return execute_jmp_a(std::get<AOperands>(instr.args));
+    case Operator::call_a:
+        return execute_call_a(std::get<AOperands>(instr.args));
+    case Operator::seq_v_b:
+        return execute_seq_v_b(std::get<VBOperands>(instr.args));
+    case Operator::sne_v_b:
+        return execute_sne_v_b(std::get<VBOperands>(instr.args));
+    case Operator::seq_v_v:
+        return execute_seq_v_v(std::get<VVOperands>(instr.args));
+    case Operator::mov_v_b:
+        return execute_mov_v_b(std::get<VBOperands>(instr.args));
+    case Operator::add_v_b:
+        return execute_add_v_b(std::get<VBOperands>(instr.args));
+    case Operator::mov_v_v:
+        return execute_mov_v_v(std::get<VVOperands>(instr.args));
+    case Operator::or_v_v:
+        return execute_or_v_v(std::get<VVOperands>(instr.args));
+    case Operator::and_v_v:
+        return execute_and_v_v(std::get<VVOperands>(instr.args));
+    case Operator::xor_v_v:
+        return execute_xor_v_v(std::get<VVOperands>(instr.args));
+    case Operator::add_v_v:
+        return execute_add_v_v(std::get<VVOperands>(instr.args));
+    case Operator::sub_v_v:
+        return execute_sub_v_v(std::get<VVOperands>(instr.args));
+    case Operator::shr_v: return execute_shr_v(std::get<VOperands>(instr.args));
+    case Operator::subn_v_v:
+        return execute_subn_v_v(std::get<VVOperands>(instr.args));
+    case Operator::shl_v: return execute_shl_v(std::get<VOperands>(instr.args));
+    case Operator::sne_v_v:
+        return execute_sne_v_v(std::get<VVOperands>(instr.args));
+    case Operator::mov_i_a:
+        return execute_mov_i_a(std::get<AOperands>(instr.args));
+    case Operator::jmp_v0_a:
+        return execute_jmp_v0_a(std::get<AOperands>(instr.args));
+    case Operator::rnd_v_b:
+        return execute_rnd_v_b(std::get<VBOperands>(instr.args));
+    case Operator::drw_v_v_n:
+        return execute_drw_v_v_n(std::get<VVNOperands>(instr.args));
+    case Operator::skp_v: return execute_skp_v(std::get<VOperands>(instr.args));
+    case Operator::sknp_v:
+        return execute_sknp_v(std::get<VOperands>(instr.args));
+    case Operator::mov_v_dt:
+        return execute_mov_v_dt(std::get<VOperands>(instr.args));
+    case Operator::wkp_v: return execute_wkp_v(std::get<VOperands>(instr.args));
+    case Operator::mov_dt_v:
+        return execute_mov_dt_v(std::get<VOperands>(instr.args));
+    case Operator::mov_st_v:
+        return execute_mov_st_v(std::get<VOperands>(instr.args));
+    case Operator::add_i_v:
+        return execute_add_i_v(std::get<VOperands>(instr.args));
+    case Operator::font_v:
+        return execute_font_v(std::get<VOperands>(instr.args));
+    case Operator::bcd_v: return execute_bcd_v(std::get<VOperands>(instr.args));
+    case Operator::mov_ii_v:
+        return execute_mov_ii_v(std::get<VOperands>(instr.args));
+    case Operator::mov_v_ii:
+        return execute_mov_v_ii(std::get<VOperands>(instr.args));
     }
 
     LIBNPLN_DETAIL_UNREACHABLE
@@ -414,7 +437,8 @@ auto Machine::execute_rnd_v_b(VBOperands const& args) noexcept -> Result
         std::numeric_limits<Byte>::max(),
     };
 
-    registers[args.vx] = static_cast<Byte>(byte_dist(random_engine) & args.byte);
+    registers[args.vx] =
+        static_cast<Byte>(byte_dist(random_engine) & args.byte);
 
     program_counter += Instruction::width;
     return std::nullopt;
@@ -594,4 +618,4 @@ auto Machine::execute_mov_v_ii(VOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-}
+} // namespace libnpln::machine

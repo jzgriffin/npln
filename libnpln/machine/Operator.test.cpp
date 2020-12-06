@@ -82,8 +82,8 @@ TEST_CASE("Operators define format strings", "[machine][operator]")
     REQUIRE(get_format_string(Operator::mov_i_a) == "MOV {address}, %I");
     REQUIRE(get_format_string(Operator::jmp_v0_a) == "JMP %V0({address})");
     REQUIRE(get_format_string(Operator::rnd_v_b) == "RND ${byte}, %{Vx}");
-    REQUIRE(get_format_string(Operator::drw_v_v_n) ==
-        "DRW %{Vx}, %{Vy}, ${nibble}");
+    REQUIRE(get_format_string(Operator::drw_v_v_n)
+        == "DRW %{Vx}, %{Vy}, ${nibble}");
     REQUIRE(get_format_string(Operator::skp_v) == "SKP %{Vx}");
     REQUIRE(get_format_string(Operator::sknp_v) == "SKNP %{Vx}");
     REQUIRE(get_format_string(Operator::mov_v_dt) == "MOV %DT, %{Vx}");
@@ -97,75 +97,75 @@ TEST_CASE("Operators define format strings", "[machine][operator]")
     REQUIRE(get_format_string(Operator::mov_v_ii) == "MOV (%I), %V0..%{Vx}");
 }
 
-TEST_CASE("Operators return a format string when formatted",
-    "[machine][operator]")
+TEST_CASE(
+    "Operators return a format string when formatted", "[machine][operator]")
 {
-    REQUIRE(fmt::format("{}", Operator::cls) ==
-        get_format_string(Operator::cls));
-    REQUIRE(fmt::format("{}", Operator::ret) ==
-        get_format_string(Operator::ret));
-    REQUIRE(fmt::format("{}", Operator::jmp_a) ==
-        get_format_string(Operator::jmp_a));
-    REQUIRE(fmt::format("{}", Operator::call_a) ==
-        get_format_string(Operator::call_a));
-    REQUIRE(fmt::format("{}", Operator::seq_v_b) ==
-        get_format_string(Operator::seq_v_b));
-    REQUIRE(fmt::format("{}", Operator::sne_v_b) ==
-        get_format_string(Operator::sne_v_b));
-    REQUIRE(fmt::format("{}", Operator::seq_v_v) ==
-        get_format_string(Operator::seq_v_v));
-    REQUIRE(fmt::format("{}", Operator::mov_v_b) ==
-        get_format_string(Operator::mov_v_b));
-    REQUIRE(fmt::format("{}", Operator::add_v_b) ==
-        get_format_string(Operator::add_v_b));
-    REQUIRE(fmt::format("{}", Operator::mov_v_v) ==
-        get_format_string(Operator::mov_v_v));
-    REQUIRE(fmt::format("{}", Operator::or_v_v) ==
-        get_format_string(Operator::or_v_v));
-    REQUIRE(fmt::format("{}", Operator::and_v_v) ==
-        get_format_string(Operator::and_v_v));
-    REQUIRE(fmt::format("{}", Operator::xor_v_v) ==
-        get_format_string(Operator::xor_v_v));
-    REQUIRE(fmt::format("{}", Operator::add_v_v) ==
-        get_format_string(Operator::add_v_v));
-    REQUIRE(fmt::format("{}", Operator::sub_v_v) ==
-        get_format_string(Operator::sub_v_v));
-    REQUIRE(fmt::format("{}", Operator::shr_v) ==
-        get_format_string(Operator::shr_v));
-    REQUIRE(fmt::format("{}", Operator::subn_v_v) ==
-        get_format_string(Operator::subn_v_v));
-    REQUIRE(fmt::format("{}", Operator::shl_v) ==
-        get_format_string(Operator::shl_v));
-    REQUIRE(fmt::format("{}", Operator::sne_v_v) ==
-        get_format_string(Operator::sne_v_v));
-    REQUIRE(fmt::format("{}", Operator::mov_i_a) ==
-        get_format_string(Operator::mov_i_a));
-    REQUIRE(fmt::format("{}", Operator::jmp_v0_a) ==
-        get_format_string(Operator::jmp_v0_a));
-    REQUIRE(fmt::format("{}", Operator::rnd_v_b) ==
-        get_format_string(Operator::rnd_v_b));
-    REQUIRE(fmt::format("{}", Operator::drw_v_v_n) ==
-        get_format_string(Operator::drw_v_v_n));
-    REQUIRE(fmt::format("{}", Operator::skp_v) ==
-        get_format_string(Operator::skp_v));
-    REQUIRE(fmt::format("{}", Operator::sknp_v) ==
-        get_format_string(Operator::sknp_v));
-    REQUIRE(fmt::format("{}", Operator::mov_v_dt) ==
-        get_format_string(Operator::mov_v_dt));
-    REQUIRE(fmt::format("{}", Operator::wkp_v) ==
-        get_format_string(Operator::wkp_v));
-    REQUIRE(fmt::format("{}", Operator::mov_dt_v) ==
-        get_format_string(Operator::mov_dt_v));
-    REQUIRE(fmt::format("{}", Operator::mov_st_v) ==
-        get_format_string(Operator::mov_st_v));
-    REQUIRE(fmt::format("{}", Operator::add_i_v) ==
-        get_format_string(Operator::add_i_v));
-    REQUIRE(fmt::format("{}", Operator::font_v) ==
-        get_format_string(Operator::font_v));
-    REQUIRE(fmt::format("{}", Operator::bcd_v) ==
-        get_format_string(Operator::bcd_v));
-    REQUIRE(fmt::format("{}", Operator::mov_ii_v) ==
-        get_format_string(Operator::mov_ii_v));
-    REQUIRE(fmt::format("{}", Operator::mov_v_ii) ==
-        get_format_string(Operator::mov_v_ii));
+    REQUIRE(
+        fmt::format("{}", Operator::cls) == get_format_string(Operator::cls));
+    REQUIRE(
+        fmt::format("{}", Operator::ret) == get_format_string(Operator::ret));
+    REQUIRE(fmt::format("{}", Operator::jmp_a)
+        == get_format_string(Operator::jmp_a));
+    REQUIRE(fmt::format("{}", Operator::call_a)
+        == get_format_string(Operator::call_a));
+    REQUIRE(fmt::format("{}", Operator::seq_v_b)
+        == get_format_string(Operator::seq_v_b));
+    REQUIRE(fmt::format("{}", Operator::sne_v_b)
+        == get_format_string(Operator::sne_v_b));
+    REQUIRE(fmt::format("{}", Operator::seq_v_v)
+        == get_format_string(Operator::seq_v_v));
+    REQUIRE(fmt::format("{}", Operator::mov_v_b)
+        == get_format_string(Operator::mov_v_b));
+    REQUIRE(fmt::format("{}", Operator::add_v_b)
+        == get_format_string(Operator::add_v_b));
+    REQUIRE(fmt::format("{}", Operator::mov_v_v)
+        == get_format_string(Operator::mov_v_v));
+    REQUIRE(fmt::format("{}", Operator::or_v_v)
+        == get_format_string(Operator::or_v_v));
+    REQUIRE(fmt::format("{}", Operator::and_v_v)
+        == get_format_string(Operator::and_v_v));
+    REQUIRE(fmt::format("{}", Operator::xor_v_v)
+        == get_format_string(Operator::xor_v_v));
+    REQUIRE(fmt::format("{}", Operator::add_v_v)
+        == get_format_string(Operator::add_v_v));
+    REQUIRE(fmt::format("{}", Operator::sub_v_v)
+        == get_format_string(Operator::sub_v_v));
+    REQUIRE(fmt::format("{}", Operator::shr_v)
+        == get_format_string(Operator::shr_v));
+    REQUIRE(fmt::format("{}", Operator::subn_v_v)
+        == get_format_string(Operator::subn_v_v));
+    REQUIRE(fmt::format("{}", Operator::shl_v)
+        == get_format_string(Operator::shl_v));
+    REQUIRE(fmt::format("{}", Operator::sne_v_v)
+        == get_format_string(Operator::sne_v_v));
+    REQUIRE(fmt::format("{}", Operator::mov_i_a)
+        == get_format_string(Operator::mov_i_a));
+    REQUIRE(fmt::format("{}", Operator::jmp_v0_a)
+        == get_format_string(Operator::jmp_v0_a));
+    REQUIRE(fmt::format("{}", Operator::rnd_v_b)
+        == get_format_string(Operator::rnd_v_b));
+    REQUIRE(fmt::format("{}", Operator::drw_v_v_n)
+        == get_format_string(Operator::drw_v_v_n));
+    REQUIRE(fmt::format("{}", Operator::skp_v)
+        == get_format_string(Operator::skp_v));
+    REQUIRE(fmt::format("{}", Operator::sknp_v)
+        == get_format_string(Operator::sknp_v));
+    REQUIRE(fmt::format("{}", Operator::mov_v_dt)
+        == get_format_string(Operator::mov_v_dt));
+    REQUIRE(fmt::format("{}", Operator::wkp_v)
+        == get_format_string(Operator::wkp_v));
+    REQUIRE(fmt::format("{}", Operator::mov_dt_v)
+        == get_format_string(Operator::mov_dt_v));
+    REQUIRE(fmt::format("{}", Operator::mov_st_v)
+        == get_format_string(Operator::mov_st_v));
+    REQUIRE(fmt::format("{}", Operator::add_i_v)
+        == get_format_string(Operator::add_i_v));
+    REQUIRE(fmt::format("{}", Operator::font_v)
+        == get_format_string(Operator::font_v));
+    REQUIRE(fmt::format("{}", Operator::bcd_v)
+        == get_format_string(Operator::bcd_v));
+    REQUIRE(fmt::format("{}", Operator::mov_ii_v)
+        == get_format_string(Operator::mov_ii_v));
+    REQUIRE(fmt::format("{}", Operator::mov_v_ii)
+        == get_format_string(Operator::mov_v_ii));
 }

@@ -20,15 +20,11 @@
 
 namespace libnpln::machine {
 
-Display::Display()
-    : pixels_(std::make_unique<Pixels>())
-{
-}
+Display::Display() : pixels_(std::make_unique<Pixels>()) {}
 
 Display::Display(Display const& other)
     : pixels_(std::make_unique<Pixels>(*other.pixels_))
-{
-}
+{}
 
 // This move constructor cannot be noexcept because it must allocate memory.
 // NOLINTNEXTLINE(performance-noexcept-move-constructor, hicpp-noexcept-move)
@@ -69,7 +65,8 @@ auto Display::operator!=(Display const& rhs) const noexcept -> bool
     return !(*this == rhs);
 }
 
-auto Display::pixel(std::size_t const x, std::size_t const y) const -> ConstProxy
+auto Display::pixel(std::size_t const x, std::size_t const y) const
+    -> ConstProxy
 {
     if (auto const z = offset(x, y); z != std::nullopt) {
         return &gsl::at(*pixels_, *z);
@@ -92,4 +89,4 @@ auto Display::clear() noexcept -> void
     std::fill(std::begin(*pixels_), std::end(*pixels_), false);
 }
 
-}
+} // namespace libnpln::machine

@@ -45,6 +45,6 @@ private:
     GLFWwindow* window = nullptr;
 };
 
-}
+} // namespace npln::runner
 
 #endif

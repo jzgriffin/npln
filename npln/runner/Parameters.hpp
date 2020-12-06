@@ -24,6 +24,6 @@ struct Parameters
     std::filesystem::path path;
 };
 
-}
+} // namespace npln::runner
 
 #endif

@@ -38,8 +38,7 @@ struct fmt::formatter<libnpln::machine::Stack>
     }
 
     template<typename FormatContext>
-    auto format(libnpln::machine::Stack const& value,
-        FormatContext& context)
+    auto format(libnpln::machine::Stack const& value, FormatContext& context)
     {
         auto out = context.out();
         for (auto i = std::begin(value); i != std::end(value); ++i) {

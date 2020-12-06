@@ -27,10 +27,10 @@ namespace libnpln::machine {
 
 using Keys = std::bitset<key_count>;
 
-auto keys_difference(Keys const& initial, Keys const& final) noexcept ->
-    std::pair<std::set<Key>, std::set<Key>>;
+auto keys_difference(Keys const& initial, Keys const& final) noexcept
+    -> std::pair<std::set<Key>, std::set<Key>>;
 
-}
+} // namespace libnpln::machine
 
 template<>
 struct fmt::formatter<libnpln::machine::Keys>
@@ -42,14 +42,13 @@ struct fmt::formatter<libnpln::machine::Keys>
     }
 
     template<typename FormatContext>
-    auto format(libnpln::machine::Keys const& value,
-        FormatContext& context)
+    auto format(libnpln::machine::Keys const& value, FormatContext& context)
     {
         auto out = context.out();
         for (std::size_t i = 0; i < value.size(); ++i) {
             if (value.test(i)) {
-                out = format_to(out, "{}",
-                    static_cast<libnpln::machine::Key>(i));
+                out =
+                    format_to(out, "{}", static_cast<libnpln::machine::Key>(i));
             }
         }
         return out;

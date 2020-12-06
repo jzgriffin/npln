@@ -65,46 +65,46 @@ enum class Operator : Word
 constexpr auto get_format_string(Operator const op) -> std::string_view
 {
     switch (op) {
-        case Operator::cls: return "CLS";
-        case Operator::ret: return "RET";
-        case Operator::jmp_a: return "JMP {address}";
-        case Operator::call_a: return "CALL {address}";
-        case Operator::seq_v_b: return "SEQ %{Vx}, ${byte}";
-        case Operator::sne_v_b: return "SNE %{Vx}, ${byte}";
-        case Operator::seq_v_v: return "SEQ %{Vx}, %{Vy}";
-        case Operator::mov_v_b: return "MOV ${byte}, %{Vx}";
-        case Operator::add_v_b: return "ADD ${byte}, %{Vx}";
-        case Operator::mov_v_v: return "MOV %{Vy}, %{Vx}";
-        case Operator::or_v_v: return "OR %{Vy}, %{Vx}";
-        case Operator::and_v_v: return "AND %{Vy}, %{Vx}";
-        case Operator::xor_v_v: return "XOR %{Vy}, %{Vx}";
-        case Operator::add_v_v: return "ADD %{Vy}, %{Vx}";
-        case Operator::sub_v_v: return "SUB %{Vy}, %{Vx}";
-        case Operator::shr_v: return "SHR %{Vx}";
-        case Operator::subn_v_v: return "SUBN %{Vy}, %{Vx}";
-        case Operator::shl_v: return "SHL %{Vx}";
-        case Operator::sne_v_v: return "SNE %{Vx}, %{Vy}";
-        case Operator::mov_i_a: return "MOV {address}, %I";
-        case Operator::jmp_v0_a: return "JMP %V0({address})";
-        case Operator::rnd_v_b: return "RND ${byte}, %{Vx}";
-        case Operator::drw_v_v_n: return "DRW %{Vx}, %{Vy}, ${nibble}";
-        case Operator::skp_v: return "SKP %{Vx}";
-        case Operator::sknp_v: return "SKNP %{Vx}";
-        case Operator::mov_v_dt: return "MOV %DT, %{Vx}";
-        case Operator::wkp_v: return "WKP %{Vx}";
-        case Operator::mov_dt_v: return "MOV %{Vx}, %DT";
-        case Operator::mov_st_v: return "MOV %{Vx}, %ST";
-        case Operator::add_i_v: return "ADD %{Vx}, %I";
-        case Operator::font_v: return "FONT %{Vx}";
-        case Operator::bcd_v: return "BCD %{Vx}";
-        case Operator::mov_ii_v: return "MOV %V0..%{Vx}, (%I)";
-        case Operator::mov_v_ii: return "MOV (%I), %V0..%{Vx}";
+    case Operator::cls: return "CLS";
+    case Operator::ret: return "RET";
+    case Operator::jmp_a: return "JMP {address}";
+    case Operator::call_a: return "CALL {address}";
+    case Operator::seq_v_b: return "SEQ %{Vx}, ${byte}";
+    case Operator::sne_v_b: return "SNE %{Vx}, ${byte}";
+    case Operator::seq_v_v: return "SEQ %{Vx}, %{Vy}";
+    case Operator::mov_v_b: return "MOV ${byte}, %{Vx}";
+    case Operator::add_v_b: return "ADD ${byte}, %{Vx}";
+    case Operator::mov_v_v: return "MOV %{Vy}, %{Vx}";
+    case Operator::or_v_v: return "OR %{Vy}, %{Vx}";
+    case Operator::and_v_v: return "AND %{Vy}, %{Vx}";
+    case Operator::xor_v_v: return "XOR %{Vy}, %{Vx}";
+    case Operator::add_v_v: return "ADD %{Vy}, %{Vx}";
+    case Operator::sub_v_v: return "SUB %{Vy}, %{Vx}";
+    case Operator::shr_v: return "SHR %{Vx}";
+    case Operator::subn_v_v: return "SUBN %{Vy}, %{Vx}";
+    case Operator::shl_v: return "SHL %{Vx}";
+    case Operator::sne_v_v: return "SNE %{Vx}, %{Vy}";
+    case Operator::mov_i_a: return "MOV {address}, %I";
+    case Operator::jmp_v0_a: return "JMP %V0({address})";
+    case Operator::rnd_v_b: return "RND ${byte}, %{Vx}";
+    case Operator::drw_v_v_n: return "DRW %{Vx}, %{Vy}, ${nibble}";
+    case Operator::skp_v: return "SKP %{Vx}";
+    case Operator::sknp_v: return "SKNP %{Vx}";
+    case Operator::mov_v_dt: return "MOV %DT, %{Vx}";
+    case Operator::wkp_v: return "WKP %{Vx}";
+    case Operator::mov_dt_v: return "MOV %{Vx}, %DT";
+    case Operator::mov_st_v: return "MOV %{Vx}, %ST";
+    case Operator::add_i_v: return "ADD %{Vx}, %I";
+    case Operator::font_v: return "FONT %{Vx}";
+    case Operator::bcd_v: return "BCD %{Vx}";
+    case Operator::mov_ii_v: return "MOV %V0..%{Vx}, (%I)";
+    case Operator::mov_v_ii: return "MOV (%I), %V0..%{Vx}";
     }
 
     LIBNPLN_DETAIL_UNREACHABLE
 }
 
-}
+} // namespace libnpln::machine
 
 template<>
 struct fmt::formatter<libnpln::machine::Operator>
@@ -119,11 +119,10 @@ struct fmt::formatter<libnpln::machine::Operator>
     // format string may be formatted using named arguments whose names match
     // the parameters in the operator's mnemonic.
     template<typename FormatContext>
-    auto format(libnpln::machine::Operator const& value,
-        FormatContext& context)
+    auto format(libnpln::machine::Operator const& value, FormatContext& context)
     {
-        return format_to(context.out(), "{}",
-            libnpln::machine::get_format_string(value));
+        return format_to(
+            context.out(), "{}", libnpln::machine::get_format_string(value));
     }
 };
 

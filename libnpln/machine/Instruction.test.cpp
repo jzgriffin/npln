@@ -60,8 +60,8 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("seq_v_b")
     {
-        auto const x = Instruction{Operator::seq_v_b,
-            VBOperands{Register::vf, 0xDB}};
+        auto const x =
+            Instruction{Operator::seq_v_b, VBOperands{Register::vf, 0xDB}};
         REQUIRE(x.encode() == 0x3FDB);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "SEQ %VF, $DBh");
@@ -69,8 +69,8 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("sne_v_b")
     {
-        auto const x = Instruction{Operator::sne_v_b,
-            VBOperands{Register::vf, 0xDB}};
+        auto const x =
+            Instruction{Operator::sne_v_b, VBOperands{Register::vf, 0xDB}};
         REQUIRE(x.encode() == 0x4FDB);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "SNE %VF, $DBh");
@@ -78,8 +78,8 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("seq_v_v")
     {
-        auto const x = Instruction{Operator::seq_v_v,
-            VVOperands{Register::vf, Register::vd}};
+        auto const x = Instruction{
+            Operator::seq_v_v, VVOperands{Register::vf, Register::vd}};
         REQUIRE(x.encode() == 0x5FD0);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "SEQ %VF, %VD");
@@ -87,8 +87,8 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("mov_v_b")
     {
-        auto const x = Instruction{Operator::mov_v_b,
-            VBOperands{Register::vf, 0xDB}};
+        auto const x =
+            Instruction{Operator::mov_v_b, VBOperands{Register::vf, 0xDB}};
         REQUIRE(x.encode() == 0x6FDB);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "MOV $DBh, %VF");
@@ -96,8 +96,8 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("add_v_b")
     {
-        auto const x = Instruction{Operator::add_v_b,
-            VBOperands{Register::vf, 0xDB}};
+        auto const x =
+            Instruction{Operator::add_v_b, VBOperands{Register::vf, 0xDB}};
         REQUIRE(x.encode() == 0x7FDB);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "ADD $DBh, %VF");
@@ -105,8 +105,8 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("mov_v_v")
     {
-        auto const x = Instruction{Operator::mov_v_v,
-            VVOperands{Register::vf, Register::vd}};
+        auto const x = Instruction{
+            Operator::mov_v_v, VVOperands{Register::vf, Register::vd}};
         REQUIRE(x.encode() == 0x8FD0);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "MOV %VD, %VF");
@@ -114,8 +114,8 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("or_v_v")
     {
-        auto const x = Instruction{Operator::or_v_v,
-            VVOperands{Register::vf, Register::vd}};
+        auto const x = Instruction{
+            Operator::or_v_v, VVOperands{Register::vf, Register::vd}};
         REQUIRE(x.encode() == 0x8FD1);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "OR %VD, %VF");
@@ -123,8 +123,8 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("and_v_v")
     {
-        auto const x = Instruction{Operator::and_v_v,
-            VVOperands{Register::vf, Register::vd}};
+        auto const x = Instruction{
+            Operator::and_v_v, VVOperands{Register::vf, Register::vd}};
         REQUIRE(x.encode() == 0x8FD2);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "AND %VD, %VF");
@@ -132,8 +132,8 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("xor_v_v")
     {
-        auto const x = Instruction{Operator::xor_v_v,
-            VVOperands{Register::vf, Register::vd}};
+        auto const x = Instruction{
+            Operator::xor_v_v, VVOperands{Register::vf, Register::vd}};
         REQUIRE(x.encode() == 0x8FD3);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "XOR %VD, %VF");
@@ -141,8 +141,8 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("add_v_v")
     {
-        auto const x = Instruction{Operator::add_v_v,
-            VVOperands{Register::vf, Register::vd}};
+        auto const x = Instruction{
+            Operator::add_v_v, VVOperands{Register::vf, Register::vd}};
         REQUIRE(x.encode() == 0x8FD4);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "ADD %VD, %VF");
@@ -150,8 +150,8 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("sub_v_v")
     {
-        auto const x = Instruction{Operator::sub_v_v,
-            VVOperands{Register::vf, Register::vd}};
+        auto const x = Instruction{
+            Operator::sub_v_v, VVOperands{Register::vf, Register::vd}};
         REQUIRE(x.encode() == 0x8FD5);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "SUB %VD, %VF");
@@ -167,8 +167,8 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("subn_v_v")
     {
-        auto const x = Instruction{Operator::subn_v_v,
-            VVOperands{Register::vf, Register::vd}};
+        auto const x = Instruction{
+            Operator::subn_v_v, VVOperands{Register::vf, Register::vd}};
         REQUIRE(x.encode() == 0x8FD7);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "SUBN %VD, %VF");
@@ -184,8 +184,8 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("sne_v_v")
     {
-        auto const x = Instruction{Operator::sne_v_v,
-            VVOperands{Register::vf, Register::vd}};
+        auto const x = Instruction{
+            Operator::sne_v_v, VVOperands{Register::vf, Register::vd}};
         REQUIRE(x.encode() == 0x9FD0);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "SNE %VF, %VD");
@@ -209,8 +209,8 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("rnd_v_b")
     {
-        auto const x = Instruction{Operator::rnd_v_b,
-            VBOperands{Register::vf, 0xDB}};
+        auto const x =
+            Instruction{Operator::rnd_v_b, VBOperands{Register::vf, 0xDB}};
         REQUIRE(x.encode() == 0xCFDB);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "RND $DBh, %VF");
@@ -218,8 +218,8 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("drw_v_v_n")
     {
-        auto const x = Instruction{Operator::drw_v_v_n,
-            VVNOperands{Register::vf, Register::vd, 0xB}};
+        auto const x = Instruction{
+            Operator::drw_v_v_n, VVNOperands{Register::vf, Register::vd, 0xB}};
         REQUIRE(x.encode() == 0xDFDB);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "DRW %VF, %VD, $Bh");
@@ -243,8 +243,7 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("mov_v_dt")
     {
-        auto const x = Instruction{Operator::mov_v_dt,
-            VOperands{Register::vf}};
+        auto const x = Instruction{Operator::mov_v_dt, VOperands{Register::vf}};
         REQUIRE(x.encode() == 0xFF07);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "MOV %DT, %VF");
@@ -260,8 +259,7 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("mov_dt_v")
     {
-        auto const x = Instruction{Operator::mov_dt_v,
-            VOperands{Register::vf}};
+        auto const x = Instruction{Operator::mov_dt_v, VOperands{Register::vf}};
         REQUIRE(x.encode() == 0xFF15);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "MOV %VF, %DT");
@@ -269,8 +267,7 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("mov_st_v")
     {
-        auto const x = Instruction{Operator::mov_st_v,
-            VOperands{Register::vf}};
+        auto const x = Instruction{Operator::mov_st_v, VOperands{Register::vf}};
         REQUIRE(x.encode() == 0xFF18);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "MOV %VF, %ST");
@@ -278,8 +275,7 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("add_i_v")
     {
-        auto const x = Instruction{Operator::add_i_v,
-            VOperands{Register::vf}};
+        auto const x = Instruction{Operator::add_i_v, VOperands{Register::vf}};
         REQUIRE(x.encode() == 0xFF1E);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "ADD %VF, %I");
@@ -303,8 +299,7 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("mov_ii_v")
     {
-        auto const x = Instruction{Operator::mov_ii_v,
-            VOperands{Register::vf}};
+        auto const x = Instruction{Operator::mov_ii_v, VOperands{Register::vf}};
         REQUIRE(x.encode() == 0xFF55);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "MOV %V0..%VF, (%I)");
@@ -312,8 +307,7 @@ TEST_CASE("Instructions encode/decode correctly", "[machine][instruction]")
 
     SECTION("mov_v_ii")
     {
-        auto const x = Instruction{Operator::mov_v_ii,
-            VOperands{Register::vf}};
+        auto const x = Instruction{Operator::mov_v_ii, VOperands{Register::vf}};
         REQUIRE(x.encode() == 0xFF65);
         REQUIRE(x.decode(x.encode()) == x);
         REQUIRE(fmt::format("{}", x) == "MOV (%I), %V0..%VF");

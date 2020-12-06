@@ -32,15 +32,9 @@ public:
     using reference = Register const&;
     using iterator_category = std::input_iterator_tag;
 
-    RegisterIterator()
-        : RegisterIterator{std::nullopt}
-    {
-    }
+    RegisterIterator() : RegisterIterator{std::nullopt} {}
 
-    explicit RegisterIterator(std::optional<Register> r)
-        : current{r}
-    {
-    }
+    explicit RegisterIterator(std::optional<Register> r) : current{r} {}
 
     constexpr auto operator==(RegisterIterator const& rhs) const noexcept
     {
@@ -83,22 +77,22 @@ public:
         -> std::optional<Register>
     {
         switch (r) {
-            case Register::v0: return Register::v1;
-            case Register::v1: return Register::v2;
-            case Register::v2: return Register::v3;
-            case Register::v3: return Register::v4;
-            case Register::v4: return Register::v5;
-            case Register::v5: return Register::v6;
-            case Register::v6: return Register::v7;
-            case Register::v7: return Register::v8;
-            case Register::v8: return Register::v9;
-            case Register::v9: return Register::va;
-            case Register::va: return Register::vb;
-            case Register::vb: return Register::vc;
-            case Register::vc: return Register::vd;
-            case Register::vd: return Register::ve;
-            case Register::ve: return Register::vf;
-            case Register::vf: return std::nullopt;
+        case Register::v0: return Register::v1;
+        case Register::v1: return Register::v2;
+        case Register::v2: return Register::v3;
+        case Register::v3: return Register::v4;
+        case Register::v4: return Register::v5;
+        case Register::v5: return Register::v6;
+        case Register::v6: return Register::v7;
+        case Register::v7: return Register::v8;
+        case Register::v8: return Register::v9;
+        case Register::v9: return Register::va;
+        case Register::va: return Register::vb;
+        case Register::vb: return Register::vc;
+        case Register::vc: return Register::vd;
+        case Register::vd: return Register::ve;
+        case Register::ve: return Register::vf;
+        case Register::vf: return std::nullopt;
         }
 
         LIBNPLN_DETAIL_UNREACHABLE
@@ -111,30 +105,30 @@ private:
 class RegisterRange
 {
 public:
-    RegisterRange()
-        : RegisterRange{Register::vf}
-    {
-    }
+    RegisterRange() : RegisterRange{Register::vf} {}
 
     explicit RegisterRange(Register const last)
         : RegisterRange{Register::v0, last}
-    {
-    }
+    {}
 
     RegisterRange(Register const first, Register const last)
-        : first{first}
-        , last{RegisterIterator::next(last)}
-    {
-    }
+        : first{first}, last{RegisterIterator::next(last)}
+    {}
 
-    auto begin() const noexcept { return first; }
-    auto end() const noexcept { return last; }
+    auto begin() const noexcept
+    {
+        return first;
+    }
+    auto end() const noexcept
+    {
+        return last;
+    }
 
 private:
     RegisterIterator first;
     RegisterIterator last;
 };
 
-}
+} // namespace libnpln::machine
 
 #endif

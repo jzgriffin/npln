@@ -30,6 +30,6 @@ auto static_cast_set(std::set<TFrom> const& sf) noexcept
     return st;
 }
 
-}
+} // namespace libnpln::detail
 
 #endif

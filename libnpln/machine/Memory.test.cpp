@@ -42,7 +42,8 @@ TEST_CASE("Memory can be loaded from an iterator range", "[machine][memory]")
 }
 
 TEST_CASE("Memory cannot be loaded from an iterator range larger than the "
-    "memory", "[machine][memory]")
+          "memory",
+    "[machine][memory]")
 {
     auto const s = "some test data"s;
     auto m = Memory{};

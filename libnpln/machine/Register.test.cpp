@@ -60,8 +60,7 @@ TEST_CASE("Registers define names", "[machine][register]")
     REQUIRE(get_name(Register::vf) == "VF");
 }
 
-TEST_CASE("Register returns its name when formatted",
-    "[machine][register]")
+TEST_CASE("Register returns its name when formatted", "[machine][register]")
 {
     REQUIRE(fmt::format("{}", Register::v0) == get_name(Register::v0));
     REQUIRE(fmt::format("{}", Register::v1) == get_name(Register::v1));

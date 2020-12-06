@@ -72,6 +72,6 @@ auto to_hex_dump(std::array<std::uint8_t, N> const& a) -> std::string
     return str;
 }
 
-}
+} // namespace libnpln::utility
 
 #endif

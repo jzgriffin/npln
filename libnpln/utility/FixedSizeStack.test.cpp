@@ -82,8 +82,8 @@ SCENARIO("FixedSizeStack can be iterated over", "[utility][fixedsizestack]")
     }
 }
 
-SCENARIO("FixedSizeStack respects its size constraint",
-    "[utility][fixedsizestack]")
+SCENARIO(
+    "FixedSizeStack respects its size constraint", "[utility][fixedsizestack]")
 {
     GIVEN("an empty stack")
     {
@@ -139,8 +139,7 @@ SCENARIO("FixedSizeStack respects its size constraint",
     }
 }
 
-SCENARIO("FixedSizeStack implements push and pop",
-    "[utility][fixedsizestack]")
+SCENARIO("FixedSizeStack implements push and pop", "[utility][fixedsizestack]")
 {
     GIVEN("an empty stack")
     {

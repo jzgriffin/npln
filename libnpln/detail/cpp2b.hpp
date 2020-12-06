@@ -28,6 +28,6 @@ constexpr auto to_underlying(T const value) noexcept
     return static_cast<std::underlying_type_t<T>>(value);
 }
 
-}
+} // namespace libnpln::detail
 
 #endif

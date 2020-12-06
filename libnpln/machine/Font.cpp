@@ -30,4 +30,4 @@ auto load_font_into_memory(Memory& m, Address const a) -> bool
     return true;
 }
 
-}
+} // namespace libnpln::machine

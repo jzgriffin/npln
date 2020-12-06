@@ -47,28 +47,28 @@ enum class Register : Byte
 constexpr auto get_name(Register const r) -> std::string_view
 {
     switch (r) {
-        case Register::v0: return "V0";
-        case Register::v1: return "V1";
-        case Register::v2: return "V2";
-        case Register::v3: return "V3";
-        case Register::v4: return "V4";
-        case Register::v5: return "V5";
-        case Register::v6: return "V6";
-        case Register::v7: return "V7";
-        case Register::v8: return "V8";
-        case Register::v9: return "V9";
-        case Register::va: return "VA";
-        case Register::vb: return "VB";
-        case Register::vc: return "VC";
-        case Register::vd: return "VD";
-        case Register::ve: return "VE";
-        case Register::vf: return "VF";
+    case Register::v0: return "V0";
+    case Register::v1: return "V1";
+    case Register::v2: return "V2";
+    case Register::v3: return "V3";
+    case Register::v4: return "V4";
+    case Register::v5: return "V5";
+    case Register::v6: return "V6";
+    case Register::v7: return "V7";
+    case Register::v8: return "V8";
+    case Register::v9: return "V9";
+    case Register::va: return "VA";
+    case Register::vb: return "VB";
+    case Register::vc: return "VC";
+    case Register::vd: return "VD";
+    case Register::ve: return "VE";
+    case Register::vf: return "VF";
     }
 
     LIBNPLN_DETAIL_UNREACHABLE
 }
 
-}
+} // namespace libnpln::machine
 
 template<>
 struct fmt::formatter<libnpln::machine::Register>
@@ -80,11 +80,10 @@ struct fmt::formatter<libnpln::machine::Register>
     }
 
     template<typename FormatContext>
-    auto format(libnpln::machine::Register const& value,
-        FormatContext& context)
+    auto format(libnpln::machine::Register const& value, FormatContext& context)
     {
-        return format_to(context.out(), "{}",
-            libnpln::machine::get_name(value));
+        return format_to(
+            context.out(), "{}", libnpln::machine::get_name(value));
     }
 };
 

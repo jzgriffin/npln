@@ -41,12 +41,10 @@ struct Fault
 
 constexpr auto operator==(Fault const& lhs, Fault const& rhs) noexcept
 {
-    return lhs.type == rhs.type
-        && lhs.address == rhs.address;
+    return lhs.type == rhs.type && lhs.address == rhs.address;
 }
 
-constexpr auto operator!=(Fault const& lhs, Fault const& rhs)
-    noexcept
+constexpr auto operator!=(Fault const& lhs, Fault const& rhs) noexcept
 {
     return !(lhs == rhs);
 }
@@ -54,17 +52,17 @@ constexpr auto operator!=(Fault const& lhs, Fault const& rhs)
 constexpr auto get_name(Fault::Type const t) -> std::string_view
 {
     switch (t) {
-        case Fault::Type::invalid_address: return "invalid_address";
-        case Fault::Type::invalid_instruction: return "invalid_instruction";
-        case Fault::Type::invalid_digit: return "invalid_digit";
-        case Fault::Type::empty_stack: return "empty_stack";
-        case Fault::Type::full_stack: return "full_stack";
+    case Fault::Type::invalid_address: return "invalid_address";
+    case Fault::Type::invalid_instruction: return "invalid_instruction";
+    case Fault::Type::invalid_digit: return "invalid_digit";
+    case Fault::Type::empty_stack: return "empty_stack";
+    case Fault::Type::full_stack: return "full_stack";
     }
 
     LIBNPLN_DETAIL_UNREACHABLE
 }
 
-}
+} // namespace libnpln::machine
 
 template<>
 struct fmt::formatter<libnpln::machine::Fault::Type>
@@ -76,11 +74,11 @@ struct fmt::formatter<libnpln::machine::Fault::Type>
     }
 
     template<typename FormatContext>
-    auto format(libnpln::machine::Fault::Type const& value,
-        FormatContext& context)
+    auto format(
+        libnpln::machine::Fault::Type const& value, FormatContext& context)
     {
-        return format_to(context.out(), "{}",
-            libnpln::machine::get_name(value));
+        return format_to(
+            context.out(), "{}", libnpln::machine::get_name(value));
     }
 };
 
@@ -94,11 +92,10 @@ struct fmt::formatter<libnpln::machine::Fault>
     }
 
     template<typename FormatContext>
-    auto format(libnpln::machine::Fault const& value,
-        FormatContext& context)
+    auto format(libnpln::machine::Fault const& value, FormatContext& context)
     {
-        return format_to(context.out(), "{}@{:03X}h",
-            value.type, value.address);
+        return format_to(
+            context.out(), "{}@{:03X}h", value.type, value.address);
     }
 };
 

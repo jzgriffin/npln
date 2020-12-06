@@ -21,33 +21,33 @@
 namespace libnpln::utility {
 
 template<typename T>
-auto addition_overflow(T const x, T const y) ->
-    std::enable_if_t<std::is_integral_v<T>, bool>
+auto addition_overflow(T const x, T const y)
+    -> std::enable_if_t<std::is_integral_v<T>, bool>
 {
     return y > 0 && x > std::numeric_limits<T>::max() - y;
 }
 
 template<typename T>
-auto subtraction_underflow(T const x, T const y) ->
-    std::enable_if_t<std::is_integral_v<T>, bool>
+auto subtraction_underflow(T const x, T const y)
+    -> std::enable_if_t<std::is_integral_v<T>, bool>
 {
     return y > 0 && x < std::numeric_limits<T>::min() + y;
 }
 
 template<typename T>
-auto lsb(T const x) ->
-    std::enable_if_t<std::is_integral_v<T> && std::is_unsigned_v<T>, bool>
+auto lsb(T const x)
+    -> std::enable_if_t<std::is_integral_v<T> && std::is_unsigned_v<T>, bool>
 {
     return (x & (1 << 0)) != 0;
 }
 
 template<typename T>
-auto msb(T const x) ->
-    std::enable_if_t<std::is_integral_v<T> && std::is_unsigned_v<T>, bool>
+auto msb(T const x)
+    -> std::enable_if_t<std::is_integral_v<T> && std::is_unsigned_v<T>, bool>
 {
     return (x & (1 << (std::numeric_limits<T>::digits - 1))) != 0;
 }
 
-}
+} // namespace libnpln::utility
 
 #endif

@@ -21,9 +21,9 @@
 // warning. The proposal P0627 would make this an attribute rather than a
 // compiler-specific builtin.
 #ifdef _MSC_VER
-#   define LIBNPLN_DETAIL_UNREACHABLE __assume(false);
+#    define LIBNPLN_DETAIL_UNREACHABLE __assume(false);
 #else
-#   define LIBNPLN_DETAIL_UNREACHABLE __builtin_unreachable();
+#    define LIBNPLN_DETAIL_UNREACHABLE __builtin_unreachable();
 #endif
 
 #endif

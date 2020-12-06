@@ -33,9 +33,13 @@ public:
     using const_iterator = typename container_type::const_iterator;
 
     constexpr auto operator==(FixedSizeStack const& rhs) const noexcept
-    { return elements_ == rhs.elements_ && size_ == rhs.size_; }
+    {
+        return elements_ == rhs.elements_ && size_ == rhs.size_;
+    }
     constexpr auto operator!=(FixedSizeStack const& rhs) const noexcept
-    { return !(*this == rhs); }
+    {
+        return !(*this == rhs);
+    }
 
     constexpr auto swap(FixedSizeStack& rhs) noexcept -> void
     {
@@ -45,20 +49,39 @@ public:
     }
 
     constexpr auto begin() const noexcept -> const_iterator
-    { return std::begin(elements_); };
+    {
+        return std::begin(elements_);
+    };
     constexpr auto end() const noexcept -> const_iterator
-    { return std::next(begin(), size()); };
+    {
+        return std::next(begin(), size());
+    };
 
-    constexpr auto cbegin() const noexcept { return begin(); }
-    constexpr auto cend() const noexcept { return end(); }
+    constexpr auto cbegin() const noexcept
+    {
+        return begin();
+    }
+    constexpr auto cend() const noexcept
+    {
+        return end();
+    }
 
     static constexpr auto max_size() noexcept -> size_type
-    { return TMaxSize; }
-    constexpr auto size() const noexcept { return size_; }
+    {
+        return TMaxSize;
+    }
+    constexpr auto size() const noexcept
+    {
+        return size_;
+    }
     [[nodiscard]] constexpr auto empty() const noexcept
-    { return size_ == 0; }
+    {
+        return size_ == 0;
+    }
     [[nodiscard]] constexpr auto full() const noexcept
-    { return size_ == max_size(); }
+    {
+        return size_ == max_size();
+    }
 
     constexpr auto top() const noexcept -> std::optional<value_type>
     {
@@ -121,6 +144,6 @@ constexpr auto swap(FixedSizeStack<TValue, TMaxSize>& lhs,
     lhs.swap(rhs);
 }
 
-}
+} // namespace libnpln::utility
 
 #endif

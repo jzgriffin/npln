@@ -25,6 +25,6 @@ using ByteBitCodec = BitCodec<Word, 8, 0>;
 template<std::size_t TBitOffset>
 using NibbleBitCodec = BitCodec<Word, 4, TBitOffset>;
 
-}
+} // namespace libnpln::machine
 
 #endif

@@ -25,6 +25,6 @@ using VxOperand = NibbleBitCodec<8>;
 using VyOperand = NibbleBitCodec<4>;
 using NibbleOperand = NibbleBitCodec<0>;
 
-}
+} // namespace libnpln::machine
 
 #endif

@@ -43,4 +43,4 @@ auto install_interface(CLI::App& app, Parameters& params) -> CLI::App*
     return run_app;
 }
 
-}
+} // namespace npln::runner

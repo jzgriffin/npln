@@ -15,8 +15,8 @@
 #include <npln/Build.hpp>
 
 #ifdef BUILD_RUNNER
-    #include <npln/runner/Interface.hpp>
-    #include <npln/runner/Parameters.hpp>
+#    include <npln/runner/Interface.hpp>
+#    include <npln/runner/Parameters.hpp>
 #endif
 
 #include <CLI/App.hpp>

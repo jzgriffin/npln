@@ -115,7 +115,6 @@ SCENARIO("Display pixels can be get and set", "[machine][display]")
     }
 }
 
-
 SCENARIO("Display can be cleared", "[machine][display]")
 {
     GIVEN("A solid display")

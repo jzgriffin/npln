@@ -54,28 +54,28 @@ constexpr auto to_index(Key const k) noexcept -> std::size_t
 constexpr auto get_name(Key const k) noexcept -> std::string_view
 {
     switch (k) {
-        case Key::k0: return "0";
-        case Key::k1: return "1";
-        case Key::k2: return "2";
-        case Key::k3: return "3";
-        case Key::k4: return "4";
-        case Key::k5: return "5";
-        case Key::k6: return "6";
-        case Key::k7: return "7";
-        case Key::k8: return "8";
-        case Key::k9: return "9";
-        case Key::ka: return "A";
-        case Key::kb: return "B";
-        case Key::kc: return "C";
-        case Key::kd: return "D";
-        case Key::ke: return "E";
-        case Key::kf: return "F";
+    case Key::k0: return "0";
+    case Key::k1: return "1";
+    case Key::k2: return "2";
+    case Key::k3: return "3";
+    case Key::k4: return "4";
+    case Key::k5: return "5";
+    case Key::k6: return "6";
+    case Key::k7: return "7";
+    case Key::k8: return "8";
+    case Key::k9: return "9";
+    case Key::ka: return "A";
+    case Key::kb: return "B";
+    case Key::kc: return "C";
+    case Key::kd: return "D";
+    case Key::ke: return "E";
+    case Key::kf: return "F";
     }
 
     LIBNPLN_DETAIL_UNREACHABLE
 }
 
-}
+} // namespace libnpln::machine
 
 template<>
 struct fmt::formatter<libnpln::machine::Key>
@@ -87,11 +87,10 @@ struct fmt::formatter<libnpln::machine::Key>
     }
 
     template<typename FormatContext>
-    auto format(libnpln::machine::Key const& value,
-        FormatContext& context)
+    auto format(libnpln::machine::Key const& value, FormatContext& context)
     {
-        return format_to(context.out(), "{}",
-            libnpln::machine::get_name(value));
+        return format_to(
+            context.out(), "{}", libnpln::machine::get_name(value));
     }
 };
 

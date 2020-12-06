@@ -55,18 +55,17 @@ public:
 private:
     using Pixels = std::array<Pixel, width * height>;
 
-    static constexpr auto offset(std::size_t const x,
-        std::size_t const y) -> std::optional<std::size_t>
+    static constexpr auto offset(std::size_t const x, std::size_t const y)
+        -> std::optional<std::size_t>
     {
-        return x < width && y < height
-            ? std::optional{y * width + x}
-            : std::nullopt;
+        return x < width && y < height ? std::optional{y * width + x}
+                                       : std::nullopt;
     }
 
     gsl::not_null<std::unique_ptr<Pixels>> const pixels_;
 };
 
-}
+} // namespace libnpln::machine
 
 template<>
 struct fmt::formatter<libnpln::machine::Display>
@@ -78,8 +77,7 @@ struct fmt::formatter<libnpln::machine::Display>
     }
 
     template<typename FormatContext>
-    auto format(libnpln::machine::Display const& value,
-        FormatContext& context)
+    auto format(libnpln::machine::Display const& value, FormatContext& context)
     {
         auto out = context.out();
         for (std::size_t y = 0; y < value.height; ++y) {

@@ -25,6 +25,6 @@ struct Parameters;
 
 auto install_interface(CLI::App& app, Parameters& params) -> CLI::App*;
 
-}
+} // namespace npln::runner
 
 #endif

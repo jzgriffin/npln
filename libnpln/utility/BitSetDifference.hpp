@@ -40,8 +40,8 @@ auto bit_set_difference(std::bitset<TBitCount> const& initial,
 // bit indices that became reset.
 template<std::size_t TBitCount>
 auto bit_set_split_difference(std::bitset<TBitCount> const& initial,
-    std::bitset<TBitCount> const& final) noexcept ->
-    std::pair<std::set<std::size_t>, std::set<std::size_t>>
+    std::bitset<TBitCount> const& final) noexcept
+    -> std::pair<std::set<std::size_t>, std::set<std::size_t>>
 {
     auto sbs = std::set<std::size_t>{};
     auto rbs = std::set<std::size_t>{};
@@ -52,6 +52,6 @@ auto bit_set_split_difference(std::bitset<TBitCount> const& initial,
     return {sbs, rbs};
 }
 
-}
+} // namespace libnpln::utility
 
 #endif

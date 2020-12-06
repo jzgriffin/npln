@@ -19,12 +19,12 @@
 
 namespace libnpln::machine {
 
-auto keys_difference(Keys const& initial, Keys const& final) noexcept ->
-    std::pair<std::set<Key>, std::set<Key>>
+auto keys_difference(Keys const& initial, Keys const& final) noexcept
+    -> std::pair<std::set<Key>, std::set<Key>>
 {
     using detail::static_cast_set;
     auto const [pbs, rbs] = utility::bit_set_split_difference(initial, final);
     return {static_cast_set<Key>(pbs), static_cast_set<Key>(rbs)};
 }
 
-}
+} // namespace libnpln::machine

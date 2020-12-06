@@ -27,10 +27,9 @@ using Nibble = Byte;
 
 constexpr auto make_word(Byte const high, Byte const low) noexcept
 {
-    return static_cast<Word>(low |
-        (high << std::numeric_limits<Byte>::digits));
+    return static_cast<Word>(low | (high << std::numeric_limits<Byte>::digits));
 }
 
-}
+} // namespace libnpln::machine
 
 #endif

@@ -50,13 +50,11 @@ public:
 
     auto operator==(Machine const& rhs) const noexcept
     {
-        // Compare display and memory last because they are expensive to compare.
-        return fault == rhs.fault
-            && program_counter == rhs.program_counter
-            && registers == rhs.registers
-            && stack == rhs.stack
-            && keys == rhs.keys
-            && display == rhs.display
+        // Compare display and memory last because they are expensive to
+        // compare.
+        return fault == rhs.fault && program_counter == rhs.program_counter
+            && registers == rhs.registers && stack == rhs.stack
+            && keys == rhs.keys && display == rhs.display
             && memory == rhs.memory;
     }
 
@@ -130,7 +128,7 @@ private:
     std::size_t sound_cycles = 0;
 };
 
-}
+} // namespace libnpln::machine
 
 template<>
 struct fmt::formatter<libnpln::machine::Machine>
@@ -142,8 +140,7 @@ struct fmt::formatter<libnpln::machine::Machine>
     }
 
     template<typename FormatContext>
-    auto format(libnpln::machine::Machine const& value,
-        FormatContext& context)
+    auto format(libnpln::machine::Machine const& value, FormatContext& context)
     {
         return format_to(context.out(),
             "fault: {}\n"
@@ -154,11 +151,8 @@ struct fmt::formatter<libnpln::machine::Machine>
             "keys: {{{}}}\n"
             "display:\n{}",
             value.fault == std::nullopt ? "none" : to_string(*value.fault),
-            value.program_counter,
-            value.registers,
-            value.stack,
-            libnpln::utility::to_hex_dump(value.memory),
-            value.keys,
+            value.program_counter, value.registers, value.stack,
+            libnpln::utility::to_hex_dump(value.memory), value.keys,
             value.display);
     }
 };
