@@ -15,6 +15,7 @@
 #include <libnpln/machine/Font.hpp>
 
 #include <catch2/catch.hpp>
+#include <gsl/gsl>
 
 #include <iterator>
 #include <map>
@@ -35,9 +36,9 @@ TEST_CASE("Font can be loaded into memory", "[machine][font]")
     constexpr Address base_addr = 0x100;
     REQUIRE(load_font_into_memory(m, base_addr));
 
-    auto const base_iter = std::next(std::begin(m), base_addr);
+    auto* const base_iter = std::next(std::begin(m), base_addr);
     for (std::size_t i = 0; i < font_glyphs.size(); ++i) {
-        auto const& g = font_glyphs[i];
+        auto const& g = gsl::at(font_glyphs, i);
         REQUIRE(std::equal(
             std::next(base_iter, g.size() * i),
             std::next(base_iter, g.size() * (i + 1)),
