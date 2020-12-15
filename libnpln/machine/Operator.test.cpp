@@ -17,6 +17,10 @@
 
 #include <catch2/catch.hpp>
 
+#include <limits>
+#include <stdexcept>
+#include <type_traits>
+
 using namespace libnpln;
 using namespace libnpln::machine;
 
@@ -95,6 +99,14 @@ TEST_CASE("Operators define format strings", "[machine][operator]")
     REQUIRE(get_format_string(Operator::bcd_v) == "BCD %{Vx}");
     REQUIRE(get_format_string(Operator::mov_ii_v) == "MOV %V0..%{Vx}, (%I)");
     REQUIRE(get_format_string(Operator::mov_v_ii) == "MOV (%I), %V0..%{Vx}");
+}
+
+TEST_CASE(
+    "Unknown Operators do not define format strings", "[machine][operator]")
+{
+    auto const invalid_operator = static_cast<Operator>(
+        std::numeric_limits<std::underlying_type_t<Operator>>::max());
+    REQUIRE_THROWS_AS(get_format_string(invalid_operator), std::out_of_range);
 }
 
 TEST_CASE(

@@ -15,11 +15,11 @@
 #ifndef LIBNPLN_MACHINE_FAULT_HPP
 #define LIBNPLN_MACHINE_FAULT_HPP
 
-#include <libnpln/detail/unreachable.hpp>
 #include <libnpln/machine/DataUnits.hpp>
 
 #include <fmt/format.h>
 
+#include <stdexcept>
 #include <string_view>
 
 namespace libnpln::machine {
@@ -59,7 +59,7 @@ constexpr auto get_name(Fault::Type const t) -> std::string_view
     case Fault::Type::full_stack: return "full_stack";
     }
 
-    LIBNPLN_DETAIL_UNREACHABLE
+    throw std::out_of_range("Unknown Fault::Type in get_name");
 }
 
 } // namespace libnpln::machine

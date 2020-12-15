@@ -15,11 +15,11 @@
 #ifndef LIBNPLN_MACHINE_REGISTERRANGE_HPP
 #define LIBNPLN_MACHINE_REGISTERRANGE_HPP
 
-#include <libnpln/detail/unreachable.hpp>
 #include <libnpln/machine/Register.hpp>
 
 #include <iterator>
 #include <optional>
+#include <stdexcept>
 
 namespace libnpln::machine {
 
@@ -46,7 +46,7 @@ public:
         return !(*this == rhs);
     }
 
-    auto operator++() noexcept -> RegisterIterator&
+    auto operator++() -> RegisterIterator&
     {
         if (current == std::nullopt) {
             return *this;
@@ -56,7 +56,7 @@ public:
         return *this;
     }
 
-    auto operator++(int) noexcept -> RegisterIterator
+    auto operator++(int) -> RegisterIterator
     {
         auto i = *this;
         (*this)++;
@@ -73,8 +73,7 @@ public:
         return &*current;
     }
 
-    static constexpr auto next(Register const r) noexcept
-        -> std::optional<Register>
+    static constexpr auto next(Register const r) -> std::optional<Register>
     {
         switch (r) {
         case Register::v0: return Register::v1;
@@ -95,7 +94,7 @@ public:
         case Register::vf: return std::nullopt;
         }
 
-        LIBNPLN_DETAIL_UNREACHABLE
+        throw std::out_of_range("Unknown Register in RegisterIterator::next");
     }
 
 private:

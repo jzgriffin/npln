@@ -16,6 +16,10 @@
 
 #include <catch2/catch.hpp>
 
+#include <limits>
+#include <stdexcept>
+#include <type_traits>
+
 using namespace libnpln::machine;
 
 TEST_CASE("Fault types define names", "[machine][fault]")
@@ -26,6 +30,13 @@ TEST_CASE("Fault types define names", "[machine][fault]")
     REQUIRE(get_name(Fault::Type::invalid_digit) == "invalid_digit");
     REQUIRE(get_name(Fault::Type::empty_stack) == "empty_stack");
     REQUIRE(get_name(Fault::Type::full_stack) == "full_stack");
+}
+
+TEST_CASE("Unknown Fault types do not define names", "[machine][fault]")
+{
+    auto const invalid_fault_type = static_cast<Fault::Type>(
+        std::numeric_limits<std::underlying_type_t<Fault::Type>>::max());
+    REQUIRE_THROWS_AS(get_name(invalid_fault_type), std::out_of_range);
 }
 
 TEST_CASE("Fault type returns its name when formatted", "[machine][fault]")

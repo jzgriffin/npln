@@ -15,11 +15,12 @@
 #ifndef LIBNPLN_MACHINE_REGISTERS_HPP
 #define LIBNPLN_MACHINE_REGISTERS_HPP
 
-#include <libnpln/detail/unreachable.hpp>
 #include <libnpln/machine/DataUnits.hpp>
 #include <libnpln/machine/Register.hpp>
 
 #include <fmt/format.h>
+
+#include <stdexcept>
 
 namespace libnpln::machine {
 
@@ -39,7 +40,7 @@ struct Registers
         return !(*this == rhs);
     }
 
-    constexpr auto operator[](Register const r) noexcept -> Byte&
+    constexpr auto operator[](Register const r) -> Byte&
     {
         switch (r) {
         case Register::v0: return v0;
@@ -60,10 +61,10 @@ struct Registers
         case Register::vf: return vf;
         }
 
-        LIBNPLN_DETAIL_UNREACHABLE
+        throw std::out_of_range("Unknown Register in Registers::operator[]");
     }
 
-    constexpr auto operator[](Register const r) const noexcept -> Byte const&
+    constexpr auto operator[](Register const r) const -> Byte const&
     {
         switch (r) {
         case Register::v0: return v0;
@@ -84,7 +85,7 @@ struct Registers
         case Register::vf: return vf;
         }
 
-        LIBNPLN_DETAIL_UNREACHABLE
+        throw std::out_of_range("Unknown Register in Registers::operator[]");
     }
 
     // General-purpose

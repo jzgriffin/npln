@@ -17,6 +17,10 @@
 
 #include <catch2/catch.hpp>
 
+#include <limits>
+#include <stdexcept>
+#include <type_traits>
+
 using namespace libnpln;
 using namespace libnpln::machine;
 
@@ -58,6 +62,13 @@ TEST_CASE("Registers define names", "[machine][register]")
     REQUIRE(get_name(Register::vd) == "VD");
     REQUIRE(get_name(Register::ve) == "VE");
     REQUIRE(get_name(Register::vf) == "VF");
+}
+
+TEST_CASE("Unknown Registers do not define names", "[machine][register]")
+{
+    auto const invalid_register = static_cast<Register>(
+        std::numeric_limits<std::underlying_type_t<Register>>::max());
+    REQUIRE_THROWS_AS(get_name(invalid_register), std::out_of_range);
 }
 
 TEST_CASE("Register returns its name when formatted", "[machine][register]")

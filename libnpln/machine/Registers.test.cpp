@@ -17,6 +17,8 @@
 #include <catch2/catch.hpp>
 
 #include <limits>
+#include <stdexcept>
+#include <type_traits>
 
 using namespace libnpln::machine;
 
@@ -101,6 +103,19 @@ TEST_CASE("Registers can be indexed by general-purpose registers",
         REQUIRE(&rs[Register::ve] == &rs.ve);
         REQUIRE(&rs[Register::vf] == &rs.vf);
     }
+}
+
+TEST_CASE("Registers cannot be indexed by unknown general-purpose registers",
+    "[machine][registers]")
+{
+    auto const invalid_register = static_cast<Register>(
+        std::numeric_limits<std::underlying_type_t<Register>>::max());
+
+    auto const rs_const = Registers{};
+    REQUIRE_THROWS_AS(rs_const[invalid_register], std::out_of_range);
+
+    auto rs = Registers{};
+    REQUIRE_THROWS_AS(rs[invalid_register], std::out_of_range);
 }
 
 TEST_CASE("Indexed general-purpose register writes can be read back",

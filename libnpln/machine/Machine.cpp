@@ -14,7 +14,6 @@
 
 #include <libnpln/machine/Machine.hpp>
 
-#include <libnpln/detail/unreachable.hpp>
 #include <libnpln/machine/Font.hpp>
 #include <libnpln/machine/RegisterRange.hpp>
 #include <libnpln/utility/Numeric.hpp>
@@ -101,7 +100,7 @@ auto Machine::operator=(Machine&& other) noexcept -> Machine&
     return *this;
 }
 
-auto Machine::cycle() noexcept -> bool
+auto Machine::cycle() -> bool
 {
     if (fault != std::nullopt) {
         return false;
@@ -155,7 +154,7 @@ auto Machine::fetch() noexcept -> std::optional<Word>
     return make_word(high, low); // Big-endian
 }
 
-auto Machine::execute(Instruction const& instr) noexcept -> Result
+auto Machine::execute(Instruction const& instr) -> Result
 {
     switch (instr.op) {
     case Operator::cls: return execute_cls();
@@ -220,10 +219,10 @@ auto Machine::execute(Instruction const& instr) noexcept -> Result
         return execute_mov_v_ii(std::get<VOperands>(instr.args));
     }
 
-    LIBNPLN_DETAIL_UNREACHABLE
+    throw std::out_of_range("Unknown Operator in Machine::execute");
 }
 
-auto Machine::execute_cls() noexcept -> Result
+auto Machine::execute_cls() -> Result
 {
     display.clear();
 
@@ -231,7 +230,7 @@ auto Machine::execute_cls() noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_ret() noexcept -> Result
+auto Machine::execute_ret() -> Result
 {
     auto const a = stack.pop();
     if (a == std::nullopt) {
@@ -242,13 +241,13 @@ auto Machine::execute_ret() noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_jmp_a(AOperands const& args) noexcept -> Result
+auto Machine::execute_jmp_a(AOperands const& args) -> Result
 {
     program_counter = args.address;
     return std::nullopt;
 }
 
-auto Machine::execute_call_a(AOperands const& args) noexcept -> Result
+auto Machine::execute_call_a(AOperands const& args) -> Result
 {
     if (!stack.push(program_counter + Instruction::width)) {
         return Fault::Type::full_stack;
@@ -258,7 +257,7 @@ auto Machine::execute_call_a(AOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_seq_v_b(VBOperands const& args) noexcept -> Result
+auto Machine::execute_seq_v_b(VBOperands const& args) -> Result
 {
     if (registers[args.vx] == args.byte) {
         program_counter += Instruction::width;
@@ -268,7 +267,7 @@ auto Machine::execute_seq_v_b(VBOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_sne_v_b(VBOperands const& args) noexcept -> Result
+auto Machine::execute_sne_v_b(VBOperands const& args) -> Result
 {
     if (registers[args.vx] != args.byte) {
         program_counter += Instruction::width;
@@ -278,7 +277,7 @@ auto Machine::execute_sne_v_b(VBOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_seq_v_v(VVOperands const& args) noexcept -> Result
+auto Machine::execute_seq_v_v(VVOperands const& args) -> Result
 {
     if (registers[args.vx] == registers[args.vy]) {
         program_counter += Instruction::width;
@@ -288,7 +287,7 @@ auto Machine::execute_seq_v_v(VVOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_mov_v_b(VBOperands const& args) noexcept -> Result
+auto Machine::execute_mov_v_b(VBOperands const& args) -> Result
 {
     registers[args.vx] = args.byte;
 
@@ -296,7 +295,7 @@ auto Machine::execute_mov_v_b(VBOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_add_v_b(VBOperands const& args) noexcept -> Result
+auto Machine::execute_add_v_b(VBOperands const& args) -> Result
 {
     registers[args.vx] += args.byte;
 
@@ -304,7 +303,7 @@ auto Machine::execute_add_v_b(VBOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_mov_v_v(VVOperands const& args) noexcept -> Result
+auto Machine::execute_mov_v_v(VVOperands const& args) -> Result
 {
     registers[args.vx] = registers[args.vy];
 
@@ -312,7 +311,7 @@ auto Machine::execute_mov_v_v(VVOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_or_v_v(VVOperands const& args) noexcept -> Result
+auto Machine::execute_or_v_v(VVOperands const& args) -> Result
 {
     registers[args.vx] |= registers[args.vy];
 
@@ -320,7 +319,7 @@ auto Machine::execute_or_v_v(VVOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_and_v_v(VVOperands const& args) noexcept -> Result
+auto Machine::execute_and_v_v(VVOperands const& args) -> Result
 {
     registers[args.vx] &= registers[args.vy];
 
@@ -328,7 +327,7 @@ auto Machine::execute_and_v_v(VVOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_xor_v_v(VVOperands const& args) noexcept -> Result
+auto Machine::execute_xor_v_v(VVOperands const& args) -> Result
 {
     registers[args.vx] ^= registers[args.vy];
 
@@ -353,7 +352,7 @@ auto Machine::execute_xor_v_v(VVOperands const& args) noexcept -> Result
 // The test cases for these instructions are designed to verify that using %VF
 // as an operand register takes precedence over its status as a flag register.
 
-auto Machine::execute_add_v_v(VVOperands const& args) noexcept -> Result
+auto Machine::execute_add_v_v(VVOperands const& args) -> Result
 {
     auto const x = registers[args.vx];
     auto const y = registers[args.vy];
@@ -364,7 +363,7 @@ auto Machine::execute_add_v_v(VVOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_sub_v_v(VVOperands const& args) noexcept -> Result
+auto Machine::execute_sub_v_v(VVOperands const& args) -> Result
 {
     auto const x = registers[args.vx];
     auto const y = registers[args.vy];
@@ -375,7 +374,7 @@ auto Machine::execute_sub_v_v(VVOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_shr_v(VOperands const& args) noexcept -> Result
+auto Machine::execute_shr_v(VOperands const& args) -> Result
 {
     auto const x = registers[args.vx];
     registers.vf = utility::lsb(x) ? 1U : 0U;
@@ -385,7 +384,7 @@ auto Machine::execute_shr_v(VOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_subn_v_v(VVOperands const& args) noexcept -> Result
+auto Machine::execute_subn_v_v(VVOperands const& args) -> Result
 {
     auto const x = registers[args.vx];
     auto const y = registers[args.vy];
@@ -396,7 +395,7 @@ auto Machine::execute_subn_v_v(VVOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_shl_v(VOperands const& args) noexcept -> Result
+auto Machine::execute_shl_v(VOperands const& args) -> Result
 {
     auto const x = registers[args.vx];
     registers.vf = utility::msb(x) ? 1U : 0U;
@@ -406,7 +405,7 @@ auto Machine::execute_shl_v(VOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_sne_v_v(VVOperands const& args) noexcept -> Result
+auto Machine::execute_sne_v_v(VVOperands const& args) -> Result
 {
     if (registers[args.vx] != registers[args.vy]) {
         program_counter += Instruction::width;
@@ -416,7 +415,7 @@ auto Machine::execute_sne_v_v(VVOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_mov_i_a(AOperands const& args) noexcept -> Result
+auto Machine::execute_mov_i_a(AOperands const& args) -> Result
 {
     registers.i = args.address;
 
@@ -424,13 +423,13 @@ auto Machine::execute_mov_i_a(AOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_jmp_v0_a(AOperands const& args) noexcept -> Result
+auto Machine::execute_jmp_v0_a(AOperands const& args) -> Result
 {
     program_counter = registers.v0 + args.address;
     return std::nullopt;
 }
 
-auto Machine::execute_rnd_v_b(VBOperands const& args) noexcept -> Result
+auto Machine::execute_rnd_v_b(VBOperands const& args) -> Result
 {
     static std::uniform_int_distribution<std::size_t> byte_dist{
         std::numeric_limits<Byte>::min(),
@@ -444,7 +443,7 @@ auto Machine::execute_rnd_v_b(VBOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_drw_v_v_n(VVNOperands const& args) noexcept -> Result
+auto Machine::execute_drw_v_v_n(VVNOperands const& args) -> Result
 {
     if (registers.i + args.nibble >= memory.size()) {
         return Fault::Type::invalid_address;
@@ -479,7 +478,7 @@ auto Machine::execute_drw_v_v_n(VVNOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_skp_v(VOperands const& args) noexcept -> Result
+auto Machine::execute_skp_v(VOperands const& args) -> Result
 {
     auto const x = registers[args.vx];
     if (x < keys.size() && keys.test(x)) { // Unknown keys are never pressed
@@ -490,7 +489,7 @@ auto Machine::execute_skp_v(VOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_sknp_v(VOperands const& args) noexcept -> Result
+auto Machine::execute_sknp_v(VOperands const& args) -> Result
 {
     auto const x = registers[args.vx];
     if (x >= keys.size() || !keys.test(x)) { // Unknown keys are never pressed
@@ -501,7 +500,7 @@ auto Machine::execute_sknp_v(VOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_mov_v_dt(VOperands const& args) noexcept -> Result
+auto Machine::execute_mov_v_dt(VOperands const& args) -> Result
 {
     registers[args.vx] = registers.dt;
 
@@ -509,7 +508,7 @@ auto Machine::execute_mov_v_dt(VOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_wkp_v(VOperands const& args) noexcept -> Result
+auto Machine::execute_wkp_v(VOperands const& args) -> Result
 {
     // This instruction will repeat until a key is pressed.  If a key is
     // already pressed the first time this instruction runs, it will be
@@ -529,7 +528,7 @@ auto Machine::execute_wkp_v(VOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_mov_dt_v(VOperands const& args) noexcept -> Result
+auto Machine::execute_mov_dt_v(VOperands const& args) -> Result
 {
     registers.dt = registers[args.vx];
 
@@ -537,7 +536,7 @@ auto Machine::execute_mov_dt_v(VOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_mov_st_v(VOperands const& args) noexcept -> Result
+auto Machine::execute_mov_st_v(VOperands const& args) -> Result
 {
     registers.st = registers[args.vx];
 
@@ -545,7 +544,7 @@ auto Machine::execute_mov_st_v(VOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_add_i_v(VOperands const& args) noexcept -> Result
+auto Machine::execute_add_i_v(VOperands const& args) -> Result
 {
     registers.i += registers[args.vx];
     registers.i &= 0xFFFU;
@@ -554,7 +553,7 @@ auto Machine::execute_add_i_v(VOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_font_v(VOperands const& args) noexcept -> Result
+auto Machine::execute_font_v(VOperands const& args) -> Result
 {
     auto const offset = get_glyph_offset(registers[args.vx]);
     if (offset == std::nullopt) {
@@ -567,7 +566,7 @@ auto Machine::execute_font_v(VOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_bcd_v(VOperands const& args) noexcept -> Result
+auto Machine::execute_bcd_v(VOperands const& args) -> Result
 {
     if (registers.i + 2 >= memory.size()) {
         return Fault::Type::invalid_address;
@@ -583,7 +582,7 @@ auto Machine::execute_bcd_v(VOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_mov_ii_v(VOperands const& args) noexcept -> Result
+auto Machine::execute_mov_ii_v(VOperands const& args) -> Result
 {
     auto const rs = RegisterRange{args.vx};
     auto const d = std::distance(std::begin(rs), std::end(rs));
@@ -600,7 +599,7 @@ auto Machine::execute_mov_ii_v(VOperands const& args) noexcept -> Result
     return std::nullopt;
 }
 
-auto Machine::execute_mov_v_ii(VOperands const& args) noexcept -> Result
+auto Machine::execute_mov_v_ii(VOperands const& args) -> Result
 {
     auto const rs = RegisterRange{args.vx};
     auto const d = std::distance(std::begin(rs), std::end(rs));

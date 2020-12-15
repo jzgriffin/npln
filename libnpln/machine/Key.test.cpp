@@ -17,6 +17,10 @@
 
 #include <catch2/catch.hpp>
 
+#include <limits>
+#include <stdexcept>
+#include <type_traits>
+
 using namespace libnpln;
 using namespace libnpln::machine;
 
@@ -78,6 +82,13 @@ TEST_CASE("Key defines names", "[machine][key]")
     REQUIRE(get_name(Key::kd) == "D");
     REQUIRE(get_name(Key::ke) == "E");
     REQUIRE(get_name(Key::kf) == "F");
+}
+
+TEST_CASE("Unknown Keys do not define names", "[machine][key]")
+{
+    auto const invalid_key = static_cast<Key>(
+        std::numeric_limits<std::underlying_type_t<Key>>::max());
+    REQUIRE_THROWS_AS(get_name(invalid_key), std::out_of_range);
 }
 
 TEST_CASE("Key returns its name when formatted", "[machine][key]")

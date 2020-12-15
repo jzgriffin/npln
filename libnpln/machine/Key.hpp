@@ -15,11 +15,11 @@
 #ifndef LIBNPLN_MACHINE_KEY_HPP
 #define LIBNPLN_MACHINE_KEY_HPP
 
-#include <libnpln/detail/unreachable.hpp>
 #include <libnpln/machine/DataUnits.hpp>
 
 #include <fmt/format.h>
 
+#include <stdexcept>
 #include <string_view>
 
 namespace libnpln::machine {
@@ -51,7 +51,7 @@ constexpr auto to_index(Key const k) noexcept -> std::size_t
     return static_cast<std::size_t>(k);
 }
 
-constexpr auto get_name(Key const k) noexcept -> std::string_view
+constexpr auto get_name(Key const k) -> std::string_view
 {
     switch (k) {
     case Key::k0: return "0";
@@ -72,7 +72,7 @@ constexpr auto get_name(Key const k) noexcept -> std::string_view
     case Key::kf: return "F";
     }
 
-    LIBNPLN_DETAIL_UNREACHABLE
+    throw std::out_of_range("Unknown Key in get_name");
 }
 
 } // namespace libnpln::machine

@@ -63,7 +63,7 @@ public:
         return !(*this == rhs);
     }
 
-    auto cycle() noexcept -> bool;
+    auto cycle() -> bool;
 
     std::optional<Fault> fault;
     Address program_counter{program_address};
@@ -86,41 +86,41 @@ private:
     using Result = std::optional<Fault::Type>;
 
     auto fetch() noexcept -> std::optional<Word>;
-    auto execute(Instruction const& instr) noexcept -> Result;
-    auto execute_cls() noexcept -> Result;
-    auto execute_ret() noexcept -> Result;
-    auto execute_jmp_a(AOperands const& args) noexcept -> Result;
-    auto execute_call_a(AOperands const& args) noexcept -> Result;
-    auto execute_seq_v_b(VBOperands const& args) noexcept -> Result;
-    auto execute_sne_v_b(VBOperands const& args) noexcept -> Result;
-    auto execute_seq_v_v(VVOperands const& args) noexcept -> Result;
-    auto execute_mov_v_b(VBOperands const& args) noexcept -> Result;
-    auto execute_add_v_b(VBOperands const& args) noexcept -> Result;
-    auto execute_mov_v_v(VVOperands const& args) noexcept -> Result;
-    auto execute_or_v_v(VVOperands const& args) noexcept -> Result;
-    auto execute_and_v_v(VVOperands const& args) noexcept -> Result;
-    auto execute_xor_v_v(VVOperands const& args) noexcept -> Result;
-    auto execute_add_v_v(VVOperands const& args) noexcept -> Result;
-    auto execute_sub_v_v(VVOperands const& args) noexcept -> Result;
-    auto execute_shr_v(VOperands const& args) noexcept -> Result;
-    auto execute_subn_v_v(VVOperands const& args) noexcept -> Result;
-    auto execute_shl_v(VOperands const& args) noexcept -> Result;
-    auto execute_sne_v_v(VVOperands const& args) noexcept -> Result;
-    auto execute_mov_i_a(AOperands const& args) noexcept -> Result;
-    auto execute_jmp_v0_a(AOperands const& args) noexcept -> Result;
-    auto execute_rnd_v_b(VBOperands const& args) noexcept -> Result;
-    auto execute_drw_v_v_n(VVNOperands const& args) noexcept -> Result;
-    auto execute_skp_v(VOperands const& args) noexcept -> Result;
-    auto execute_sknp_v(VOperands const& args) noexcept -> Result;
-    auto execute_mov_v_dt(VOperands const& args) noexcept -> Result;
-    auto execute_wkp_v(VOperands const& args) noexcept -> Result;
-    auto execute_mov_dt_v(VOperands const& args) noexcept -> Result;
-    auto execute_mov_st_v(VOperands const& args) noexcept -> Result;
-    auto execute_add_i_v(VOperands const& args) noexcept -> Result;
-    auto execute_font_v(VOperands const& args) noexcept -> Result;
-    auto execute_bcd_v(VOperands const& args) noexcept -> Result;
-    auto execute_mov_ii_v(VOperands const& args) noexcept -> Result;
-    auto execute_mov_v_ii(VOperands const& args) noexcept -> Result;
+    auto execute(Instruction const& instr) -> Result;
+    auto execute_cls() -> Result;
+    auto execute_ret() -> Result;
+    auto execute_jmp_a(AOperands const& args) -> Result;
+    auto execute_call_a(AOperands const& args) -> Result;
+    auto execute_seq_v_b(VBOperands const& args) -> Result;
+    auto execute_sne_v_b(VBOperands const& args) -> Result;
+    auto execute_seq_v_v(VVOperands const& args) -> Result;
+    auto execute_mov_v_b(VBOperands const& args) -> Result;
+    auto execute_add_v_b(VBOperands const& args) -> Result;
+    auto execute_mov_v_v(VVOperands const& args) -> Result;
+    auto execute_or_v_v(VVOperands const& args) -> Result;
+    auto execute_and_v_v(VVOperands const& args) -> Result;
+    auto execute_xor_v_v(VVOperands const& args) -> Result;
+    auto execute_add_v_v(VVOperands const& args) -> Result;
+    auto execute_sub_v_v(VVOperands const& args) -> Result;
+    auto execute_shr_v(VOperands const& args) -> Result;
+    auto execute_subn_v_v(VVOperands const& args) -> Result;
+    auto execute_shl_v(VOperands const& args) -> Result;
+    auto execute_sne_v_v(VVOperands const& args) -> Result;
+    auto execute_mov_i_a(AOperands const& args) -> Result;
+    auto execute_jmp_v0_a(AOperands const& args) -> Result;
+    auto execute_rnd_v_b(VBOperands const& args) -> Result;
+    auto execute_drw_v_v_n(VVNOperands const& args) -> Result;
+    auto execute_skp_v(VOperands const& args) -> Result;
+    auto execute_sknp_v(VOperands const& args) -> Result;
+    auto execute_mov_v_dt(VOperands const& args) -> Result;
+    auto execute_wkp_v(VOperands const& args) -> Result;
+    auto execute_mov_dt_v(VOperands const& args) -> Result;
+    auto execute_mov_st_v(VOperands const& args) -> Result;
+    auto execute_add_i_v(VOperands const& args) -> Result;
+    auto execute_font_v(VOperands const& args) -> Result;
+    auto execute_bcd_v(VOperands const& args) -> Result;
+    auto execute_mov_ii_v(VOperands const& args) -> Result;
+    auto execute_mov_v_ii(VOperands const& args) -> Result;
 
     // These counters represent the number of master cycles since the last
     // decrement of the respective timer register.

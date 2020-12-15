@@ -16,6 +16,10 @@
 
 #include <catch2/catch.hpp>
 
+#include <limits>
+#include <stdexcept>
+#include <type_traits>
+
 using namespace libnpln::machine;
 
 TEST_CASE("Register iterator starts at the correct register",
@@ -74,6 +78,15 @@ TEST_CASE("Register iterator advances to the next register",
         auto const last = RegisterIterator{};
         REQUIRE(current == last);
     }
+}
+
+TEST_CASE("Register iterator at unknown register does not advance",
+    "[machine][register][iterator]")
+{
+    auto const invalid_register = static_cast<Register>(
+        std::numeric_limits<std::underlying_type_t<Register>>::max());
+    auto current = RegisterIterator{invalid_register};
+    REQUIRE_THROWS_AS(++current, std::out_of_range);
 }
 
 TEST_CASE("Register range produces accurate iterators")
