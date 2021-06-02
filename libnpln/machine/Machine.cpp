@@ -608,7 +608,7 @@ auto Machine::execute_mov_v_ii(VOperands const& args) -> Result
         return Fault::Type::invalid_address;
     }
 
-    auto* i = std::next(std::begin(memory), registers.i);
+    auto i = std::next(std::begin(memory), registers.i);
     for (auto&& r : rs) {
         registers[r] = *i++;
     }
