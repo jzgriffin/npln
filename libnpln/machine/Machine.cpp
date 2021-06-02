@@ -445,6 +445,10 @@ auto Machine::execute_rnd_v_b(VBOperands const& args) -> Result
 
 auto Machine::execute_drw_v_v_n(VVNOperands const& args) -> Result
 {
+    if (args.nibble > max_nibble) {
+        return Fault::Type::invalid_instruction;
+    }
+
     if (registers.i + args.nibble >= memory.size()) {
         return Fault::Type::invalid_address;
     }
