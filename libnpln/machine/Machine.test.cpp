@@ -1621,7 +1621,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
     {
         SECTION("with known values")
         {
-            for (Nibble digit = 0; digit < 0x10; ++digit) {
+            for (Nibble digit = 0; digit < max_nibble; ++digit) {
                 Machine m;
                 load_into_memory<Machine::program_address>(
                     {

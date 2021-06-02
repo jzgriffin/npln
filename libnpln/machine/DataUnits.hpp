@@ -25,6 +25,8 @@ using Address = Word;
 using Byte = std::uint8_t;
 using Nibble = Byte;
 
+constexpr Nibble max_nibble = 0xF;
+
 constexpr auto make_word(Byte const high, Byte const low) noexcept
 {
     return static_cast<Word>(low | (high << std::numeric_limits<Byte>::digits));
