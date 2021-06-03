@@ -18,8 +18,7 @@
 
 using namespace libnpln::utility;
 
-SCENARIO("The bit set difference algorithm detects changes",
-    "[utility][bitsetdifference]")
+SCENARIO("The bit set difference algorithm detects changes", "[utility][bitsetdifference]")
 {
     GIVEN("A bit set")
     {
@@ -86,8 +85,7 @@ SCENARIO("The bit set difference algorithm detects changes",
     }
 }
 
-SCENARIO("The bit set split difference algorithm detects changes",
-    "[utility][bitsetdifference]")
+SCENARIO("The bit set split difference algorithm detects changes", "[utility][bitsetdifference]")
 {
     GIVEN("A bit set")
     {

@@ -24,15 +24,14 @@ auto load_into_memory(std::istream& s, Memory& m, Address const a) -> bool
         return false;
     }
 
-    // reinterpret_cast between unsigned char* and char* is safe because they
-    // have the same representation and alignment.
+    // reinterpret_cast between unsigned char* and char* is safe because they have the same
+    // representation and alignment.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     s.read(reinterpret_cast<char*>(std::next(m.data(), a)), m.size() - a);
     return s.fail() && s.eof() && !s.bad();
 }
 
-auto load_into_memory(
-    std::filesystem::path const& p, Memory& m, Address const a) -> bool
+auto load_into_memory(std::filesystem::path const& p, Memory& m, Address const a) -> bool
 {
     auto s = std::ifstream{p, std::ios::in | std::ios::binary};
     return s ? load_into_memory(s, m, a) : false;

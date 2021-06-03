@@ -61,8 +61,7 @@ TEST_CASE("Memory can be loaded from a stream", "[machine][memory]")
     REQUIRE(std::memcmp(str.data(), m.data() + a, str.size() + 1) == 0);
 }
 
-TEST_CASE("Memory cannot be loaded from a stream larger than the memory",
-    "[machine][memory]")
+TEST_CASE("Memory cannot be loaded from a stream larger than the memory", "[machine][memory]")
 {
     auto const str = "some test data"s;
     auto s = std::istringstream{str};
@@ -87,8 +86,7 @@ TEST_CASE("Memory can be loaded from a file", "[machine][memory]")
     REQUIRE(std::memcmp(str.data(), m.data() + a, str.size() + 1) == 0);
 }
 
-TEST_CASE("Memory cannot be loaded from a file larger than the memory",
-    "[machine][memory]")
+TEST_CASE("Memory cannot be loaded from a file larger than the memory", "[machine][memory]")
 {
     auto const str = "some test data from a file"s;
     auto const p = std::filesystem::path{"machine-memory-test-file"};

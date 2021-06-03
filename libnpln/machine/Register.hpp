@@ -82,8 +82,7 @@ struct fmt::formatter<libnpln::machine::Register>
     template<typename FormatContext>
     auto format(libnpln::machine::Register const& value, FormatContext& context)
     {
-        return format_to(
-            context.out(), "{}", libnpln::machine::get_name(value));
+        return format_to(context.out(), "{}", libnpln::machine::get_name(value));
     }
 };
 

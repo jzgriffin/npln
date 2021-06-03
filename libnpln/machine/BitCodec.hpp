@@ -37,13 +37,12 @@ struct BitCodec
 
     static constexpr auto bit_width = TBitWidth;
     static constexpr auto bit_offset = TBitOffset;
-    static_assert(
-        bit_width + bit_offset <= std::numeric_limits<Container>::digits);
+    static_assert(bit_width + bit_offset <= std::numeric_limits<Container>::digits);
 
-    static constexpr auto bit_mask = static_cast<Container>(
-        (std::numeric_limits<Container>::max()
-            >> (std::numeric_limits<Container>::digits - bit_width))
-        << bit_offset);
+    static constexpr auto bit_mask =
+        static_cast<Container>((std::numeric_limits<Container>::max()
+                                   >> (std::numeric_limits<Container>::digits - bit_width))
+            << bit_offset);
 };
 
 } // namespace libnpln::machine

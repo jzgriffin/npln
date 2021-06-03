@@ -45,8 +45,8 @@ auto create_checkerboard() -> Display
 
 } // namespace
 
-// By inspecting the entire state of the machine after each cycle, we verify
-// that no instruction has an unintended side-effect.
+// By inspecting the entire state of the machine after each cycle, we verify that no instruction
+// has an unintended side-effect.
 
 TEST_CASE("Cycles fail after a fault", "[machine][cycle]")
 {
@@ -233,8 +233,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
                     0x2E, 0xEE, // CALL EEEh
                 },
                 m.memory);
-            for (std::size_t i = 0; i < decltype(m.stack)::max_size() - 1; ++i)
-            {
+            for (std::size_t i = 0; i < decltype(m.stack)::max_size() - 1; ++i) {
                 REQUIRE(m.stack.push(i));
             }
 
@@ -1633,17 +1632,15 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
 
                 auto m_expect = m;
                 m_expect.program_counter += Instruction::width;
-                m_expect.registers.i =
-                    Machine::font_address + *get_glyph_offset(digit);
+                m_expect.registers.i = Machine::font_address + *get_glyph_offset(digit);
 
                 CHECK(m.cycle());
                 REQUIRE(m == m_expect);
 
                 auto const& g = gsl::at(font_glyphs, digit);
-                REQUIRE(std::equal(
-                    std::next(std::begin(m.memory), m.registers.i),
-                    std::next(std::begin(m.memory), m.registers.i + glyph_size),
-                    std::begin(g), std::end(g)));
+                REQUIRE(std::equal(std::next(std::begin(m.memory), m.registers.i),
+                    std::next(std::begin(m.memory), m.registers.i + glyph_size), std::begin(g),
+                    std::end(g)));
             }
         }
 
@@ -1659,8 +1656,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.i = 0xFFF;
 
             auto m_expect = m;
-            m_expect.fault =
-                Fault{Fault::Type::invalid_digit, m.program_counter};
+            m_expect.fault = Fault{Fault::Type::invalid_digit, m.program_counter};
 
             CHECK_FALSE(m.cycle());
             REQUIRE(m == m_expect);
@@ -1702,8 +1698,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.i = 0xFFE; // The ones index will be at 0x1000
 
             auto m_expect = m;
-            m_expect.fault =
-                Fault{Fault::Type::invalid_address, m.program_counter};
+            m_expect.fault = Fault{Fault::Type::invalid_address, m.program_counter};
 
             CHECK_FALSE(m.cycle());
             REQUIRE(m == m_expect);
@@ -1752,8 +1747,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.i = 0xFFE; // %V2 will go to 0x1000 and above
 
             auto m_expect = m;
-            m_expect.fault =
-                Fault{Fault::Type::invalid_address, m.program_counter};
+            m_expect.fault = Fault{Fault::Type::invalid_address, m.program_counter};
 
             CHECK_FALSE(m.cycle());
             REQUIRE(m == m_expect);
@@ -1867,8 +1861,7 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
             m.registers.i = 0xFFE; // %V2 will come from 0x1000 and above
 
             auto m_expect = m;
-            m_expect.fault =
-                Fault{Fault::Type::invalid_address, m.program_counter};
+            m_expect.fault = Fault{Fault::Type::invalid_address, m.program_counter};
 
             CHECK_FALSE(m.cycle());
             REQUIRE(m == m_expect);

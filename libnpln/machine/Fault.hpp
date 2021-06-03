@@ -74,11 +74,9 @@ struct fmt::formatter<libnpln::machine::Fault::Type>
     }
 
     template<typename FormatContext>
-    auto format(
-        libnpln::machine::Fault::Type const& value, FormatContext& context)
+    auto format(libnpln::machine::Fault::Type const& value, FormatContext& context)
     {
-        return format_to(
-            context.out(), "{}", libnpln::machine::get_name(value));
+        return format_to(context.out(), "{}", libnpln::machine::get_name(value));
     }
 };
 
@@ -94,8 +92,7 @@ struct fmt::formatter<libnpln::machine::Fault>
     template<typename FormatContext>
     auto format(libnpln::machine::Fault const& value, FormatContext& context)
     {
-        return format_to(
-            context.out(), "{}@{:03X}h", value.type, value.address);
+        return format_to(context.out(), "{}@{:03X}h", value.type, value.address);
     }
 };
 

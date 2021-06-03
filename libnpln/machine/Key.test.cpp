@@ -86,8 +86,8 @@ TEST_CASE("Key defines names", "[machine][key]")
 
 TEST_CASE("Unknown Keys do not define names", "[machine][key]")
 {
-    auto const invalid_key = static_cast<Key>(
-        std::numeric_limits<std::underlying_type_t<Key>>::max());
+    auto const invalid_key =
+        static_cast<Key>(std::numeric_limits<std::underlying_type_t<Key>>::max());
     REQUIRE_THROWS_AS(get_name(invalid_key), std::out_of_range);
 }
 

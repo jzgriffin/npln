@@ -47,8 +47,7 @@ namespace detail {
                 static constexpr auto encode(TTypes... xs) noexcept
                 {
                     return static_cast<Word>((0x0000 | ...
-                        | TCodecs::encode(
-                            static_cast<typename TCodecs::Container>(xs))));
+                        | TCodecs::encode(static_cast<typename TCodecs::Container>(xs))));
                 }
 
             private:
@@ -60,8 +59,7 @@ namespace detail {
 
 } // namespace detail
 
-struct NullaryOperands
-    : detail::BaseOperands<NullaryOperands>::WithTypes<>::WithCodecs<>
+struct NullaryOperands : detail::BaseOperands<NullaryOperands>::WithTypes<>::WithCodecs<>
 {
     constexpr auto encode() const noexcept
     {
@@ -75,23 +73,19 @@ struct NullaryOperands
     }
 };
 
-constexpr auto operator==(
-    NullaryOperands const& lhs, NullaryOperands const& rhs) noexcept
+constexpr auto operator==(NullaryOperands const& lhs, NullaryOperands const& rhs) noexcept
 {
     (void)lhs;
     (void)rhs;
     return true;
 }
 
-constexpr auto operator!=(
-    NullaryOperands const& lhs, NullaryOperands const& rhs) noexcept
+constexpr auto operator!=(NullaryOperands const& lhs, NullaryOperands const& rhs) noexcept
 {
     return !(lhs == rhs);
 }
 
-struct AOperands
-    : detail::BaseOperands<AOperands>::WithTypes<Address>::WithCodecs<
-          AddressOperand>
+struct AOperands : detail::BaseOperands<AOperands>::WithTypes<Address>::WithCodecs<AddressOperand>
 {
     constexpr AOperands(Address const address) noexcept : address{address} {}
 
@@ -103,8 +97,8 @@ struct AOperands
     template<typename FormatContext>
     auto format(std::string_view const& spec, FormatContext& context) const
     {
-        return fmt::format_to(context.out(), spec,
-            fmt::arg("address", fmt::format("{:03X}h", address)));
+        return fmt::format_to(
+            context.out(), spec, fmt::arg("address", fmt::format("{:03X}h", address)));
     }
 
     Address address;
@@ -120,9 +114,7 @@ constexpr auto operator!=(AOperands const& lhs, AOperands const& rhs) noexcept
     return !(lhs == rhs);
 }
 
-struct VOperands
-    : detail::BaseOperands<VOperands>::WithTypes<Register>::WithCodecs<
-          VxOperand>
+struct VOperands : detail::BaseOperands<VOperands>::WithTypes<Register>::WithCodecs<VxOperand>
 {
     constexpr VOperands(Register const vx) noexcept : vx{vx} {}
 
@@ -151,12 +143,10 @@ constexpr auto operator!=(VOperands const& lhs, VOperands const& rhs) noexcept
 }
 
 struct VBOperands
-    : detail::BaseOperands<VBOperands>::WithTypes<Register,
-          Byte>::WithCodecs<VxOperand, ByteOperand>
+    : detail::BaseOperands<VBOperands>::WithTypes<Register, Byte>::WithCodecs<VxOperand,
+          ByteOperand>
 {
-    constexpr VBOperands(Register const vx, Byte const byte) noexcept
-        : vx{vx}, byte{byte}
-    {}
+    constexpr VBOperands(Register const vx, Byte const byte) noexcept : vx{vx}, byte{byte} {}
 
     constexpr auto encode() const noexcept
     {
@@ -185,12 +175,10 @@ constexpr auto operator!=(VBOperands const& lhs, VBOperands const& rhs) noexcept
 }
 
 struct VVOperands
-    : detail::BaseOperands<VVOperands>::WithTypes<Register,
-          Register>::WithCodecs<VxOperand, VyOperand>
+    : detail::BaseOperands<VVOperands>::WithTypes<Register, Register>::WithCodecs<VxOperand,
+          VyOperand>
 {
-    constexpr VVOperands(Register const vx, Register const vy) noexcept
-        : vx{vx}, vy{vy}
-    {}
+    constexpr VVOperands(Register const vx, Register const vy) noexcept : vx{vx}, vy{vy} {}
 
     constexpr auto encode() const noexcept
     {
@@ -200,8 +188,7 @@ struct VVOperands
     template<typename FormatContext>
     auto format(std::string_view const& spec, FormatContext& context) const
     {
-        return fmt::format_to(
-            context.out(), spec, fmt::arg("Vx", vx), fmt::arg("Vy", vy));
+        return fmt::format_to(context.out(), spec, fmt::arg("Vx", vx), fmt::arg("Vy", vy));
     }
 
     Register vx;
@@ -222,8 +209,7 @@ struct VVNOperands
     : detail::BaseOperands<VVNOperands>::WithTypes<Register, Register,
           Nibble>::WithCodecs<VxOperand, VyOperand, NibbleOperand>
 {
-    constexpr VVNOperands(
-        Register const vx, Register const vy, Nibble const nibble) noexcept
+    constexpr VVNOperands(Register const vx, Register const vy, Nibble const nibble) noexcept
         : vx{vx}, vy{vy}, nibble{nibble}
     {}
 
@@ -235,8 +221,7 @@ struct VVNOperands
     template<typename FormatContext>
     auto format(std::string_view const& spec, FormatContext& context) const
     {
-        return fmt::format_to(context.out(), spec, fmt::arg("Vx", vx),
-            fmt::arg("Vy", vy),
+        return fmt::format_to(context.out(), spec, fmt::arg("Vx", vx), fmt::arg("Vy", vy),
             fmt::arg("nibble", fmt::format("{:01X}h", nibble)));
     }
 
@@ -245,20 +230,18 @@ struct VVNOperands
     Nibble nibble;
 };
 
-constexpr auto operator==(
-    VVNOperands const& lhs, VVNOperands const& rhs) noexcept
+constexpr auto operator==(VVNOperands const& lhs, VVNOperands const& rhs) noexcept
 {
     return lhs.vx == rhs.vx && lhs.vy == rhs.vy && lhs.nibble == rhs.nibble;
 }
 
-constexpr auto operator!=(
-    VVNOperands const& lhs, VVNOperands const& rhs) noexcept
+constexpr auto operator!=(VVNOperands const& lhs, VVNOperands const& rhs) noexcept
 {
     return !(lhs == rhs);
 }
 
-using Operands = std::variant<NullaryOperands, AOperands, VOperands, VBOperands,
-    VVOperands, VVNOperands>;
+using Operands =
+    std::variant<NullaryOperands, AOperands, VOperands, VBOperands, VVOperands, VVNOperands>;
 
 } // namespace libnpln::machine
 

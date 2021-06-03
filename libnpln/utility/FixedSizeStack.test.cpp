@@ -74,16 +74,14 @@ SCENARIO("FixedSizeStack can be iterated over", "[utility][fixedsizestack]")
             {
                 THEN("they are equal")
                 {
-                    REQUIRE(std::equal(std::begin(v), std::end(v),
-                        std::begin(s), std::end(s)));
+                    REQUIRE(std::equal(std::begin(v), std::end(v), std::begin(s), std::end(s)));
                 }
             }
         }
     }
 }
 
-SCENARIO(
-    "FixedSizeStack respects its size constraint", "[utility][fixedsizestack]")
+SCENARIO("FixedSizeStack respects its size constraint", "[utility][fixedsizestack]")
 {
     GIVEN("an empty stack")
     {

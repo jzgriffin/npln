@@ -106,9 +106,7 @@ class RegisterRange
 public:
     RegisterRange() : RegisterRange{Register::vf} {}
 
-    explicit RegisterRange(Register const last)
-        : RegisterRange{Register::v0, last}
-    {}
+    explicit RegisterRange(Register const last) : RegisterRange{Register::v0, last} {}
 
     RegisterRange(Register const first, Register const last)
         : first{first}, last{RegisterIterator::next(last)}

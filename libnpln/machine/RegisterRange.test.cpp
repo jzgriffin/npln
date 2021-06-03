@@ -22,8 +22,7 @@
 
 using namespace libnpln::machine;
 
-TEST_CASE("Register iterator starts at the correct register",
-    "[machine][register][iterator]")
+TEST_CASE("Register iterator starts at the correct register", "[machine][register][iterator]")
 {
     SECTION("from %V0")
     {
@@ -50,8 +49,7 @@ TEST_CASE("Register iterator starts at the correct register",
     }
 }
 
-TEST_CASE("Register iterator advances to the next register",
-    "[machine][register][iterator]")
+TEST_CASE("Register iterator advances to the next register", "[machine][register][iterator]")
 {
     SECTION("from %V0")
     {
@@ -80,11 +78,10 @@ TEST_CASE("Register iterator advances to the next register",
     }
 }
 
-TEST_CASE("Register iterator at unknown register does not advance",
-    "[machine][register][iterator]")
+TEST_CASE("Register iterator at unknown register does not advance", "[machine][register][iterator]")
 {
-    auto const invalid_register = static_cast<Register>(
-        std::numeric_limits<std::underlying_type_t<Register>>::max());
+    auto const invalid_register =
+        static_cast<Register>(std::numeric_limits<std::underlying_type_t<Register>>::max());
     auto current = RegisterIterator{invalid_register};
     REQUIRE_THROWS_AS(++current, std::out_of_range);
 }

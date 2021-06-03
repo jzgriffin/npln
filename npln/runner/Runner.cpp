@@ -42,8 +42,7 @@ Runner::Runner(Parameters const& params)
 auto Runner::install_error_callback() -> void
 {
     glfwSetErrorCallback([](int error, char const* desc) {
-        std::cerr << "Error: GLFW reported code " << error << ": " << desc
-                  << '\n';
+        std::cerr << "Error: GLFW reported code " << error << ": " << desc << '\n';
     });
 }
 
@@ -64,8 +63,7 @@ auto Runner::create_window() -> void
     glfwMakeContextCurrent(window);
     // Interfacing with this C API requires reinterpret_cast.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-    if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))
-        == 0) {
+    if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == 0) {
         throw std::runtime_error{"Unable to initialize GLAD"};
     }
 
@@ -74,8 +72,8 @@ auto Runner::create_window() -> void
 
 auto Runner::install_window_callbacks() -> void
 {
-    glfwSetKeyCallback(window,
-        [](GLFWwindow* window, int key, int scan_code, int action, int mods) {
+    glfwSetKeyCallback(
+        window, [](GLFWwindow* window, int key, int scan_code, int action, int mods) {
             auto* self = static_cast<Runner*>(glfwGetWindowUserPointer(window));
             if (self != nullptr) {
                 self->process_key(key, scan_code, action, mods);

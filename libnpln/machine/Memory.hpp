@@ -29,8 +29,7 @@ using Memory = std::array<Byte, 0x1000>;
 constexpr std::size_t memory_size = Memory{}.size();
 
 template<typename InputIter>
-auto load_into_memory(
-    InputIter first, InputIter last, Memory& m, Address const a) -> bool
+auto load_into_memory(InputIter first, InputIter last, Memory& m, Address const a) -> bool
 {
     if (m.size() < a) {
         return false;
@@ -46,8 +45,7 @@ auto load_into_memory(
 }
 
 auto load_into_memory(std::istream& s, Memory& m, Address const a) -> bool;
-auto load_into_memory(
-    std::filesystem::path const& p, Memory& m, Address const a) -> bool;
+auto load_into_memory(std::filesystem::path const& p, Memory& m, Address const a) -> bool;
 
 template<Address A, std::size_t N>
     auto load_into_memory(Byte const (&b)[N], Memory& m)

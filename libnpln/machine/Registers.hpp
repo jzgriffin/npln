@@ -28,11 +28,10 @@ struct Registers
 {
     constexpr auto operator==(Registers const& rhs) const noexcept
     {
-        return v0 == rhs.v0 && v1 == rhs.v1 && v2 == rhs.v2 && v3 == rhs.v3
-            && v4 == rhs.v4 && v5 == rhs.v5 && v6 == rhs.v6 && v7 == rhs.v7
-            && v8 == rhs.v8 && v9 == rhs.v9 && va == rhs.va && vb == rhs.vb
-            && vc == rhs.vc && vd == rhs.vd && ve == rhs.ve && vf == rhs.vf
-            && dt == rhs.dt && st == rhs.st && i == rhs.i;
+        return v0 == rhs.v0 && v1 == rhs.v1 && v2 == rhs.v2 && v3 == rhs.v3 && v4 == rhs.v4
+            && v5 == rhs.v5 && v6 == rhs.v6 && v7 == rhs.v7 && v8 == rhs.v8 && v9 == rhs.v9
+            && va == rhs.va && vb == rhs.vb && vc == rhs.vc && vd == rhs.vd && ve == rhs.ve
+            && vf == rhs.vf && dt == rhs.dt && st == rhs.st && i == rhs.i;
     }
 
     constexpr auto operator!=(Registers const& rhs) const noexcept
@@ -126,8 +125,7 @@ struct fmt::formatter<libnpln::machine::Registers>
     }
 
     template<typename FormatContext>
-    auto format(
-        libnpln::machine::Registers const& value, FormatContext& context)
+    auto format(libnpln::machine::Registers const& value, FormatContext& context)
     {
         return format_to(context.out(),
             "v0: {:02X}h, v1: {:02X}h, v2: {:02X}h, v3: {:02X}h,\n"
@@ -135,10 +133,9 @@ struct fmt::formatter<libnpln::machine::Registers>
             "v8: {:02X}h, v9: {:02X}h, va: {:02X}h, vb: {:02X}h,\n"
             "vc: {:02X}h, vd: {:02X}h, ve: {:02X}h, vf: {:02X}h,\n"
             "dt: {:02X}h, st: {:02X}h, i: {:03X}h",
-            value.v0, value.v1, value.v2, value.v3, value.v4, value.v5,
-            value.v6, value.v7, value.v8, value.v9, value.va, value.vb,
-            value.vc, value.vd, value.ve, value.vf, value.dt, value.st,
-            value.i);
+            value.v0, value.v1, value.v2, value.v3, value.v4, value.v5, value.v6, value.v7,
+            value.v8, value.v9, value.va, value.vb, value.vc, value.vd, value.ve, value.vf,
+            value.dt, value.st, value.i);
     }
 };
 

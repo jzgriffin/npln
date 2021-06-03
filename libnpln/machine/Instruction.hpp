@@ -26,20 +26,17 @@ namespace libnpln::machine {
 
 struct Instruction
 {
-    static constexpr auto decode(Word const w) noexcept
-        -> std::optional<Instruction>
+    static constexpr auto decode(Word const w) noexcept -> std::optional<Instruction>
     {
-        // The decode_* operations cascade until a matching decoding is found
-        // or the possible decodings are exhausted, in which case a null
-        // optional is returned.  The decode_ffff operation is the highest
-        // level of this cascade.
+        // The decode_* operations cascade until a matching decoding is found or the possible
+        // decodings are exhausted, in which case a null optional is returned.  The decode_ffff
+        // operation is the highest level of this cascade.
         return decode_ffff(w);
     }
 
     constexpr auto encode() const noexcept -> Word
     {
-        return static_cast<Word>(op)
-            | std::visit([](auto&& a) { return a.encode(); }, args);
+        return static_cast<Word>(op) | std::visit([](auto&& a) { return a.encode(); }, args);
     }
 
     static constexpr auto width = sizeof(Word);
@@ -48,8 +45,7 @@ struct Instruction
     Operands args;
 
 private:
-    static constexpr auto decode_f000(Word const w) noexcept
-        -> std::optional<Instruction>
+    static constexpr auto decode_f000(Word const w) noexcept -> std::optional<Instruction>
     {
         auto op = static_cast<Operator>(w & 0xF000);
         switch (op) {
@@ -67,8 +63,7 @@ private:
         }
     }
 
-    static constexpr auto decode_f00f(Word const w) noexcept
-        -> std::optional<Instruction>
+    static constexpr auto decode_f00f(Word const w) noexcept -> std::optional<Instruction>
     {
         auto op = static_cast<Operator>(w & 0xF00F);
         switch (op) {
@@ -85,8 +80,7 @@ private:
         }
     }
 
-    static constexpr auto decode_f0ff(Word const w) noexcept
-        -> std::optional<Instruction>
+    static constexpr auto decode_f0ff(Word const w) noexcept -> std::optional<Instruction>
     {
         auto op = static_cast<Operator>(w & 0xF0FF);
         switch (op) {
@@ -107,8 +101,7 @@ private:
         }
     }
 
-    static constexpr auto decode_ffff(Word const w) noexcept
-        -> std::optional<Instruction>
+    static constexpr auto decode_ffff(Word const w) noexcept -> std::optional<Instruction>
     {
         auto op = static_cast<Operator>(w);
         switch (op) {
@@ -119,14 +112,12 @@ private:
     }
 };
 
-constexpr auto operator==(
-    Instruction const& lhs, Instruction const& rhs) noexcept
+constexpr auto operator==(Instruction const& lhs, Instruction const& rhs) noexcept
 {
     return lhs.op == rhs.op && lhs.args == rhs.args;
 }
 
-constexpr auto operator!=(
-    Instruction const& lhs, Instruction const& rhs) noexcept
+constexpr auto operator!=(Instruction const& lhs, Instruction const& rhs) noexcept
 {
     return !(lhs == rhs);
 }
@@ -143,27 +134,22 @@ struct fmt::formatter<libnpln::machine::Instruction>
     }
 
     template<typename FormatContext>
-    auto format(
-        libnpln::machine::Instruction const& value, FormatContext& context)
+    auto format(libnpln::machine::Instruction const& value, FormatContext& context)
     {
-        // This implementation of operand formatting is a hack.  Ideally, each
-        // operand type could produce a fmt::format_arg_store containing all
-        // of the named arguments provided by that operand.  This argument
-        // store be applied to a format string with fmt::vformat.  However,
-        // the type returned by fmt::arg only stores references to the
-        // argument name and value.  Some of the operands format their values
-        // as strings before instantiating the argument for that string.
-        // There is no reasonable place to store these temporary strings with
-        // a sufficient lifetime.  Thus, the fmt::format_arg_store refers to
-        // invalid memory when returned.  The workaround is to apply those
-        // temporary arguments in the same function as they are generated in,
-        // as is done here.  The ideal solution is to extend fmt with an
-        // owning named argument type, possibly renaming what is currently
-        // called a named argument to be a named argument view.
+        // This implementation of operand formatting is a hack.  Ideally, each operand type could
+        // produce a fmt::format_arg_store containing all of the named arguments provided by that
+        // operand.  This argument store be applied to a format string with fmt::vformat.  However,
+        // the type returned by fmt::arg only stores references to the argument name and value.
+        // Some of the operands format their values as strings before instantiating the argument for
+        // that string.  There is no reasonable place to store these temporary strings with a
+        // sufficient lifetime.  Thus, the fmt::format_arg_store refers to invalid memory when
+        // returned.  The workaround is to apply those temporary arguments in the same function as
+        // they are generated in, as is done here.  The ideal solution is to extend fmt with an
+        // owning named argument type, possibly renaming what is currently called a named argument
+        // to be a named argument view.
         return std::visit(
             [&](auto&& a) {
-                return a.format(
-                    libnpln::machine::get_format_string(value.op), context);
+                return a.format(libnpln::machine::get_format_string(value.op), context);
             },
             value.args);
     }

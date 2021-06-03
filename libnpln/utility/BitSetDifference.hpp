@@ -21,8 +21,8 @@
 namespace libnpln::utility {
 
 template<std::size_t TBitCount>
-auto bit_set_difference(std::bitset<TBitCount> const& initial,
-    std::bitset<TBitCount> const& final) -> std::set<std::size_t>
+auto bit_set_difference(std::bitset<TBitCount> const& initial, std::bitset<TBitCount> const& final)
+    -> std::set<std::size_t>
 {
     auto const diff = initial ^ final;
     std::set<std::size_t> positions;
@@ -35,12 +35,11 @@ auto bit_set_difference(std::bitset<TBitCount> const& initial,
     return positions;
 }
 
-// Returns the difference between the initial and final bit sets.  The first
-// set returned is the bit indices that became set and the second set is the
-// bit indices that became reset.
+// Returns the difference between the initial and final bit sets.  The first set returned is the bit
+// indices that became set and the second set is the bit indices that became reset.
 template<std::size_t TBitCount>
-auto bit_set_split_difference(std::bitset<TBitCount> const& initial,
-    std::bitset<TBitCount> const& final) noexcept
+auto bit_set_split_difference(
+    std::bitset<TBitCount> const& initial, std::bitset<TBitCount> const& final) noexcept
     -> std::pair<std::set<std::size_t>, std::set<std::size_t>>
 {
     auto sbs = std::set<std::size_t>{};

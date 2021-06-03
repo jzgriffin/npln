@@ -36,8 +36,8 @@ namespace libnpln::machine {
 class Machine
 {
 private:
-    // This must be declared prior to the memory reference so that the pointer
-    // is initialized in time for the reference to be made.
+    // This must be declared prior to the memory reference so that the pointer is initialized in
+    // time for the reference to be made.
     gsl::not_null<std::unique_ptr<Memory>> const memory_;
 
 public:
@@ -50,12 +50,10 @@ public:
 
     auto operator==(Machine const& rhs) const noexcept
     {
-        // Compare display and memory last because they are expensive to
-        // compare.
+        // Compare display and memory last because they are expensive to compare.
         return fault == rhs.fault && program_counter == rhs.program_counter
-            && registers == rhs.registers && stack == rhs.stack
-            && keys == rhs.keys && display == rhs.display
-            && memory == rhs.memory;
+            && registers == rhs.registers && stack == rhs.stack && keys == rhs.keys
+            && display == rhs.display && memory == rhs.memory;
     }
 
     auto operator!=(Machine const& rhs) const noexcept
@@ -122,8 +120,8 @@ private:
     auto execute_mov_ii_v(VOperands const& args) -> Result;
     auto execute_mov_v_ii(VOperands const& args) -> Result;
 
-    // These counters represent the number of master cycles since the last
-    // decrement of the respective timer register.
+    // These counters represent the number of master cycles since the last decrement of the
+    // respective timer register.
     std::size_t delay_cycles = 0;
     std::size_t sound_cycles = 0;
 };
@@ -150,9 +148,8 @@ struct fmt::formatter<libnpln::machine::Machine>
             "memory:\n{}\n"
             "keys: {{{}}}\n"
             "display:\n{}",
-            value.fault == std::nullopt ? "none" : to_string(*value.fault),
-            value.program_counter, value.registers, value.stack,
-            libnpln::utility::to_hex_dump(value.memory), value.keys,
+            value.fault == std::nullopt ? "none" : to_string(*value.fault), value.program_counter,
+            value.registers, value.stack, libnpln::utility::to_hex_dump(value.memory), value.keys,
             value.display);
     }
 };

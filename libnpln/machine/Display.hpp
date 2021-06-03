@@ -58,8 +58,7 @@ private:
     static constexpr auto offset(std::size_t const x, std::size_t const y)
         -> std::optional<std::size_t>
     {
-        return x < width && y < height ? std::optional{y * width + x}
-                                       : std::nullopt;
+        return x < width && y < height ? std::optional{y * width + x} : std::nullopt;
     }
 
     gsl::not_null<std::unique_ptr<Pixels>> const pixels_;

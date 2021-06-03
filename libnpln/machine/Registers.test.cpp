@@ -59,8 +59,7 @@ TEST_CASE("Registers are of acceptable widths", "[machine][registers]")
     }
 }
 
-TEST_CASE("Registers can be indexed by general-purpose registers",
-    "[machine][registers]")
+TEST_CASE("Registers can be indexed by general-purpose registers", "[machine][registers]")
 {
     SECTION("constant operator[] returns references")
     {
@@ -105,11 +104,11 @@ TEST_CASE("Registers can be indexed by general-purpose registers",
     }
 }
 
-TEST_CASE("Registers cannot be indexed by unknown general-purpose registers",
-    "[machine][registers]")
+TEST_CASE(
+    "Registers cannot be indexed by unknown general-purpose registers", "[machine][registers]")
 {
-    auto const invalid_register = static_cast<Register>(
-        std::numeric_limits<std::underlying_type_t<Register>>::max());
+    auto const invalid_register =
+        static_cast<Register>(std::numeric_limits<std::underlying_type_t<Register>>::max());
 
     auto const rs_const = Registers{};
     REQUIRE_THROWS_AS(rs_const[invalid_register], std::out_of_range);
@@ -118,8 +117,7 @@ TEST_CASE("Registers cannot be indexed by unknown general-purpose registers",
     REQUIRE_THROWS_AS(rs[invalid_register], std::out_of_range);
 }
 
-TEST_CASE("Indexed general-purpose register writes can be read back",
-    "[machine][registers]")
+TEST_CASE("Indexed general-purpose register writes can be read back", "[machine][registers]")
 {
     auto rs = Registers{};
     rs[Register::v0] = 0xCC;

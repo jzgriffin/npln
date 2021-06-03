@@ -115,14 +115,12 @@ struct fmt::formatter<libnpln::machine::Operator>
         return context.begin();
     }
 
-    // The string output by this function is itself a format string.  The
-    // format string may be formatted using named arguments whose names match
-    // the parameters in the operator's mnemonic.
+    // The string output by this function is itself a format string.  The format string may be
+    // formatted using named arguments whose names match the parameters in the operator's mnemonic.
     template<typename FormatContext>
     auto format(libnpln::machine::Operator const& value, FormatContext& context)
     {
-        return format_to(
-            context.out(), "{}", libnpln::machine::get_format_string(value));
+        return format_to(context.out(), "{}", libnpln::machine::get_format_string(value));
     }
 };
 

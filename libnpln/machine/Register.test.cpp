@@ -66,8 +66,8 @@ TEST_CASE("Registers define names", "[machine][register]")
 
 TEST_CASE("Unknown Registers do not define names", "[machine][register]")
 {
-    auto const invalid_register = static_cast<Register>(
-        std::numeric_limits<std::underlying_type_t<Register>>::max());
+    auto const invalid_register =
+        static_cast<Register>(std::numeric_limits<std::underlying_type_t<Register>>::max());
     REQUIRE_THROWS_AS(get_name(invalid_register), std::out_of_range);
 }
 

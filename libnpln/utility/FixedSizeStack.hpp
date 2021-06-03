@@ -138,8 +138,8 @@ private:
 };
 
 template<typename TValue, std::size_t TMaxSize>
-constexpr auto swap(FixedSizeStack<TValue, TMaxSize>& lhs,
-    FixedSizeStack<TValue, TMaxSize>& rhs) noexcept -> void
+constexpr auto swap(
+    FixedSizeStack<TValue, TMaxSize>& lhs, FixedSizeStack<TValue, TMaxSize>& rhs) noexcept -> void
 {
     lhs.swap(rhs);
 }
