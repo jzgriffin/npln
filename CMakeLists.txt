@@ -66,13 +66,6 @@ disable_clang_tidy(Catch2::Catch2)
 add_subdirectory(vendor/gsl)
 disable_clang_tidy(Microsoft.GSL::GSL)
 
-add_library(scope_guard INTERFACE)
-target_include_directories(scope_guard
-    INTERFACE
-    vendor/scope_guard
-)
-disable_clang_tidy(scope_guard)
-
 if(BUILD_RENDERER)
     add_library(glad STATIC
         vendor/glad/include/KHR/khrplatform.h
@@ -203,7 +196,6 @@ add_executable(npln
 )
 target_link_libraries(npln
     libnpln
-    scope_guard
     CLI11::CLI11
     ${npln_RENDERER_LIBRARIES}
     ${npln_RUNNER_LIBRARIES}
