@@ -13,20 +13,22 @@ that appear in the CHIP-8 architecture.
 ### Dependencies
 
 - C++17 compiler
-- CMake 3.13
-- fmt 6.0
-- CLI11 1.9
-- GLFW 3.3 (runner only)
+- CMake
+- Conan
 
 ### Instructions
 
-npln uses CMake as its build system.  The standard procedure for
-building software with CMake applies:
+npln uses CMake as its build system and Conan as its package manager.
+On systems using GCC, it is necessary to configure Conan with
+`compiler.libcxx=libstdc++11` to avoid issues with package ABI.
+
+The standard procedure for building software with Conan/CMake applies:
 
 ```sh
 mkdir build
 cd build
-cmake -G"Ninja" .. # or other generator
+conan install .. # NOTE: compiler.libcxx=stdc++11 is needed
+cmake -G ..
 cmake --build .
 ctest # to run the test suite
 ```
@@ -66,10 +68,10 @@ license:
 
 Name                                                | Version | License
 --------------------------------------------------- | ------- | --------------
-[Catch](https://github.com/catchorg/Catch2)         | 2.13.3  | BSL-1.0
-[CLI11](https://github.com/CLIUtils/CLI11)          | 1.9     | BSD
-[GLFW](https://www.glfw.org)                        | 3.3     | zlib/libpng
+[Catch](https://github.com/catchorg/Catch2)         | 2.13.7  | BSL-1.0
+[CLI11](https://github.com/CLIUtils/CLI11)          | 2.1.1   | BSD
+[GLFW](https://www.glfw.org)                        | 3.3.4   | zlib/libpng
 [GSL](https://github.com/microsoft/GSL)             | ec6cd75 | MIT
 [Glad](https://glad.dav1d.de)                       | 0.1.34  | Public domain
-[fmtlib](https://fmt.dev)                           | 6.0     | MIT
+[fmtlib](https://fmt.dev)                           | 8.0.1   | MIT
 [CHIP-8 Games Pack](https://www.zophar.net/pdroms/chip8/chip-8-games-pack.html) | | Public Domain

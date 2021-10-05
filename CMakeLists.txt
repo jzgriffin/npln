@@ -50,38 +50,24 @@ if(BUILD_RUNNER)
 endif()
 
 # Dependencies
-find_package(fmt 6.0.0 REQUIRED)
+include(${CMAKE_CURRENT_BINARY_DIR}/conan_paths.cmake)
 
-find_package(CLI11 1.9.0 REQUIRED)
+find_package(CLI11 REQUIRED)
+find_package(fmt REQUIRED)
 
 if(BUILD_RUNNER)
-    find_package(glfw3 3.3.0 REQUIRED)
+    find_package(glad REQUIRED)
+    find_package(glfw3 REQUIRED)
+endif()
+
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+    find_package(Catch2 REQUIRED)
+    include(Catch)
 endif()
 
 # Vendored dependencies
-add_subdirectory(vendor/catch2)
-include(vendor/catch2/contrib/Catch.cmake)
-disable_clang_tidy(Catch2::Catch2)
-
 add_subdirectory(vendor/gsl)
 disable_clang_tidy(Microsoft.GSL::GSL)
-
-if(BUILD_RENDERER)
-    add_library(glad STATIC
-        vendor/glad/include/KHR/khrplatform.h
-        vendor/glad/include/glad/glad.h
-        vendor/glad/src/glad.c
-    )
-    target_link_libraries(glad
-        PUBLIC
-        ${CMAKE_DL_LIBS}
-    )
-    target_include_directories(glad
-        PUBLIC
-        vendor/glad/include
-    )
-    disable_clang_tidy(glad)
-endif()
 
 # libnpln target
 add_library(libnpln
@@ -180,7 +166,7 @@ if(BUILD_RENDERER)
     set(npln_RENDERER_SOURCE
     )
     set(npln_RENDERER_LIBRARIES
-        glad
+        glad::glad
     )
 endif()
 configure_file(
