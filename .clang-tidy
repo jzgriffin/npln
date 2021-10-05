@@ -5,6 +5,7 @@ Checks: >
   -google*,
   -fuchsia*,
   -llvmlibc*,
+  -clang-diagnostic-c++17-extensions,
   -cppcoreguidelines-avoid-magic-numbers,
   -readability-magic-numbers,
 CheckOptions:
