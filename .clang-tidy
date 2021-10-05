@@ -6,6 +6,7 @@ Checks: >
   -fuchsia*,
   -llvmlibc*,
   -*-qualified-auto,
+  -altera-struct-pack-align,
   -clang-diagnostic-c++17-extensions,
   -cppcoreguidelines-avoid-magic-numbers,
   -readability-function-cognitive-complexity,
