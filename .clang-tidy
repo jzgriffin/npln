@@ -5,6 +5,7 @@ Checks: >
   -google*,
   -fuchsia*,
   -llvmlibc*,
+  -*-qualified-auto,
   -clang-diagnostic-c++17-extensions,
   -cppcoreguidelines-avoid-magic-numbers,
   -readability-function-cognitive-complexity,
