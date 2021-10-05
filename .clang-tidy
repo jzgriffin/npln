@@ -7,6 +7,7 @@ Checks: >
   -llvmlibc*,
   -clang-diagnostic-c++17-extensions,
   -cppcoreguidelines-avoid-magic-numbers,
+  -readability-function-cognitive-complexity,
   -readability-magic-numbers,
 CheckOptions:
   - key:    misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
