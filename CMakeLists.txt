@@ -1,4 +1,4 @@
-# Copyright 2020 Jeremiah Griffin
+# Copyright 2020-2021 Jeremiah Griffin
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -24,7 +24,9 @@ project(npln
     LANGUAGES C CXX
 )
 
-include(CTest)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    include(CTest)
+endif()
 
 # Helpers
 function(disable_clang_tidy target)
@@ -136,34 +138,36 @@ target_include_directories(libnpln
 )
 
 # libnpln tests
-add_executable(test-libnpln
-    libnpln/libnpln.test.cpp
-    libnpln/machine/BitCodec.test.cpp
-    libnpln/machine/DataUnits.test.cpp
-    libnpln/machine/Display.test.cpp
-    libnpln/machine/Instruction.test.cpp
-    libnpln/machine/Fault.test.cpp
-    libnpln/machine/Font.test.cpp
-    libnpln/machine/Key.test.cpp
-    libnpln/machine/Keys.test.cpp
-    libnpln/machine/Machine.test.cpp
-    libnpln/machine/Memory.test.cpp
-    libnpln/machine/Operand.test.cpp
-    libnpln/machine/Operands.test.cpp
-    libnpln/machine/Operator.test.cpp
-    libnpln/machine/Register.test.cpp
-    libnpln/machine/RegisterRange.test.cpp
-    libnpln/machine/Registers.test.cpp
-    libnpln/machine/Stack.test.cpp
-    libnpln/utility/BitSetDifference.test.cpp
-    libnpln/utility/FixedSizeStack.test.cpp
-    libnpln/utility/Numeric.test.cpp
-)
-target_link_libraries(test-libnpln
-    libnpln
-    Catch2::Catch2
-)
-catch_discover_tests(test-libnpln)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+    add_executable(test-libnpln
+        libnpln/libnpln.test.cpp
+        libnpln/machine/BitCodec.test.cpp
+        libnpln/machine/DataUnits.test.cpp
+        libnpln/machine/Display.test.cpp
+        libnpln/machine/Instruction.test.cpp
+        libnpln/machine/Fault.test.cpp
+        libnpln/machine/Font.test.cpp
+        libnpln/machine/Key.test.cpp
+        libnpln/machine/Keys.test.cpp
+        libnpln/machine/Machine.test.cpp
+        libnpln/machine/Memory.test.cpp
+        libnpln/machine/Operand.test.cpp
+        libnpln/machine/Operands.test.cpp
+        libnpln/machine/Operator.test.cpp
+        libnpln/machine/Register.test.cpp
+        libnpln/machine/RegisterRange.test.cpp
+        libnpln/machine/Registers.test.cpp
+        libnpln/machine/Stack.test.cpp
+        libnpln/utility/BitSetDifference.test.cpp
+        libnpln/utility/FixedSizeStack.test.cpp
+        libnpln/utility/Numeric.test.cpp
+    )
+    target_link_libraries(test-libnpln
+        libnpln
+        Catch2::Catch2
+    )
+    catch_discover_tests(test-libnpln)
+endif()
 
 # npln target
 if(BUILD_RUNNER)
