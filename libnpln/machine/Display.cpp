@@ -65,7 +65,7 @@ auto Display::operator!=(Display const& rhs) const noexcept -> bool
 auto Display::pixel(std::size_t const x, std::size_t const y) const -> ConstProxy
 {
     if (auto const z = offset(x, y); z != std::nullopt) {
-        return &gsl::at(*pixels_, *z);
+        return &gsl::at(*pixels_, gsl::narrow<gsl::index>(*z));
     }
 
     return nullptr;
@@ -74,7 +74,7 @@ auto Display::pixel(std::size_t const x, std::size_t const y) const -> ConstProx
 auto Display::pixel(std::size_t const x, std::size_t const y) -> Proxy
 {
     if (auto const z = offset(x, y); z != std::nullopt) {
-        return &gsl::at(*pixels_, *z);
+        return &gsl::at(*pixels_, gsl::narrow<gsl::index>(*z));
     }
 
     return nullptr;

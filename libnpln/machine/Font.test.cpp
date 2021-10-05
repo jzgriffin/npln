@@ -37,7 +37,7 @@ TEST_CASE("Font can be loaded into memory", "[machine][font]")
     REQUIRE(load_font_into_memory(m, base_addr));
 
     auto const base_iter = std::next(std::begin(m), base_addr);
-    for (std::size_t i = 0; i < font_glyphs.size(); ++i) {
+    for (gsl::index i = 0; i < font_glyphs.size(); ++i) {
         auto const& g = gsl::at(font_glyphs, i);
         REQUIRE(std::equal(std::next(base_iter, g.size() * i),
             std::next(base_iter, g.size() * (i + 1)), std::begin(g), std::end(g)));

@@ -14,6 +14,8 @@
 
 #include <libnpln/machine/Memory.hpp>
 
+#include <gsl/narrow>
+
 #include <fstream>
 
 namespace libnpln::machine {
@@ -27,7 +29,8 @@ auto load_into_memory(std::istream& s, Memory& m, Address const a) -> bool
     // reinterpret_cast between unsigned char* and char* is safe because they have the same
     // representation and alignment.
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-    s.read(reinterpret_cast<char*>(std::next(m.data(), a)), m.size() - a);
+    s.read(reinterpret_cast<char*>(std::next(m.data(), a)),
+        gsl::narrow<std::streamsize>(m.size() - a));
     return s.fail() && s.eof() && !s.bad();
 }
 
