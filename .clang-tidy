@@ -13,5 +13,7 @@ Checks: >
 CheckOptions:
   - key:    misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
     value:  '1'
+ExtraArgs:
+  - -std=c++17
 HeaderFilterRegex: '.*(?!/vendor/).*'
 ...
