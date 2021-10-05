@@ -46,7 +46,7 @@ npln run <path-to-executable>
 npln is licensed under the terms of the permissive ISC open source
 license:
 
-> Copyright 2020 Jeremiah Griffin
+> Copyright 2020-2021 Jeremiah Griffin
 >
 > Permission to use, copy, modify, and/or distribute this software for
 > any purpose with or without fee is hereby granted, provided that the
