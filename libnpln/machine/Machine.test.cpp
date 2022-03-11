@@ -2005,7 +2005,7 @@ TEST_CASE("Delay timer counts down correctly", "[machine][cycle]")
             ++cycles;
         }
 
-        REQUIRE(cycles == ticks * 2); // Round up to the next multiple
+        REQUIRE(cycles == static_cast<std::size_t>(ticks) * 2); // Round up to the next multiple
 
         REQUIRE(m.cycle());
         REQUIRE(m.registers.dt == 0);
@@ -2031,7 +2031,7 @@ TEST_CASE("Delay timer counts down correctly", "[machine][cycle]")
             ++cycles;
         }
 
-        REQUIRE(cycles == ticks * multiplier);
+        REQUIRE(cycles == static_cast<std::size_t>(ticks) * multiplier);
 
         REQUIRE(m.cycle());
         REQUIRE(m.registers.dt == 0);
@@ -2109,7 +2109,7 @@ TEST_CASE("Sound timer counts down correctly", "[machine][cycle]")
             ++cycles;
         }
 
-        REQUIRE(cycles == ticks * 2); // Round up to the next multiple
+        REQUIRE(cycles == static_cast<std::size_t>(ticks) * 2); // Round up to the next multiple
 
         REQUIRE(m.cycle());
         REQUIRE(m.registers.st == 0);
@@ -2135,7 +2135,7 @@ TEST_CASE("Sound timer counts down correctly", "[machine][cycle]")
             ++cycles;
         }
 
-        REQUIRE(cycles == ticks * multiplier);
+        REQUIRE(cycles == static_cast<std::size_t>(ticks) * multiplier);
 
         REQUIRE(m.cycle());
         REQUIRE(m.registers.st == 0);
