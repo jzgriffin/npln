@@ -48,8 +48,7 @@ auto load_into_memory(std::istream& s, Memory& m, Address a) -> bool;
 auto load_into_memory(std::filesystem::path const& p, Memory& m, Address a) -> bool;
 
 template<Address A, std::size_t N>
-    // NOLINTNEXTLINE(hicpp-avoid-c-arrays, modernize-avoid-c-arrays,
-    // cppcoreguidelines-avoid-c-arrays)
+    // NOLINTNEXTLINE
     auto load_into_memory(Byte const (&b)[N], Memory& m)
         -> std::enable_if_t < A + N<memory_size, void>
 {
