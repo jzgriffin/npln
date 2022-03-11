@@ -15,6 +15,8 @@
 #ifndef NPLN_RUNNER_RUNNER_HPP
 #define NPLN_RUNNER_RUNNER_HPP
 
+#include <libnpln/machine/Machine.hpp>
+
 #include <chrono>
 
 struct GLFWwindow;
@@ -46,6 +48,8 @@ private:
     auto process_key(int key, int scan_code, int action, int mods) -> void;
     auto update(FrameClock::duration const& frame_time) -> void;
     auto render() -> void;
+
+    libnpln::machine::Machine machine;
 
     GLFWwindow* window = nullptr;
 };

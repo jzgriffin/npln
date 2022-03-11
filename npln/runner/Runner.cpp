@@ -19,6 +19,7 @@
 #include <npln/runner/Parameters.hpp>
 
 #include <GLFW/glfw3.h>
+#include <fmt/format.h>
 #include <glad/glad.h>
 
 #include <cstdlib>
@@ -29,7 +30,11 @@ namespace npln::runner {
 
 Runner::Runner(Parameters const& params)
 {
-    (void)params;
+    using namespace libnpln::machine;
+    if (!load_into_memory(params.path, machine.memory(), Machine::program_address)) {
+        throw std::runtime_error{
+            fmt::format("Unable to load program {} into memory", params.path.c_str())};
+    }
 
     if (glfwInit() == GLFW_FALSE) {
         throw std::runtime_error{"Unable to initialize GLFW"};
