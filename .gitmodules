@@ -1,0 +1,3 @@
+[submodule "vendor/frequencypp"]
+	path = vendor/frequencypp
+	url = https://github.com/nokurn/frequencypp

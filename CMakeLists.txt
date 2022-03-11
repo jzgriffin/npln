@@ -77,6 +77,8 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
 endif()
 
 # Vendored dependencies
+add_subdirectory(vendor/frequencypp)
+disable_clang_tidy(frequencypp::frequencypp)
 add_subdirectory(vendor/gsl)
 disable_clang_tidy(Microsoft.GSL::GSL)
 
@@ -120,6 +122,7 @@ target_link_libraries(libnpln
     PUBLIC
     Microsoft.GSL::GSL
     fmt::fmt
+    frequencypp::frequencypp
 )
 target_include_directories(libnpln
     PUBLIC

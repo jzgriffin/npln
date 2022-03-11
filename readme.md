@@ -74,4 +74,5 @@ Name                                                | Version | License
 [GSL](https://github.com/microsoft/GSL)             | ec6cd75 | MIT
 [Glad](https://glad.dav1d.de)                       | 0.1.34  | Public domain
 [fmtlib](https://fmt.dev)                           | 8.0.1   | MIT
+[frequencypp](https://github.com/nokurn/frequencypp | 0.1.1   | ISC
 [CHIP-8 Games Pack](https://www.zophar.net/pdroms/chip8/chip-8-games-pack.html) | | Public Domain
