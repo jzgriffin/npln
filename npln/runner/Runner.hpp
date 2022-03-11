@@ -27,7 +27,12 @@ class Runner
 {
 public:
     explicit Runner(Parameters const& params);
+    Runner(Runner const&) = delete;
+    Runner(Runner&&) noexcept = delete;
     ~Runner();
+
+    auto operator=(Runner const&) -> Runner& = delete;
+    auto operator=(Runner&&) noexcept -> Runner& = delete;
 
     auto run() -> int;
 
