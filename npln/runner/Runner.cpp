@@ -73,6 +73,7 @@ auto Runner::create_window() -> void
 auto Runner::install_window_callbacks() -> void
 {
     glfwSetKeyCallback(
+        // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
         window, [](GLFWwindow* window, int key, int scan_code, int action, int mods) {
             auto* self = static_cast<Runner*>(glfwGetWindowUserPointer(window));
             if (self != nullptr) {
@@ -102,6 +103,7 @@ auto Runner::run() -> int
     return EXIT_SUCCESS;
 }
 
+// NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
 auto Runner::process_key(int key, int scan_code, int action, int mods) -> void
 {
     (void)scan_code;
