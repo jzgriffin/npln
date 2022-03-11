@@ -28,6 +28,17 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CTest)
 endif()
 
+# Require C++17 without extensions.  These variables inform the target
+# properties.  By explicitly requiring C++17, rather than simply setting
+# the language version with the cxx_std_17 compiler feature, CMake will
+# always add the appropriate compiler flag.  This ensures that the flag
+# is present in compile_commands.json.  This is important when the
+# compiler, such as GCC, defaults to C++17 but the language server, such
+# as clangd, does not.
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 # Helpers
 function(disable_clang_tidy target)
     get_target_property(target_type ${target} TYPE)
