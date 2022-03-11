@@ -35,13 +35,13 @@ auto subtraction_underflow(T const x, T const y) -> std::enable_if_t<std::is_int
 template<typename T>
 auto lsb(T const x) -> std::enable_if_t<std::is_integral_v<T> && std::is_unsigned_v<T>, bool>
 {
-    return (x & (1 << 0)) != 0;
+    return (x & (1U << 0U)) != 0;
 }
 
 template<typename T>
 auto msb(T const x) -> std::enable_if_t<std::is_integral_v<T> && std::is_unsigned_v<T>, bool>
 {
-    return (x & (1 << (std::numeric_limits<T>::digits - 1))) != 0;
+    return (x & (1U << (std::numeric_limits<T>::digits - 1))) != 0;
 }
 
 } // namespace libnpln::utility

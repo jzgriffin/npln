@@ -159,7 +159,7 @@ constexpr std::array<Glyph, 0x10> font_glyphs = {
     },
 };
 
-auto load_font_into_memory(Memory& m, Address const a) -> bool;
+auto load_font_into_memory(Memory& m, Address a) -> bool;
 
 constexpr auto get_glyph_offset(Nibble const digit) -> std::optional<std::size_t>
 {

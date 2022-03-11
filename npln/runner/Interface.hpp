@@ -17,7 +17,7 @@
 
 namespace CLI {
 class App;
-}
+} // namespace CLI
 
 namespace npln::runner {
 

@@ -26,7 +26,7 @@ namespace libnpln::machine {
 
 using Stack = utility::FixedSizeStack<Address, 16>;
 
-}
+} // namespace libnpln::machine
 
 template<>
 struct fmt::formatter<libnpln::machine::Stack>

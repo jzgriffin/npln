@@ -29,6 +29,8 @@ constexpr Nibble max_nibble = 0xF;
 
 constexpr auto make_word(Byte const high, Byte const low) noexcept
 {
+    // Byte is unsigned; this seems to be a false positive from clang-tidy.
+    // NOLINTNEXTLINE(hicpp-signed-bitwise)
     return static_cast<Word>(low | (high << std::numeric_limits<Byte>::digits));
 }
 

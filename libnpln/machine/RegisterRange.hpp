@@ -112,11 +112,11 @@ public:
         : first{first}, last{RegisterIterator::next(last)}
     {}
 
-    auto begin() const noexcept
+    [[nodiscard]] auto begin() const noexcept
     {
         return first;
     }
-    auto end() const noexcept
+    [[nodiscard]] auto end() const noexcept
     {
         return last;
     }

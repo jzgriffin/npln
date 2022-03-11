@@ -46,7 +46,7 @@ namespace detail {
             protected:
                 static constexpr auto encode(TTypes... xs) noexcept
                 {
-                    return static_cast<Word>((0x0000 | ...
+                    return static_cast<Word>((0x0000U | ...
                         | TCodecs::encode(static_cast<typename TCodecs::Container>(xs))));
                 }
 
@@ -61,7 +61,8 @@ namespace detail {
 
 struct NullaryOperands : detail::BaseOperands<NullaryOperands>::WithTypes<>::WithCodecs<>
 {
-    constexpr auto encode() const noexcept
+    // NOLINTNEXTLINE(readability-convert-member-functions-to-static)
+    [[nodiscard]] constexpr auto encode() const noexcept
     {
         return WithCodecs::encode();
     }
@@ -87,9 +88,9 @@ constexpr auto operator!=(NullaryOperands const& lhs, NullaryOperands const& rhs
 
 struct AOperands : detail::BaseOperands<AOperands>::WithTypes<Address>::WithCodecs<AddressOperand>
 {
-    constexpr AOperands(Address const address) noexcept : address{address} {}
+    constexpr explicit AOperands(Address const address) noexcept : address{address} {}
 
-    constexpr auto encode() const noexcept
+    [[nodiscard]] constexpr auto encode() const noexcept
     {
         return WithCodecs::encode(address);
     }
@@ -116,9 +117,9 @@ constexpr auto operator!=(AOperands const& lhs, AOperands const& rhs) noexcept
 
 struct VOperands : detail::BaseOperands<VOperands>::WithTypes<Register>::WithCodecs<VxOperand>
 {
-    constexpr VOperands(Register const vx) noexcept : vx{vx} {}
+    constexpr explicit VOperands(Register const vx) noexcept : vx{vx} {}
 
-    constexpr auto encode() const noexcept
+    [[nodiscard]] constexpr auto encode() const noexcept
     {
         return WithCodecs::encode(vx);
     }
@@ -148,7 +149,7 @@ struct VBOperands
 {
     constexpr VBOperands(Register const vx, Byte const byte) noexcept : vx{vx}, byte{byte} {}
 
-    constexpr auto encode() const noexcept
+    [[nodiscard]] constexpr auto encode() const noexcept
     {
         return WithCodecs::encode(vx, byte);
     }
@@ -180,7 +181,7 @@ struct VVOperands
 {
     constexpr VVOperands(Register const vx, Register const vy) noexcept : vx{vx}, vy{vy} {}
 
-    constexpr auto encode() const noexcept
+    [[nodiscard]] constexpr auto encode() const noexcept
     {
         return WithCodecs::encode(vx, vy);
     }
@@ -213,7 +214,7 @@ struct VVNOperands
         : vx{vx}, vy{vy}, nibble{nibble}
     {}
 
-    constexpr auto encode() const noexcept
+    [[nodiscard]] constexpr auto encode() const noexcept
     {
         return WithCodecs::encode(vx, vy, nibble);
     }

@@ -34,7 +34,7 @@ struct Instruction
         return decode_ffff(w);
     }
 
-    constexpr auto encode() const noexcept -> Word
+    [[nodiscard]] constexpr auto encode() const noexcept -> Word
     {
         return static_cast<Word>(op) | std::visit([](auto&& a) { return a.encode(); }, args);
     }
@@ -47,7 +47,7 @@ struct Instruction
 private:
     static constexpr auto decode_f000(Word const w) noexcept -> std::optional<Instruction>
     {
-        auto op = static_cast<Operator>(w & 0xF000);
+        auto op = static_cast<Operator>(w & 0xF000U);
         switch (op) {
         case Operator::jmp_a:
         case Operator::call_a:
@@ -65,7 +65,7 @@ private:
 
     static constexpr auto decode_f00f(Word const w) noexcept -> std::optional<Instruction>
     {
-        auto op = static_cast<Operator>(w & 0xF00F);
+        auto op = static_cast<Operator>(w & 0xF00FU);
         switch (op) {
         case Operator::seq_v_v:
         case Operator::mov_v_v:
@@ -82,7 +82,7 @@ private:
 
     static constexpr auto decode_f0ff(Word const w) noexcept -> std::optional<Instruction>
     {
-        auto op = static_cast<Operator>(w & 0xF0FF);
+        auto op = static_cast<Operator>(w & 0xF0FFU);
         switch (op) {
         case Operator::shr_v:
         case Operator::shl_v:
