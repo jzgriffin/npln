@@ -59,7 +59,7 @@ public:
     auto operator++(int) -> RegisterIterator
     {
         auto i = *this;
-        (*this)++;
+        ++(*this);
         return i;
     }
 
