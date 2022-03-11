@@ -1938,6 +1938,8 @@ TEST_CASE("Individual instructions execute correctly", "[machine][cycle]")
 
 TEST_CASE("Delay timer counts down correctly", "[machine][cycle]")
 {
+    using namespace frequencypp::literals;
+
     SECTION("when the master clock rate is the delay clock rate")
     {
         Byte const ticks = 0xFF;
@@ -1974,7 +1976,7 @@ TEST_CASE("Delay timer counts down correctly", "[machine][cycle]")
             },
             m.memory());
         m.registers().dt = ticks;
-        m.master_clock_rate() = Machine::delay_clock_rate - 11;
+        m.master_clock_rate() = Machine::delay_clock_rate - 11_Hz;
 
         std::size_t cycles = 0;
         while (m.registers().dt > 0) {
@@ -1999,7 +2001,7 @@ TEST_CASE("Delay timer counts down correctly", "[machine][cycle]")
             },
             m.memory());
         m.registers().dt = ticks;
-        m.master_clock_rate() = Machine::delay_clock_rate + 11;
+        m.master_clock_rate() = Machine::delay_clock_rate + 11_Hz;
 
         std::size_t cycles = 0;
         while (m.registers().dt > 0) {
@@ -2042,6 +2044,8 @@ TEST_CASE("Delay timer counts down correctly", "[machine][cycle]")
 
 TEST_CASE("Sound timer counts down correctly", "[machine][cycle]")
 {
+    using namespace frequencypp::literals;
+
     SECTION("when the master clock rate is the sound clock rate")
     {
         Byte const ticks = 0xFF;
@@ -2078,7 +2082,7 @@ TEST_CASE("Sound timer counts down correctly", "[machine][cycle]")
             },
             m.memory());
         m.registers().st = ticks;
-        m.master_clock_rate() = Machine::sound_clock_rate - 11;
+        m.master_clock_rate() = Machine::sound_clock_rate - 11_Hz;
 
         std::size_t cycles = 0;
         while (m.registers().st > 0) {
@@ -2103,7 +2107,7 @@ TEST_CASE("Sound timer counts down correctly", "[machine][cycle]")
             },
             m.memory());
         m.registers().st = ticks;
-        m.master_clock_rate() = Machine::sound_clock_rate + 11;
+        m.master_clock_rate() = Machine::sound_clock_rate + 11_Hz;
 
         std::size_t cycles = 0;
         while (m.registers().st > 0) {

@@ -26,6 +26,8 @@
 #include <libnpln/utility/HexDump.hpp>
 
 #include <fmt/format.h>
+#include <fmt/ostream.h>
+#include <frequencypp/frequency.hpp>
 
 #include <optional>
 #include <random>
@@ -115,13 +117,17 @@ public:
         return display_;
     }
 
-    auto master_clock_rate() noexcept -> std::size_t&
+    auto master_clock_rate() noexcept -> frequencypp::hertz&
+    {
+        return master_clock_rate_;
+    }
+    [[nodiscard]] auto master_clock_rate() const noexcept -> frequencypp::hertz const&
     {
         return master_clock_rate_;
     }
 
-    static constexpr std::size_t delay_clock_rate = 60; // Hz
-    static constexpr std::size_t sound_clock_rate = 60; // Hz
+    static constexpr frequencypp::hertz delay_clock_rate{60};
+    static constexpr frequencypp::hertz sound_clock_rate{60};
 
     static constexpr Address font_address = 0x100;
     static constexpr Address program_address = 0x200;
@@ -174,7 +180,7 @@ private:
     Keys keys_;
     Display display_;
 
-    std::size_t master_clock_rate_ = 120; // Hz
+    frequencypp::hertz master_clock_rate_{120};
 
     // These counters represent the number of master cycles since the last decrement of the
     // respective timer register.
@@ -200,6 +206,7 @@ struct fmt::formatter<libnpln::machine::Machine>
     {
         return format_to(context.out(),
             "fault: {}\n"
+            "master clock rate: {}\n"
             "program counter: {:3X}h\n"
             "registers:\n{}\n"
             "stack: {{{}}}\n"
@@ -207,7 +214,7 @@ struct fmt::formatter<libnpln::machine::Machine>
             "keys: {{{}}}\n"
             "display:\n{}",
             value.fault() == std::nullopt ? "none" : to_string(*value.fault()),
-            value.program_counter(), value.registers(), value.stack(),
+            value.master_clock_rate(), value.program_counter(), value.registers(), value.stack(),
             libnpln::utility::to_hex_dump(value.memory()), value.keys(), value.display());
     }
 };
