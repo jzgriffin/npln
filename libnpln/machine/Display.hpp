@@ -16,7 +16,6 @@
 #define LIBNPLN_MACHINE_DISPLAY_HPP
 
 #include <fmt/format.h>
-#include <gsl/gsl>
 
 #include <array>
 #include <cstddef>
@@ -36,7 +35,8 @@ public:
 
     Display();
     Display(Display const& other);
-    Display(Display&& other);
+    Display(Display&& other) noexcept;
+    ~Display() = default;
 
     auto operator=(Display const& other) -> Display&;
     auto operator=(Display&& other) noexcept -> Display&;
@@ -44,8 +44,8 @@ public:
     auto operator==(Display const& rhs) const noexcept -> bool;
     auto operator!=(Display const& rhs) const noexcept -> bool;
 
-    auto pixel(std::size_t const x, std::size_t const y) const -> ConstProxy;
-    auto pixel(std::size_t const x, std::size_t const y) -> Proxy;
+    [[nodiscard]] auto pixel(std::size_t x, std::size_t y) const -> ConstProxy;
+    auto pixel(std::size_t x, std::size_t y) -> Proxy;
 
     auto clear() noexcept -> void;
 
@@ -61,7 +61,7 @@ private:
         return x < width && y < height ? std::optional{y * width + x} : std::nullopt;
     }
 
-    gsl::not_null<std::unique_ptr<Pixels>> const pixels_;
+    std::unique_ptr<Pixels> pixels_;
 };
 
 } // namespace libnpln::machine
@@ -79,11 +79,11 @@ struct fmt::formatter<libnpln::machine::Display>
     auto format(libnpln::machine::Display const& value, FormatContext& context)
     {
         auto out = context.out();
-        for (std::size_t y = 0; y < value.height; ++y) {
+        for (std::size_t y = 0; y < libnpln::machine::Display::height; ++y) {
             if (y > 0) {
                 out = format_to(out, "\n");
             }
-            for (std::size_t x = 0; x < value.width; ++x) {
+            for (std::size_t x = 0; x < libnpln::machine::Display::width; ++x) {
                 out = format_to(out, "{}", *value.pixel(x, y) ? "X" : ".");
             }
         }
