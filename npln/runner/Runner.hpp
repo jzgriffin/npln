@@ -49,7 +49,10 @@ private:
     auto update(FrameClock::duration const& frame_time) -> void;
     auto render() -> void;
 
+    auto cycle_machine(FrameClock::duration const& frame_time) -> void;
+
     libnpln::machine::Machine machine;
+    FrameClock::duration accumulated_frame_time{};
 
     GLFWwindow* window = nullptr;
 };

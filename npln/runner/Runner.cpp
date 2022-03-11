@@ -25,6 +25,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
+#include <type_traits>
 
 namespace npln::runner {
 
@@ -119,11 +120,26 @@ auto Runner::process_key(int key, int scan_code, int action, int mods) -> void
     }
 }
 
-auto Runner::update(FrameClock::duration const& frame_time) -> void {}
+auto Runner::update(FrameClock::duration const& frame_time) -> void
+{
+    cycle_machine(frame_time);
+}
 
 auto Runner::render() -> void
 {
     glClear(GL_COLOR_BUFFER_BIT);
+}
+
+auto Runner::cycle_machine(FrameClock::duration const& frame_time) -> void
+{
+    // Ensure that the machine cycles in real time regardless of the update rate.
+    accumulated_frame_time += frame_time;
+    const auto passed_cycles = accumulated_frame_time * machine.master_clock_rate();
+    accumulated_frame_time -= frequencypp::duration_cast<FrameClock::duration>(
+        passed_cycles * machine.master_clock_rate());
+    for (std::decay_t<decltype(passed_cycles)> i = 0; i < passed_cycles; ++i) {
+        machine.cycle();
+    }
 }
 
 } // namespace npln::runner
