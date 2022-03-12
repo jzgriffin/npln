@@ -41,21 +41,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Helpers
-function(disable_clang_tidy target)
-    get_target_property(target_type ${target} TYPE)
-    get_target_property(target_alias ${target} ALIASED_TARGET)
-    if((NOT target_type STREQUAL "INTERFACE_LIBRARY") AND (target_alias STREQUAL ""))
-        # Clear the *_CLANG_TIDY properties so that any global setting is
-        # discarded.  This prevents clang-tidy from being run on this target.
-        set_target_properties(${target}
-            PROPERTIES
-            C_CLANG_TIDY ""
-            CXX_CLANG_TIDY ""
-        )
-    endif()
-endfunction()
-
 # Options
 option(BUILD_RUNNER "Build the runner graphical interface" TRUE)
 if(BUILD_RUNNER)
