@@ -83,9 +83,8 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
     include(Catch)
 endif()
 
-# Vendored dependencies
-add_subdirectory(vendor/frequencypp)
-disable_clang_tidy(frequencypp::frequencypp)
+# Sub-project dependencies
+include(cmake/subproject/frequencypp.cmake)
 add_subdirectory(vendor/gsl)
 disable_clang_tidy(Microsoft.GSL::GSL)
 
