@@ -72,7 +72,7 @@ Name                                                | Version | License
 [Catch](https://github.com/catchorg/Catch2)         | 2.13.7  | BSL-1.0
 [GLFW](https://www.glfw.org)                        | 3.3.4   | zlib/libpng
 [GLM](https://github.com/g-truc/glm)                | 0.9.9.8 | MIT
-[GSL](https://github.com/microsoft/GSL)             | ec6cd75 | MIT
+[GSL](https://github.com/microsoft/GSL)             | 4377f6e | MIT
 [Glad](https://glad.dav1d.de)                       | 0.1.34  | Public domain
 [fmtlib](https://fmt.dev)                           | 8.0.1   | MIT
 [frequencypp](https://github.com/nokurn/frequencypp | 0.1.1   | ISC

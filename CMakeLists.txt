@@ -85,8 +85,7 @@ endif()
 
 # Sub-project dependencies
 include(cmake/subproject/frequencypp.cmake)
-add_subdirectory(vendor/gsl)
-disable_clang_tidy(Microsoft.GSL::GSL)
+include(cmake/subproject/gsl.cmake)
 
 # libnpln target
 add_library(libnpln
