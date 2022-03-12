@@ -68,11 +68,12 @@ license:
 
 Name                                                | Version | License
 --------------------------------------------------- | ------- | --------------
-[Catch](https://github.com/catchorg/Catch2)         | 2.13.7  | BSL-1.0
 [CLI11](https://github.com/CLIUtils/CLI11)          | 2.1.1   | BSD
+[Catch](https://github.com/catchorg/Catch2)         | 2.13.7  | BSL-1.0
 [GLFW](https://www.glfw.org)                        | 3.3.4   | zlib/libpng
 [GSL](https://github.com/microsoft/GSL)             | ec6cd75 | MIT
 [Glad](https://glad.dav1d.de)                       | 0.1.34  | Public domain
 [fmtlib](https://fmt.dev)                           | 8.0.1   | MIT
 [frequencypp](https://github.com/nokurn/frequencypp | 0.1.1   | ISC
+[spdlog](https://github.com/gabime/spdlog)          | 1.9.2   | MIT
 [CHIP-8 Games Pack](https://www.zophar.net/pdroms/chip8/chip-8-games-pack.html) | | Public Domain

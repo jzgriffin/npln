@@ -65,6 +65,7 @@ include(${CMAKE_CURRENT_BINARY_DIR}/conan_paths.cmake)
 
 find_package(CLI11 REQUIRED)
 find_package(fmt REQUIRED)
+find_package(spdlog REQUIRED)
 
 if(BUILD_RUNNER)
     find_package(glad REQUIRED)
@@ -123,6 +124,7 @@ target_link_libraries(libnpln
     Microsoft.GSL::GSL
     fmt::fmt
     frequencypp::frequencypp
+    spdlog::spdlog
 )
 target_include_directories(libnpln
     PUBLIC
