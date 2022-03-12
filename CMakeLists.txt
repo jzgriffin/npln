@@ -28,6 +28,8 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     include(CTest)
 endif()
 
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+
 # Require C++17 without extensions.  These variables inform the target
 # properties.  By explicitly requiring C++17, rather than simply setting
 # the language version with the cxx_std_17 compiler feature, CMake will
