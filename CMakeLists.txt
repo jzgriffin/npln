@@ -72,6 +72,10 @@ if(BUILD_RUNNER)
     find_package(glfw3 REQUIRED)
 endif()
 
+if(BUILD_RENDERER)
+    find_package(glm REQUIRED)
+endif()
+
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
     find_package(Catch2 REQUIRED)
     include(Catch)
@@ -183,6 +187,7 @@ if(BUILD_RENDERER)
     )
     set(npln_RENDERER_LIBRARIES
         glad::glad
+        glm::glm
     )
 endif()
 configure_file(
