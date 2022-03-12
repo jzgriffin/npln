@@ -20,7 +20,8 @@
 
 #include <GLFW/glfw3.h>
 #include <fmt/format.h>
-#include <glad/glad.h>
+#include <glbinding/gl/gl.h>
+#include <glbinding/glbinding.h>
 
 #include <cstdlib>
 #include <iostream>
@@ -67,11 +68,7 @@ auto Runner::create_window() -> void
     glfwSetWindowUserPointer(window, this);
 
     glfwMakeContextCurrent(window);
-    // Interfacing with this C API requires reinterpret_cast.
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-    if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == 0) {
-        throw std::runtime_error{"Unable to initialize GLAD"};
-    }
+    glbinding::initialize(glfwGetProcAddress);
 
     install_window_callbacks();
 }
@@ -127,7 +124,7 @@ auto Runner::update(FrameClock::duration const& frame_time) -> void
 
 auto Runner::render() -> void
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    gl::glClear(gl::ClearBufferMask::GL_COLOR_BUFFER_BIT);
 }
 
 auto Runner::cycle_machine(FrameClock::duration const& frame_time) -> void

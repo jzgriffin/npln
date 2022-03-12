@@ -73,8 +73,8 @@ Name                                                | Version | License
 [GLFW](https://www.glfw.org)                        | 3.3.4   | zlib/libpng
 [GLM](https://github.com/g-truc/glm)                | 0.9.9.8 | MIT
 [GSL](https://github.com/microsoft/GSL)             | 4377f6e | MIT
-[Glad](https://glad.dav1d.de)                       | 0.1.34  | Public domain
 [fmtlib](https://fmt.dev)                           | 8.0.1   | MIT
 [frequencypp](https://github.com/nokurn/frequencypp | 0.1.1   | ISC
+[glbinding](https://glbinding.org)                  | 70e76f9 | MIT
 [spdlog](https://github.com/gabime/spdlog)          | 1.9.2   | MIT
 [CHIP-8 Games Pack](https://www.zophar.net/pdroms/chip8/chip-8-games-pack.html) | | Public Domain

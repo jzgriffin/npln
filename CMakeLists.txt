@@ -55,7 +55,6 @@ find_package(fmt REQUIRED)
 find_package(spdlog REQUIRED)
 
 if(BUILD_RUNNER)
-    find_package(glad REQUIRED)
     find_package(glfw3 REQUIRED)
 endif()
 
@@ -71,6 +70,10 @@ endif()
 # Sub-project dependencies
 include(cmake/subproject/frequencypp.cmake)
 include(cmake/subproject/gsl.cmake)
+
+if(BUILD_RENDERER)
+    include(cmake/subproject/glbinding.cmake)
+endif()
 
 # libnpln target
 add_library(libnpln
@@ -171,7 +174,7 @@ if(BUILD_RENDERER)
     set(npln_RENDERER_SOURCE
     )
     set(npln_RENDERER_LIBRARIES
-        glad::glad
+        glbinding::glbinding
         glm::glm
     )
 endif()
