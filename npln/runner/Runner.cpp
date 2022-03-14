@@ -39,10 +39,6 @@ Runner::Runner(Parameters const& params)
             fmt::format("Unable to load program {} into memory", params.path.c_str())};
     }
 
-    if (glfwInit() == GLFW_FALSE) {
-        throw std::runtime_error{"Unable to initialize GLFW"};
-    }
-
     install_error_callback();
     create_window();
 }
@@ -82,11 +78,6 @@ auto Runner::install_window_callbacks() -> void
                 self->process_key(key, scan_code, action, mods);
             }
         });
-}
-
-Runner::~Runner()
-{
-    glfwTerminate();
 }
 
 auto Runner::run() -> int

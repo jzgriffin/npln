@@ -15,6 +15,8 @@
 #ifndef NPLN_RUNNER_RUNNER_HPP
 #define NPLN_RUNNER_RUNNER_HPP
 
+#include <npln/runner/GlfwLibrary.hpp>
+
 #include <libnpln/machine/Machine.hpp>
 
 #include <chrono>
@@ -31,7 +33,7 @@ public:
     explicit Runner(Parameters const& params);
     Runner(Runner const&) = delete;
     Runner(Runner&&) noexcept = delete;
-    ~Runner();
+    ~Runner() = default;
 
     auto operator=(Runner const&) -> Runner& = delete;
     auto operator=(Runner&&) noexcept -> Runner& = delete;
@@ -54,6 +56,7 @@ private:
     libnpln::machine::Machine machine;
     FrameClock::duration accumulated_frame_time{};
 
+    GlfwLibrary glfwLibrary;
     GLFWwindow* window = nullptr;
 };
 

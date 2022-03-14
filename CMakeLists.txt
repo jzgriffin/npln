@@ -163,6 +163,8 @@ if(BUILD_RUNNER)
     set(npln_RUNNER_SOURCE
         npln/runner/GlfwError.cpp
         npln/runner/GlfwError.hpp
+        npln/runner/GlfwLibrary.cpp
+        npln/runner/GlfwLibrary.hpp
         npln/runner/Interface.cpp
         npln/runner/Interface.hpp
         npln/runner/Parameters.hpp
