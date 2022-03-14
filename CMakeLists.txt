@@ -206,3 +206,7 @@ target_include_directories(npln
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/conf>
 )
+target_compile_definitions(npln
+    PRIVATE
+    GLFW_INCLUDE_NONE
+)
