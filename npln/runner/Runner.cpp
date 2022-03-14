@@ -21,7 +21,7 @@
 #include <GLFW/glfw3.h>
 #include <fmt/format.h>
 #include <glbinding/gl/gl.h>
-#include <glbinding/glbinding.h>
+#include <globjects/globjects.h>
 
 #include <cstdlib>
 #include <iostream>
@@ -68,7 +68,7 @@ auto Runner::create_window() -> void
     glfwSetWindowUserPointer(window, this);
 
     glfwMakeContextCurrent(window);
-    glbinding::initialize(glfwGetProcAddress);
+    globjects::init(glfwGetProcAddress);
 
     install_window_callbacks();
 }
