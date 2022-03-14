@@ -161,6 +161,8 @@ endif()
 if(BUILD_RUNNER)
     set(BUILD_RENDERER ON)
     set(npln_RUNNER_SOURCE
+        npln/runner/GlfwError.cpp
+        npln/runner/GlfwError.hpp
         npln/runner/Interface.cpp
         npln/runner/Interface.hpp
         npln/runner/Parameters.hpp

@@ -16,6 +16,7 @@
 
 #include <npln/runner/Runner.hpp>
 
+#include <npln/runner/GlfwError.hpp>
 #include <npln/runner/Parameters.hpp>
 
 #include <GLFW/glfw3.h>
@@ -48,9 +49,7 @@ Runner::Runner(Parameters const& params)
 
 auto Runner::install_error_callback() -> void
 {
-    glfwSetErrorCallback([](int error, char const* desc) {
-        std::cerr << "Error: GLFW reported code " << error << ": " << desc << '\n';
-    });
+    glfwSetErrorCallback([](int code, char const* message) { throw GlfwError{code, message}; });
 }
 
 auto Runner::create_window() -> void
