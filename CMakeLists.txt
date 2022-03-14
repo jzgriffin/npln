@@ -177,6 +177,8 @@ if(NPLN_BUILD_RUNNER)
 endif()
 if(NPLN_BUILD_RENDERER)
     set(npln_RENDERER_SOURCE
+        npln/renderer/DisplayTexture.cpp
+        npln/renderer/DisplayTexture.hpp
     )
     set(npln_RENDERER_LIBRARIES
         glbinding::glbinding

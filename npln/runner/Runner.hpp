@@ -20,8 +20,15 @@
 #include <libnpln/machine/Machine.hpp>
 
 #include <chrono>
+#include <memory>
 
 struct GLFWwindow;
+
+namespace npln::renderer {
+
+class DisplayTexture;
+
+} // namespace npln::renderer
 
 namespace npln::runner {
 
@@ -33,7 +40,7 @@ public:
     explicit Runner(Parameters const& params);
     Runner(Runner const&) = delete;
     Runner(Runner&&) noexcept = delete;
-    ~Runner() = default;
+    ~Runner();
 
     auto operator=(Runner const&) -> Runner& = delete;
     auto operator=(Runner&&) noexcept -> Runner& = delete;
@@ -58,6 +65,8 @@ private:
 
     GlfwLibrary glfwLibrary;
     GLFWwindow* window = nullptr;
+
+    std::unique_ptr<renderer::DisplayTexture> display_texture_;
 };
 
 } // namespace npln::runner

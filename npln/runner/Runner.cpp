@@ -14,6 +14,7 @@
 
 #include <npln/runner/Runner.hpp>
 
+#include <npln/renderer/DisplayTexture.hpp>
 #include <npln/runner/GlfwError.hpp>
 #include <npln/runner/Parameters.hpp>
 
@@ -39,7 +40,11 @@ Runner::Runner(Parameters const& params)
 
     install_error_callback();
     create_window();
+
+    display_texture_ = std::make_unique<renderer::DisplayTexture>(machine.display());
 }
+
+Runner::~Runner() = default;
 
 auto Runner::install_error_callback() -> void
 {
@@ -112,6 +117,8 @@ auto Runner::update(FrameClock::duration const& frame_time) -> void
 
 auto Runner::render() -> void
 {
+    display_texture_->render();
+
     gl::glClear(gl::ClearBufferMask::GL_COLOR_BUFFER_BIT);
 }
 
