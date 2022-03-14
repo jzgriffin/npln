@@ -54,6 +54,10 @@ private:
     auto create_window() -> void;
     auto install_window_callbacks() -> void;
 
+    auto initialize_globjects() -> void;
+    auto initialize_imgui() -> void;
+
+    auto process_framebuffer_size(int width, int height) -> void;
     auto process_key(int key, int scan_code, int action, int mods) -> void;
     auto update(FrameClock::duration const& frame_time) -> void;
     auto render() -> void;

@@ -22,6 +22,9 @@
 #include <fmt/format.h>
 #include <glbinding/gl/gl.h>
 #include <globjects/globjects.h>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 #include <cstdlib>
 #include <iostream>
@@ -40,11 +43,18 @@ Runner::Runner(Parameters const& params)
 
     install_error_callback();
     create_window();
+    initialize_globjects();
+    initialize_imgui();
 
     display_texture_ = std::make_unique<renderer::DisplayTexture>(machine.display());
 }
 
-Runner::~Runner() = default;
+Runner::~Runner()
+{
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+}
 
 auto Runner::install_error_callback() -> void
 {
@@ -66,13 +76,21 @@ auto Runner::create_window() -> void
     glfwSetWindowUserPointer(window, this);
 
     glfwMakeContextCurrent(window);
-    globjects::init(glfwGetProcAddress);
 
     install_window_callbacks();
 }
 
 auto Runner::install_window_callbacks() -> void
 {
+    glfwSetFramebufferSizeCallback(
+        // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
+        window, [](GLFWwindow* window, int width, int height) {
+            auto* self = static_cast<Runner*>(glfwGetWindowUserPointer(window));
+            if (self != nullptr) {
+                self->process_framebuffer_size(width, height);
+            }
+        });
+
     glfwSetKeyCallback(
         // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
         window, [](GLFWwindow* window, int key, int scan_code, int action, int mods) {
@@ -81,6 +99,27 @@ auto Runner::install_window_callbacks() -> void
                 self->process_key(key, scan_code, action, mods);
             }
         });
+}
+
+// NOLINTNEXTLINE
+auto Runner::initialize_globjects() -> void
+{
+    globjects::init(glfwGetProcAddress);
+}
+
+auto Runner::initialize_imgui() -> void
+{
+    IMGUI_CHECKVERSION();
+    if (ImGui::CreateContext() == nullptr) {
+        throw std::runtime_error{"Unable to create ImGui context"};
+    }
+
+    if (!ImGui_ImplGlfw_InitForOpenGL(window, true)) {
+        throw std::runtime_error{"Unable to initialize ImGui GLFW OpenGL implementation"};
+    }
+    if (!ImGui_ImplOpenGL3_Init("#version 330")) {
+        throw std::runtime_error{"Unable to initialize ImGui OpenGL 3 implementation"};
+    }
 }
 
 auto Runner::run() -> int
@@ -99,6 +138,12 @@ auto Runner::run() -> int
     return EXIT_SUCCESS;
 }
 
+// NOLINTNEXTLINE
+auto Runner::process_framebuffer_size(int width, int height) -> void
+{
+    gl::glViewport(0, 0, width, height);
+}
+
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
 auto Runner::process_key(int key, int scan_code, int action, int mods) -> void
 {
@@ -113,6 +158,10 @@ auto Runner::process_key(int key, int scan_code, int action, int mods) -> void
 auto Runner::update(FrameClock::duration const& frame_time) -> void
 {
     cycle_machine(frame_time);
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
 }
 
 auto Runner::render() -> void
@@ -120,6 +169,8 @@ auto Runner::render() -> void
     display_texture_->render();
 
     gl::glClear(gl::ClearBufferMask::GL_COLOR_BUFFER_BIT);
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 auto Runner::cycle_machine(FrameClock::duration const& frame_time) -> void

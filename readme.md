@@ -73,6 +73,7 @@ Name                                                | Version | License
 [GLFW](https://www.glfw.org)                        | 3.3.4   | zlib/libpng
 [GLM](https://github.com/g-truc/glm)                | 0.9.9.8 | MIT
 [GSL](https://github.com/microsoft/GSL)             | 4377f6e | MIT
+[ImGui](https://github.com/ocornut/imgui)           | 1.87    | MIT
 [fmtlib](https://fmt.dev)                           | 8.0.1   | MIT
 [frequencypp](https://github.com/nokurn/frequencypp | 0.1.1   | ISC
 [glbinding](https://glbinding.org)                  | 70e76f9 | MIT

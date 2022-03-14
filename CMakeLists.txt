@@ -56,6 +56,7 @@ find_package(spdlog REQUIRED)
 
 if(NPLN_BUILD_RUNNER)
     find_package(glfw3 REQUIRED)
+    find_package(imgui REQUIRED)
 endif()
 
 if(NPLN_BUILD_RENDERER)
@@ -161,6 +162,11 @@ endif()
 if(NPLN_BUILD_RUNNER)
     set(NPLN_BUILD_RENDERER ON)
     set(npln_RUNNER_SOURCE
+        ${CMAKE_CURRENT_BINARY_DIR}/conf/imgui_impl_glfw.cpp
+        ${CMAKE_CURRENT_BINARY_DIR}/conf/imgui_impl_glfw.h
+        ${CMAKE_CURRENT_BINARY_DIR}/conf/imgui_impl_opengl3.cpp
+        ${CMAKE_CURRENT_BINARY_DIR}/conf/imgui_impl_opengl3.h
+        ${CMAKE_CURRENT_BINARY_DIR}/conf/imgui_impl_opengl3_loader.h
         npln/runner/GlfwError.cpp
         npln/runner/GlfwError.hpp
         npln/runner/GlfwLibrary.cpp
@@ -173,6 +179,7 @@ if(NPLN_BUILD_RUNNER)
     )
     set(npln_RUNNER_LIBRARIES
         glfw
+        imgui::imgui
     )
 endif()
 if(NPLN_BUILD_RENDERER)
