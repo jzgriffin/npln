@@ -61,6 +61,7 @@ private:
     auto process_key(int key, int scan_code, int action, int mods) -> void;
     auto update(FrameClock::duration const& frame_time) -> void;
     auto render() -> void;
+    auto render_display() -> void;
 
     auto cycle_machine(FrameClock::duration const& frame_time) -> void;
 

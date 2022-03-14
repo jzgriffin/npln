@@ -21,6 +21,7 @@
 #include <GLFW/glfw3.h>
 #include <fmt/format.h>
 #include <glbinding/gl/gl.h>
+#include <globjects/TextureHandle.h>
 #include <globjects/globjects.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
@@ -159,6 +160,8 @@ auto Runner::update(FrameClock::duration const& frame_time) -> void
 {
     cycle_machine(frame_time);
 
+    display_texture_->update();
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -166,11 +169,28 @@ auto Runner::update(FrameClock::duration const& frame_time) -> void
 
 auto Runner::render() -> void
 {
-    display_texture_->render();
+    render_display();
 
     gl::glClear(gl::ClearBufferMask::GL_COLOR_BUFFER_BIT);
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+auto Runner::render_display() -> void
+{
+    display_texture_->render();
+
+    ImGui::SetNextWindowPos(ImVec2(0.0F, 0.0F));
+    ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0F);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0F, 0.0F));
+    ImGui::Begin("Display", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoResize);
+    ImGui::Image(
+        // NOLINTNEXTLINE
+        reinterpret_cast<ImTextureID>(display_texture_->texture().textureHandle().handle()),
+        ImGui::GetWindowSize());
+    ImGui::End();
+    ImGui::PopStyleVar(2);
 }
 
 auto Runner::cycle_machine(FrameClock::duration const& frame_time) -> void
