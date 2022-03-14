@@ -14,7 +14,7 @@
 
 #include <npln/Build.hpp>
 
-#ifdef BUILD_RUNNER
+#ifdef NPLN_BUILD_RUNNER
 #    include <npln/runner/Interface.hpp>
 #    include <npln/runner/Parameters.hpp>
 #endif
@@ -30,7 +30,7 @@ auto main(int argc, char** argv) -> int
     CLI::App app{"PL/0 on CHIP-8 programming environment", "npln"};
     app.require_subcommand();
 
-#ifdef BUILD_RUNNER
+#ifdef NPLN_BUILD_RUNNER
     npln::runner::Parameters runner_params;
     npln::runner::install_interface(app, runner_params);
 #endif

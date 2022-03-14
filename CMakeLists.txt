@@ -42,9 +42,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Options
-option(BUILD_RUNNER "Build the runner graphical interface" TRUE)
-if(BUILD_RUNNER)
-    set(BUILD_RENDERER ON)
+option(NPLN_BUILD_RUNNER "Build the runner graphical interface" TRUE)
+if(NPLN_BUILD_RUNNER)
+    set(NPLN_BUILD_RENDERER ON)
 endif()
 
 # Dependencies
@@ -54,11 +54,11 @@ find_package(CLI11 REQUIRED)
 find_package(fmt REQUIRED)
 find_package(spdlog REQUIRED)
 
-if(BUILD_RUNNER)
+if(NPLN_BUILD_RUNNER)
     find_package(glfw3 REQUIRED)
 endif()
 
-if(BUILD_RENDERER)
+if(NPLN_BUILD_RENDERER)
     find_package(glm REQUIRED)
 endif()
 
@@ -71,7 +71,7 @@ endif()
 include(cmake/subproject/frequencypp.cmake)
 include(cmake/subproject/gsl.cmake)
 
-if(BUILD_RENDERER)
+if(NPLN_BUILD_RENDERER)
     include(cmake/subproject/glbinding.cmake)
     include(cmake/subproject/globjects.cmake)  # Must come after glbinding
 endif()
@@ -158,8 +158,8 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
 endif()
 
 # npln target
-if(BUILD_RUNNER)
-    set(BUILD_RENDERER ON)
+if(NPLN_BUILD_RUNNER)
+    set(NPLN_BUILD_RENDERER ON)
     set(npln_RUNNER_SOURCE
         npln/runner/GlfwError.cpp
         npln/runner/GlfwError.hpp
@@ -175,7 +175,7 @@ if(BUILD_RUNNER)
         glfw
     )
 endif()
-if(BUILD_RENDERER)
+if(NPLN_BUILD_RENDERER)
     set(npln_RENDERER_SOURCE
     )
     set(npln_RENDERER_LIBRARIES

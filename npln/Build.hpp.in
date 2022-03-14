@@ -15,6 +15,6 @@
 #ifndef NPLN_BUILD_HPP
 #define NPLN_BUILD_HPP
 
-#cmakedefine BUILD_RUNNER
+#cmakedefine NPLN_BUILD_RUNNER
 
 #endif
