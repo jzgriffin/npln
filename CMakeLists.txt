@@ -73,6 +73,7 @@ include(cmake/subproject/gsl.cmake)
 
 if(BUILD_RENDERER)
     include(cmake/subproject/glbinding.cmake)
+    include(cmake/subproject/globjects.cmake)  # Must come after glbinding
 endif()
 
 # libnpln target
@@ -176,6 +177,7 @@ if(BUILD_RENDERER)
     set(npln_RENDERER_LIBRARIES
         glbinding::glbinding
         glm::glm
+        globjects::globjects
     )
 endif()
 configure_file(

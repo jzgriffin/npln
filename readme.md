@@ -76,5 +76,6 @@ Name                                                | Version | License
 [fmtlib](https://fmt.dev)                           | 8.0.1   | MIT
 [frequencypp](https://github.com/nokurn/frequencypp | 0.1.1   | ISC
 [glbinding](https://glbinding.org)                  | 70e76f9 | MIT
+[globjects](https://globjects.org)                  | 72285e2 | MIT
 [spdlog](https://github.com/gabime/spdlog)          | 1.9.2   | MIT
 [CHIP-8 Games Pack](https://www.zophar.net/pdroms/chip8/chip-8-games-pack.html) | | Public Domain
