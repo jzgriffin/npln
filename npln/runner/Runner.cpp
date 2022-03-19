@@ -26,9 +26,9 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <spdlog/spdlog.h>
 
 #include <cstdlib>
-#include <iostream>
 #include <stdexcept>
 #include <type_traits>
 
@@ -46,6 +46,7 @@ Runner::Runner(Parameters const& params)
     create_window();
     initialize_globjects();
     initialize_imgui();
+    initialize_framebuffer();
 
     display_texture_ = std::make_unique<renderer::DisplayTexture>(machine.display());
 }
@@ -123,6 +124,15 @@ auto Runner::initialize_imgui() -> void
     }
 }
 
+auto Runner::initialize_framebuffer() -> void
+{
+    // Raise the initial framebuffer size event.
+    int width = 0;
+    int height = 0;
+    glfwGetFramebufferSize(window, &width, &height);
+    process_framebuffer_size(width, height);
+}
+
 auto Runner::run() -> int
 {
     auto frame_time = FrameClock::duration{};
@@ -142,6 +152,7 @@ auto Runner::run() -> int
 // NOLINTNEXTLINE
 auto Runner::process_framebuffer_size(int width, int height) -> void
 {
+    spdlog::info("Framebuffer size: {}x{}", width, height);
     gl::glViewport(0, 0, width, height);
 }
 

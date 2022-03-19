@@ -56,6 +56,7 @@ private:
 
     auto initialize_globjects() -> void;
     auto initialize_imgui() -> void;
+    auto initialize_framebuffer() -> void;
 
     auto process_framebuffer_size(int width, int height) -> void;
     auto process_key(int key, int scan_code, int action, int mods) -> void;
