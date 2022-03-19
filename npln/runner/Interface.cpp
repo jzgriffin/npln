@@ -18,10 +18,11 @@
 #include <npln/runner/Runner.hpp>
 
 #include <CLI/App.hpp>
+#include <spdlog/spdlog.h>
 
 #include <cstdlib>
 #include <exception>
-#include <iostream>
+#include <typeinfo>
 
 namespace npln::runner {
 
@@ -34,7 +35,8 @@ auto install_interface(CLI::App& app, Parameters& params) -> CLI::App*
             Runner{params}.run();
         }
         catch (std::exception const& e) {
-            std::cerr << "Error: " << e.what() << '\n';
+            spdlog::error(
+                "Uncaught exception of type {} in runner: {}", typeid(e).name(), e.what());
             throw CLI::RuntimeError{EXIT_FAILURE};
         }
     });
