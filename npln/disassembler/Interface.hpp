@@ -12,10 +12,19 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef NPLN_BUILD_HPP
-#define NPLN_BUILD_HPP
+#ifndef NPLN_DISASSEMBLER_INTERFACE_HPP
+#define NPLN_DISASSEMBLER_INTERFACE_HPP
 
-#cmakedefine NPLN_BUILD_DISASSEMBLER
-#cmakedefine NPLN_BUILD_RUNNER
+namespace CLI {
+class App;
+} // namespace CLI
+
+namespace npln::disassembler {
+
+struct Parameters;
+
+auto install_interface(CLI::App& app, Parameters& params) -> CLI::App*;
+
+} // namespace npln::disassembler
 
 #endif

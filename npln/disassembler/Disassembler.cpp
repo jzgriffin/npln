@@ -12,10 +12,22 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef NPLN_BUILD_HPP
-#define NPLN_BUILD_HPP
+#include <npln/disassembler/Disassembler.hpp>
 
-#cmakedefine NPLN_BUILD_DISASSEMBLER
-#cmakedefine NPLN_BUILD_RUNNER
+#include <npln/disassembler/Parameters.hpp>
 
-#endif
+#include <cstdlib>
+
+namespace npln::disassembler {
+
+Disassembler::Disassembler(Parameters const& params)
+{
+    (void)params;
+}
+
+auto Disassembler::run() -> int
+{
+    return EXIT_SUCCESS;
+}
+
+} // namespace npln::disassembler

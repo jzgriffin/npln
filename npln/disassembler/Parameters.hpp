@@ -12,10 +12,21 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef NPLN_BUILD_HPP
-#define NPLN_BUILD_HPP
+#ifndef NPLN_DISASSEMBLER_PARAMETERS_HPP
+#define NPLN_DISASSEMBLER_PARAMETERS_HPP
 
-#cmakedefine NPLN_BUILD_DISASSEMBLER
-#cmakedefine NPLN_BUILD_RUNNER
+#include <filesystem>
+
+namespace npln::disassembler {
+
+struct Parameters
+{
+    std::filesystem::path input_path;
+    std::filesystem::path output_path;
+    bool include_address{true};
+    bool include_opcode{true};
+};
+
+} // namespace npln::disassembler
 
 #endif

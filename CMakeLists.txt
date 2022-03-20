@@ -42,6 +42,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Options
+option(NPLN_BUILD_DISASSEMBLER "Build the disassembler utility" ON)
 option(NPLN_BUILD_RUNNER "Build the runner graphical interface" TRUE)
 if(NPLN_BUILD_RUNNER)
     set(NPLN_BUILD_RENDERER ON)
@@ -162,6 +163,14 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
 endif()
 
 # npln target
+if(NPLN_BUILD_DISASSEMBLER)
+    set(npln_DISASSEMBLER_SOURCE
+        npln/disassembler/Disassembler.cpp
+        npln/disassembler/Interface.cpp
+        npln/disassembler/Interface.hpp
+        npln/disassembler/Parameters.hpp
+    )
+endif()
 if(NPLN_BUILD_RUNNER)
     set(NPLN_BUILD_RENDERER ON)
     set(npln_RUNNER_SOURCE
@@ -203,6 +212,7 @@ configure_file(
 )
 add_executable(npln
     ${CMAKE_CURRENT_BINARY_DIR}/conf/npln/Build.hpp
+    ${npln_DISASSEMBLER_SOURCE}
     ${npln_RENDERER_SOURCE}
     ${npln_RUNNER_SOURCE}
     npln/main.cpp
@@ -210,6 +220,7 @@ add_executable(npln
 target_link_libraries(npln
     libnpln
     CLI11::CLI11
+    ${npln_DISASSEMBLER_LIBRARIES}
     ${npln_RENDERER_LIBRARIES}
     ${npln_RUNNER_LIBRARIES}
 )

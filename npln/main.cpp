@@ -14,6 +14,11 @@
 
 #include <npln/Build.hpp>
 
+#ifdef NPLN_BUILD_DISASSEMBLER
+#    include <npln/disassembler/Interface.hpp>
+#    include <npln/disassembler/Parameters.hpp>
+#endif
+
 #ifdef NPLN_BUILD_RUNNER
 #    include <npln/runner/Interface.hpp>
 #    include <npln/runner/Parameters.hpp>
@@ -29,6 +34,11 @@ auto main(int argc, char** argv) -> int
 {
     CLI::App app{"PL/0 on CHIP-8 programming environment", "npln"};
     app.require_subcommand();
+
+#ifdef NPLN_BUILD_DISASSEMBLER
+    npln::disassembler::Parameters disassembler_params;
+    npln::disassembler::install_interface(app, disassembler_params);
+#endif
 
 #ifdef NPLN_BUILD_RUNNER
     npln::runner::Parameters runner_params;

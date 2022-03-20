@@ -12,10 +12,27 @@
 // ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-#ifndef NPLN_BUILD_HPP
-#define NPLN_BUILD_HPP
+#ifndef NPLN_DISASSEMBLER_DISASSEMBLER_HPP
+#define NPLN_DISASSEMBLER_DISASSEMBLER_HPP
 
-#cmakedefine NPLN_BUILD_DISASSEMBLER
-#cmakedefine NPLN_BUILD_RUNNER
+namespace npln::disassembler {
+
+struct Parameters;
+
+class Disassembler
+{
+public:
+    explicit Disassembler(Parameters const& params);
+    Disassembler(Disassembler const&) = delete;
+    Disassembler(Disassembler&&) noexcept = delete;
+    ~Disassembler() = default;
+
+    auto operator=(Disassembler const&) -> Disassembler& = delete;
+    auto operator=(Disassembler&&) noexcept -> Disassembler& = delete;
+
+    auto run() -> int;
+};
+
+} // namespace npln::disassembler
 
 #endif
