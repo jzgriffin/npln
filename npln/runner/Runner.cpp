@@ -208,9 +208,9 @@ auto Runner::cycle_machine(FrameClock::duration const& frame_time) -> void
 {
     // Ensure that the machine cycles in real time regardless of the update rate.
     accumulated_frame_time += frame_time;
-    const auto passed_cycles = accumulated_frame_time * machine.master_clock_rate();
-    accumulated_frame_time -= frequencypp::duration_cast<FrameClock::duration>(
-        passed_cycles * machine.master_clock_rate());
+    auto const passed_cycles = accumulated_frame_time * machine.master_clock_rate();
+    accumulated_frame_time -= passed_cycles
+        * frequencypp::duration_cast<FrameClock::duration>(machine.master_clock_rate());
     for (std::decay_t<decltype(passed_cycles)> i = 0; i < passed_cycles; ++i) {
         machine.cycle();
     }
