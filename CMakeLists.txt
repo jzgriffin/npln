@@ -84,6 +84,13 @@ add_library(libnpln
     libnpln/detail/ContainerCast.hpp
     libnpln/detail/Overload.hpp
     libnpln/detail/cpp2b.hpp
+    libnpln/disassembler/Column.cpp
+    libnpln/disassembler/Column.hpp
+    libnpln/disassembler/Disassembler.cpp
+    libnpln/disassembler/Disassembler.hpp
+    libnpln/disassembler/Row.hpp
+    libnpln/disassembler/Table.cpp
+    libnpln/disassembler/Table.hpp
     libnpln/machine/BitCodec.hpp
     libnpln/machine/BitCodecs.hpp
     libnpln/machine/DataUnits.hpp
@@ -134,6 +141,10 @@ target_include_directories(libnpln
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
     add_executable(test-libnpln
         libnpln/libnpln.test.cpp
+        libnpln/disassembler/Column.test.cpp
+        libnpln/disassembler/Disassembler.test.cpp
+        libnpln/disassembler/Row.test.cpp
+        libnpln/disassembler/Table.test.cpp
         libnpln/machine/BitCodec.test.cpp
         libnpln/machine/DataUnits.test.cpp
         libnpln/machine/Display.test.cpp
