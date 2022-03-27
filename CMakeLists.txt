@@ -81,6 +81,7 @@ endif()
 # libnpln target
 add_library(libnpln
     libnpln/detail/ContainerCast.hpp
+    libnpln/detail/Overload.hpp
     libnpln/detail/cpp2b.hpp
     libnpln/machine/BitCodec.hpp
     libnpln/machine/BitCodecs.hpp
