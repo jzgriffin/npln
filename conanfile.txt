@@ -1,6 +1,7 @@
 [requires]
 catch2/2.13.7
 cli11/2.1.1
+enum-flags/0.1a
 fmt/8.0.1
 glfw/3.3.4
 glm/0.9.9.8

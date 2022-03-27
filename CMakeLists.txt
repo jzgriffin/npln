@@ -51,6 +51,7 @@ endif()
 include(${CMAKE_CURRENT_BINARY_DIR}/conan_paths.cmake)
 
 find_package(CLI11 REQUIRED)
+find_package(EnumFlags REQUIRED)
 find_package(fmt REQUIRED)
 find_package(spdlog REQUIRED)
 
@@ -115,6 +116,7 @@ target_compile_features(libnpln
 )
 target_link_libraries(libnpln
     PUBLIC
+    EnumFlags::EnumFlags
     Microsoft.GSL::GSL
     fmt::fmt
     frequencypp::frequencypp
